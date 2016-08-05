@@ -1,0 +1,27 @@
+{
+  "name": "wfl-editor",
+  "version": "0.0.0",
+  "description": "Game editor for the WFL engine.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ./src/main.js",
+    "pretest": "jshint ./src",
+    "test": "echo \"Tests Complete\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wooffull/wfl-editor.git"
+  },
+  "author": "Hector Fernando Pineiro II",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wooffull/wfl-editor/issues"
+  },
+  "homepage": "https://github.com/wooffull/wfl-editor#readme",
+  "dependencies": {
+    "electron-prebuilt": "^1.2.0"
+  },
+  "devDependencies": {
+    "jshint": "^2.9.2"
+  }
+}
