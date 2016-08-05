@@ -9,27 +9,48 @@ html, body {
     width: 100vw;
     height: 100vh;
     margin: 0;
+}
+
+/**
+ * MAIN SECTIONS
+ */
+#top-icon-container {
+    height: 40px;
+}
+
+#subwindow-container {
+    height: calc(100vh - 40px);
+}
+
+.ui-element-container {
+    width: 100vw;
     display: flex;
 }
 
 /**
- * SUBWINDOWS
+ * SUBWINDOWS & ICONWINDOWS
  */
-.subwindow {
+.subwindow, .iconwindow {
     display: inline-block;
     box-sizing: border-box;
     padding: 5px;
     background-color: #333333;
 }
 
-.subwindow:not(:last-of-type) {
+.subwindow:not(:last-of-type), .iconwindow:not(:last-of-type) {
     border-right: 1px solid #000000;
 }
 
+.iconwindow > .tool {
+    align-items: center;
+    display: inline-block;
+    margin: 4px 0;
+}
+
 /**
- * ICON SUBWINDOW
+ * TOOL BAR SUBWINDOW
  */
-#tool-bar-subwindow {
+#tool-bar-subwindow, #tool-bar-iconwindow {
     width: 42px;
 }
 
@@ -68,6 +89,7 @@ html, body {
     text-align: center;
     color: #cccccc;
     cursor: pointer;
+    width: 32px;
 }
 
 .tool-selected {
@@ -113,21 +135,20 @@ html, body {
 }
 
 /**
- * SPRITE SHEET EDITOR
+ * COMPONENT EDITOR
  */
-#sprite-sheet-subwindow {
+#component-subwindow, #component-iconwindow {
      /* +10px -- padding
         +1px  -- border-right */
      width: calc(256px + 10px + 1px);
-     background-color: #330033;
-     background: linear-gradient(to top, #330033 0%, #000000 100%);
+     background-color: #000000;
 }
 
-#sprite-sheet-subwindow > div {
+#component-subwindow > div {
     box-sizing: border-box;
 }
 
-#sprite-sheet-subwindow > div:not(:last-child) {
+#component-subwindow > div:not(:last-child) {
    margin-bottom: 5px;
 }
 
@@ -164,7 +185,6 @@ html, body {
 /**
  * MAIN EDITOR
  */
-
-#main-subwindow {
+#main-subwindow, #main-iconwindow {
     width: calc(100vw - 42px - (256px + 10px + 1px));
 }

@@ -7,7 +7,7 @@ var WflEditor = require('./scripts/WflEditor');
 $(window).on("load", () => new WflEditor());
 
 // Prevent highlighting elements when dragging on UI
-$(".subwindow").on("mousedown", (e) => {
+$(".ui-element-container").on("mousedown", (e) => {
     if (e.stopPropagation) e.stopPropagation();
     if (e.preventDefault)  e.preventDefault();
     e.cancelBubble = true;

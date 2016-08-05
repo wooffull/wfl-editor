@@ -8,32 +8,51 @@
     </head>
 
     <body>
-        <span id="tool-bar-subwindow" class="subwindow">
-            <i class="material-icons tool" id="tool-draw">create</i>
-            <i class="material-icons tool" id="tool-select">crop_free</i>
-            <i class="material-icons tool" id="tool-align">apps</i>
-            <i class="material-icons tool" id="tool-rotate">rotate_left</i>
-        </span>
+        <div id="top-icon-container" class="ui-element-container">
+            <span id="tool-bar-iconwindow" class="iconwindow">
+            </span>
 
-        <span id="sprite-sheet-subwindow" class="subwindow">
-            <div id="sprite-sheet">
-                <img src="./media/Sprites1.png">
-            </div>
+            <span id="component-iconwindow" class="iconwindow">
+                <i class="material-icons tool">photo</i>
+                <i class="material-icons tool">nature</i>
+                <i class="material-icons tool">code</i>
+            </span>
 
-            <div id="sprite-sheet-options">
-                <i class="material-icons tool" id="icon-load-sprite-sheet">folder</i>
-            </div>
-        </span>
+            <span id="main-iconwindow" class="iconwindow">
+                <i class="material-icons tool">public</i>
+                <i class="material-icons tool">event_note</i>
+                <i class="material-icons tool">timeline</i>
+            </span>
+        </div>
 
-        <span id="main-subwindow" class="subwindow">
-            <canvas id="main-canvas">
-            </canvas>
-        </span>
+        <div id="subwindow-container" class="ui-element-container">
+            <span id="tool-bar-subwindow" class="subwindow">
+                <i class="material-icons tool" id="tool-draw">create</i>
+                <i class="material-icons tool" id="tool-select">crop_free</i>
+                <i class="material-icons tool" id="tool-align">format_align_center</i>
+                <i class="material-icons tool" id="tool-rotate">rotate_left</i>
+            </span>
+
+            <span id="component-subwindow" class="subwindow">
+                <div id="sprite-sheet">
+                    <img src="./media/Sprites1.png">
+                </div>
+
+                <div id="sprite-sheet-options">
+                    <i class="material-icons tool" id="icon-load-sprite-sheet">folder</i>
+                </div>
+            </span>
+
+            <span id="main-subwindow" class="subwindow">
+                <canvas id="main-canvas">
+                </canvas>
+            </span>
+        </div>
 
         <!-- Allow 3rd party libs to be added correctly
         <script>if (typeof module === "object") {window.module = module; module = undefined;}</script>
  -->
- 
+
         <!-- Scripts for WFL Editor -->
         <script src="./lib/wfl.js"></script>
         <script src="./scripts/index.js"></script>
