@@ -13,7 +13,7 @@ let win;
 function createWindow() {
     // Create the browser window.
     win = new BrowserWindow({width: 800, height: 600});
-    win.setMinimumSize(640, 480);
+    win.setMinimumSize(720, 540);
     win.maximize();
 
     // and load the index.html of the app.

@@ -42,9 +42,12 @@ html, body {
 }
 
 .iconwindow > .tool {
-    align-items: center;
     display: inline-block;
     margin: 4px 0;
+}
+
+.subwindow:nth-child(even), .iconwindow:nth-child(even) {
+    background-color: #000000;
 }
 
 /**
@@ -140,8 +143,8 @@ html, body {
 #component-subwindow, #component-iconwindow {
      /* +10px -- padding
         +1px  -- border-right */
-     width: calc(256px + 10px + 1px);
-     background-color: #000000;
+     width: calc(25% + 10px + 1px);
+     max-width: calc(250px + 10px + 1px);
 }
 
 #component-subwindow > div {
@@ -183,8 +186,17 @@ html, body {
 }
 
 /**
- * MAIN EDITOR
+ * WORLD EDITOR
  */
-#main-subwindow, #main-iconwindow {
-    width: calc(100vw - 42px - (256px + 10px + 1px));
+#world-subwindow, #world-iconwindow {
+    width: calc(100vw - 42px - (250px + 10px + 200px + 1px));
+    min-width: calc(100vw - 42px - (25% + 10px + 20% + 1px));
+}
+
+/**
+ * LAYER EDITOR
+ */
+#layer-subwindow, #layer-iconwindow {
+    width: 20%;
+    max-width: 200px;
 }

@@ -363,13 +363,13 @@ Object.defineProperties(WorldEditorScene, {
         value: {
             MIN:   0.15,
             MAX:   1.5,
-            SPEED: 0.015
+            SPEED: 0.01
         }
     },
 
     GRID: {
         value: {
-            MIN_SCALE: 0.3
+            MIN_SCALE: 0.5
         }
     }
 });

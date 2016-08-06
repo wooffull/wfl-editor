@@ -144,7 +144,7 @@ class SelectTool extends Tool {
 
         // Only remove clicked items if the Shift key isn't down
         if (!keyboard.isPressed(keyboard.SHIFT)) {
-            var clickObj = this.edtior.find(mouseWorldPos.x, mouseWorldPos.y);
+            var clickObj = this.editor.find(mouseWorldPos.x, mouseWorldPos.y);
 
             // Clicked an object that is selected, so deselect it
             if (clickObj && !selector.isSelected(clickObj)) {
