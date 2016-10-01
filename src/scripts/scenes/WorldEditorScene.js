@@ -197,6 +197,10 @@ class WorldEditorScene extends Scene {
 
         return tilePos;
     }
+    
+    addCurrentGameObject(x, y) {
+        var currentGameObject = null;
+    }
 
     handleInput() {
         var key = this.keyboard;

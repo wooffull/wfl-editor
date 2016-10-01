@@ -48,6 +48,8 @@ class DrawTool extends Tool {
             var tileWorldPos = mouseTilePos.multiply(tileSize);
             var x            = tileWorldPos.x + tileSize * 0.5;
             var y            = tileWorldPos.y + tileSize * 0.5;
+            
+            this.editor.addCurrentGameObject(x, y);
         }
     }
 

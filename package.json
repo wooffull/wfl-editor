@@ -4,7 +4,7 @@
   "description": "Game editor for the WFL engine.",
   "main": "main.js",
   "scripts": {
-    "start": "electron ./src/main.js",
+    "start": "mkdirp ./projects && electron ./src/main.js",
     "pretest": "jshint ./src",
     "test": "echo \"Tests Complete\""
   },
@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/wooffull/wfl-editor#readme",
   "dependencies": {
+    "mkdirp": "^0.5.1",
     "electron-prebuilt": "^1.4.1"
   },
   "devDependencies": {

@@ -10,6 +10,30 @@ const {BrowserWindow} = electron;
 // processes
 const {ipcMain} = electron;
 
+// File system
+const fs = require('fs');
+
+
+
+
+// Updates the config for the game editor
+// ./projects/config.json will be created if it does not already exist
+function updateConfig(config = {}) {
+    var configJson = JSON.stringify(config, null, '  ');
+    
+    fs.writeFile('./projects/config.json', configJson, {flag: 'wx'}, (err) => {
+        if (err) {
+            console.log("Config error: " + err);
+            return;
+        }
+    });
+}
+
+updateConfig();
+
+
+
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
@@ -41,6 +65,9 @@ function createWindow() {
     });
 }
 
+
+
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -62,6 +89,9 @@ app.on('activate', () => {
         createWindow();
     }
 });
+
+
+
 
 // Set up listeners on renderer
 ipcMain.on('window-close', () => {
