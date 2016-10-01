@@ -95,7 +95,10 @@ class WflEditor {
      * Deselects all tools in a given context, then selects the given tool
      */
     _selectTool(tool, context) {
-        $(".tool-selected", context).removeClass("tool-selected");
+        if (context) {
+            $(".tool-selected", context).removeClass("tool-selected");
+        }
+
         $(tool).addClass("tool-selected");
     }
 }

@@ -9,17 +9,74 @@ html, body {
     width: 100vw;
     height: 100vh;
     margin: 0;
+    
+    -webkit-app-region: no-drag;
+    -webkit-user-select: none;
+}
+
+button {
+    -webkit-app-region: no-drag;
+}
+
+.toolbar-window-controls, .subwindow, .iconwindow {   
+    /* Prevent cursor from switching to text cursor */
+    cursor: default;
+}
+
+.toolbar-window-controls {
+    height: 25px;
+    
+    -webkit-app-region: drag;
+    
+    /* Ensure there's no white-space between the buttons */
+    font-size: 0px;
+}
+
+.close {
+    background: url('../media/close.png');
+}
+
+.minimize {
+    background: url('../media/minimize.png');
+}
+
+.maximize {
+    background: url('../media/maximize.png');
+}
+
+.close, .minimize, .maximize {
+    width: 30px;
+    height: 25px;
+    border: none;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: default;
+}
+
+.close:hover, .minimize:hover, .maximize:hover {
+    background-color: #000000;
+}
+
+.close:focus, .minimize:focus, .maximize:focus {
+    outline: none;
+}
+
+.toolbar-button-container {
+    position: absolute;
+    right: 0px;
 }
 
 /**
  * MAIN SECTIONS
  */
 #top-icon-container {
-    height: 40px;
+    height: 35px;
 }
 
 #subwindow-container {
-    height: calc(100vh - 40px);
+    /* -25px for .toolbar-window-controls */
+    /* -35px for #top-icon-container */
+    height: calc(100vh - 25px - 35px);
 }
 
 .ui-element-container {

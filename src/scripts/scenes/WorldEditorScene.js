@@ -1,16 +1,22 @@
 "use strict";
 
-var $           = wfl.jquery;
-var geom        = wfl.geom;
-var input       = wfl.input;
-var Mouse       = input.Mouse;
-var EditorScene = require('./EditorScene');
-var tools       = require('../tools');
-var util        = require('../util');
+var $     = wfl.jquery;
+var geom  = wfl.geom;
+var input = wfl.input;
+var Mouse = input.Mouse;
+var Scene = wfl.display.Scene;
+var tools = require('../tools');
+var util  = require('../util');
 
-class WorldEditorScene extends EditorScene {
+class WorldEditorScene extends Scene {
     constructor(canvas, mouse, keyboard) {
-        super(canvas, mouse, keyboard);
+        super(canvas);
+
+        this.canvas   = canvas;
+        this.mouse    = mouse;
+        this.keyboard = keyboard;
+        this.tool     = undefined;
+        this.tools    = [];
 
         this.selector = new util.Selector();
         this.scale    = WorldEditorScene.DEFAULT_SCALE;

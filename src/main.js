@@ -6,13 +6,23 @@ const {app} = electron;
 // Module to create native browser window.
 const {BrowserWindow} = electron;
 
+// Module to handling sending and receiving messages between render and main
+// processes
+const {ipcMain} = electron;
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
 function createWindow() {
     // Create the browser window.
-    win = new BrowserWindow({width: 800, height: 600});
+    win = new BrowserWindow({
+        width: 800,
+        height: 600,
+        frame: false,
+        backgroundColor: '#333333'
+    });
+    
     win.setMinimumSize(720, 540);
     win.maximize();
 
@@ -50,5 +60,22 @@ app.on('activate', () => {
     // dock icon is clicked and there are no other windows open.
     if (win === null) {
         createWindow();
+    }
+});
+
+// Set up listeners on renderer
+ipcMain.on('window-close', () => {
+    win.close();
+});
+
+ipcMain.on('window-minimize', () => {
+    win.minimize();
+});
+
+ipcMain.on('window-maximize', () => {
+    if (win.isMaximized()) {
+        win.unmaximize();
+    } else {
+        win.maximize();   
     }
 });

@@ -1,5 +1,7 @@
 "use strict";
 
+const {ipcRenderer} = require('electron');
+
 var $         = wfl.jquery;
 var WflEditor = require('./scripts/WflEditor');
 
@@ -13,4 +15,16 @@ $(".ui-element-container").on("mousedown", (e) => {
     e.cancelBubble = true;
     e.returnValue  = false;
     return false;
+});
+
+$(".close").on("click", (e) => {
+    ipcRenderer.send('window-close');
+});
+
+$(".minimize").on("click", (e) => {
+    ipcRenderer.send('window-minimize');
+});
+
+$(".maximize").on("click", (e) => {
+    ipcRenderer.send('window-maximize');
 });
