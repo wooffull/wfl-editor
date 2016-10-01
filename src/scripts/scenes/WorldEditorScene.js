@@ -12,15 +12,16 @@ class WorldEditorScene extends Scene {
     constructor(canvas, mouse, keyboard) {
         super(canvas);
 
-        this.canvas   = canvas;
-        this.mouse    = mouse;
-        this.keyboard = keyboard;
-        this.tool     = undefined;
-        this.tools    = [];
+        this.canvas       = canvas;
+        this.mouse        = mouse;
+        this.keyboard     = keyboard;
+        this.tool         = undefined;
+        this.tools        = [];
 
-        this.selector = new util.Selector();
-        this.scale    = WorldEditorScene.DEFAULT_SCALE;
-        this.tileSize = WorldEditorScene.DEFAULT_TILE_SIZE;
+        this.selector    = new util.Selector();
+        this.tileSize    = WorldEditorScene.DEFAULT_TILE_SIZE;
+        
+        this.camera.zoom = WorldEditorScene.DEFAULT_SCALE;
 
         // Add tools
         this.tools.push(tools.ids.DRAW);
@@ -46,7 +47,7 @@ class WorldEditorScene extends Scene {
 
         this.camera.position.x = 0;
         this.camera.position.y = 0;
-        this.scale             = WorldEditorScene.DEFAULT_SCALE;
+        this.camera.zoom       = WorldEditorScene.DEFAULT_SCALE;
     }
 
     update(dt) {
@@ -61,7 +62,7 @@ class WorldEditorScene extends Scene {
 
         // Only draw the grid if not zoomed too far out.
         // It makes everything look less cluttered with that small of a scale.
-        if (this.scale >= WorldEditorScene.GRID.MIN_SCALE) {
+        if (this.camera.zoom >= WorldEditorScene.GRID.MIN_SCALE) {
             this.drawGrid(ctx);
         }
 
@@ -75,8 +76,8 @@ class WorldEditorScene extends Scene {
     drawGrid(ctx) {
         var cameraPos       = this.camera.position;
         var offset          = this.getCenterOffset();
-        var totalHorizontal = Math.round((this.canvas.width  / this.scale) / this.tileSize + 2);
-        var totalVertical   = Math.round((this.canvas.height / this.scale) / this.tileSize + 2);
+        var totalHorizontal = Math.round((this.canvas.width  / this.camera.zoom) / this.tileSize + 2);
+        var totalVertical   = Math.round((this.canvas.height / this.camera.zoom) / this.tileSize + 2);
 
         ctx.save();
 
@@ -85,7 +86,7 @@ class WorldEditorScene extends Scene {
 
         // Offset the drawing from the center of the screen
         ctx.translate(offset.x, offset.y);
-        ctx.scale(this.scale, this.scale);
+        ctx.scale(this.camera.zoom, this.camera.zoom);
 
         for (var i = -Math.round(totalHorizontal * 0.5); i < Math.round(totalHorizontal * 0.5); i++) {
             for (var j = -Math.round(totalVertical * 0.5); j < Math.round(totalVertical * 0.5); j++) {
@@ -111,7 +112,7 @@ class WorldEditorScene extends Scene {
 
         // Offset the drawing from the center of the screen
         ctx.translate(offset.x, offset.y);
-        ctx.scale(this.scale, this.scale);
+        ctx.scale(this.camera.zoom, this.camera.zoom);
 
         // Get the mouse's tile position
         var mouseTilePos = this.getMouseTilePosition();
@@ -139,7 +140,7 @@ class WorldEditorScene extends Scene {
             ctx.translate(offset.x, offset.y);
 
             // Scale appropriately and translate with the (scaled) camera position
-            ctx.scale(this.scale, this.scale);
+            ctx.scale(this.camera.zoom, this.camera.zoom);
             ctx.translate(-cameraPos.x, -cameraPos.y);
 
             // Draw the selection
@@ -175,11 +176,11 @@ class WorldEditorScene extends Scene {
     convertPagePosToWorldPos(point) {
         var offset   = this.getCenterOffset();
         var worldPos = geom.Vec2.add(
-            point.clone().divide(this.scale),
+            point.clone().divide(this.camera.zoom),
             this.camera.position
         );
         worldPos.subtract(
-            offset.divide(this.scale)
+            offset.divide(this.camera.zoom)
         );
 
         return worldPos;
@@ -215,8 +216,8 @@ class WorldEditorScene extends Scene {
 
         // \ Key -- Reset scale
         if (key.isPressed(key.BACKSLASH)) {
-            dz         = 0;
-            this.scale = 1;
+            dz               = 0;
+            this.camera.zoom = 1;
         }
 
         // Shift Key -- Doubles pan and scale speed
@@ -241,12 +242,12 @@ class WorldEditorScene extends Scene {
         }
 
         // Apply adjustments to scale
-        this.scale += dz;
-        this.scale = Math.max(WorldEditorScene.SCALE.MIN, Math.min(WorldEditorScene.SCALE.MAX, this.scale));
+        this.camera.zoom += dz;
+        this.camera.zoom = Math.max(WorldEditorScene.SCALE.MIN, Math.min(WorldEditorScene.SCALE.MAX, this.camera.zoom));
 
         // Apply adjustments to pan based on current scale
-        dx /= this.scale;
-        dy /= this.scale;
+        dx /= this.camera.zoom;
+        dy /= this.camera.zoom;
         this.camera.position.x += dx;
         this.camera.position.y += dy;
 

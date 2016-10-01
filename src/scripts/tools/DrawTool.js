@@ -102,7 +102,7 @@ class DrawTool extends Tool {
         var keyboard = this.editor.keyboard;
         var mouse    = this.editor.mouse;
         var selector = this.editor.selector;
-        var scale    = this.editor.scale;
+        var zoom     = this.editor.camera.zoom;
 
         // Holding Shift with the draw tool is a shortcut for the
         // Select tool, ONLY if the selection isn't being dragged
@@ -112,8 +112,8 @@ class DrawTool extends Tool {
             var leftMouseState = mouse.getState(1);
             if (leftMouseState.dragging) {
                 selector.pan(
-                    (leftMouseState.dragEnd.x - leftMouseState.prevPos.x) / scale,
-                    (leftMouseState.dragEnd.y - leftMouseState.prevPos.y) / scale
+                    (leftMouseState.dragEnd.x - leftMouseState.prevPos.x) / zoom,
+                    (leftMouseState.dragEnd.y - leftMouseState.prevPos.y) / zoom
                 );
             }
         }

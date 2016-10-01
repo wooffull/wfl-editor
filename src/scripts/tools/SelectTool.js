@@ -13,24 +13,24 @@ class SelectTool extends Tool {
 
         if (leftMouseState.dragging) {
             var offset    = this.editor.getCenterOffset();
-            var scale     = this.editor.scale;
+            var zoom      = this.editor.camera.zoom;
             var cameraPos = this.editor.camera.position.clone();
 
-            // Multiply cameraPos by scale to keep drag start's position at the
+            // Multiply cameraPos by zoom to keep drag start's position at the
             // world position that the user clicked. This way, the user can zoom
             // while dragging and their drag start position won't change.
-            cameraPos.multiply(scale);
+            cameraPos.multiply(zoom);
 
             // Create drag start point (in world)
             var dragStart = leftMouseState.dragStart.clone().add(offset);
             dragStart = this.editor.convertPagePosToWorldPos(dragStart);
-            dragStart.multiply(scale);
+            dragStart.multiply(zoom);
             dragStart.subtract(cameraPos);
 
             // Create drag end point (in world)
             var dragEnd = leftMouseState.dragEnd.clone().add(offset);
             dragEnd = this.editor.convertPagePosToWorldPos(dragEnd);
-            dragEnd.multiply(scale);
+            dragEnd.multiply(zoom);
             dragEnd.subtract(cameraPos);
 
             var minX = Math.min(dragStart.x, dragEnd.x);
