@@ -85,7 +85,7 @@ class WflEditor {
         var style   = window.getComputedStyle(this.worldSubwindow, null);
         var width   = parseInt(style.getPropertyValue("width"));
         var height  = parseInt(style.getPropertyValue("height"));
-        var padding = parseInt(style.getPropertyValue("padding"))
+        var padding = parseInt(style.getPropertyValue("padding"));
 
         this.canvasDomObject.width  = width  - padding * 2;
         this.canvasDomObject.height = height - padding * 2;

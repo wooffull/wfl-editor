@@ -71,7 +71,7 @@ class DrawTool extends Tool {
                 var selectedObjects = selector.selectedObjects;
 
                 for (var i = selectedObjects.length - 1; i >= 0; i--) {
-                    editor.removeGameObject(selectedObjects[i]);
+                    this.editor.removeGameObject(selectedObjects[i]);
                 }
             }
         }
@@ -93,7 +93,7 @@ class DrawTool extends Tool {
         } else {
             // Clicked an object, so remove it
             if (clickObj) {
-                this.editor.removeGameObject(clickedObj);
+                this.editor.removeGameObject(clickObj);
             }
         }
     }

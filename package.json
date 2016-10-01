@@ -8,6 +8,16 @@
     "pretest": "jshint ./src",
     "test": "echo \"Tests Complete\""
   },
+  "jshintConfig": {
+    "esversion": 6,
+    "node": true,
+    "loopfunc": true,
+    "predef": [
+      "wfl",
+      "window",
+      "document"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wooffull/wfl-editor.git"
