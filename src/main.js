@@ -16,20 +16,34 @@ const fs = require('fs');
 
 
 
-// Updates the config for the game editor
-// ./projects/config.json will be created if it does not already exist
-function updateConfig(config = {}) {
+let wflConfig = {};
+
+// Writes the config for the game editor
+function writeConfig(config = {}) {
     var configJson = JSON.stringify(config, null, '  ');
     
     fs.writeFile('./projects/config.json', configJson, {flag: 'wx'}, (err) => {
         if (err) {
-            console.log("Config error: " + err);
+            console.log(err);
             return;
         }
     });
 }
 
-updateConfig();
+// Loads the config for the game editor
+// ./projects/config.json will be created if it does not already exist
+function loadConfig() {
+    fs.readFile('./projects/config.json', (err, data) => {
+        if (err) {
+            writeConfig();
+            return;
+        }
+        
+        wflConfig = JSON.parse(data);
+    });
+}
+
+loadConfig();
 
 
 
