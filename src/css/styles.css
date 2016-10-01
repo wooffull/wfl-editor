@@ -6,6 +6,7 @@
 }
 
 html, body {
+    font-family: Segoe UI, sans-serif;
     width: 100vw;
     height: 100vh;
     margin: 0;
@@ -18,13 +19,30 @@ button {
     -webkit-app-region: no-drag;
 }
 
+.app-icon {
+    margin: 6px;
+}
+
+#window-name {
+    display: block;
+    position: absolute;
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    padding: 3px;
+    font-size: 14px;
+    color: #ccc;
+}
+
 .toolbar-window-controls, .subwindow, .iconwindow {   
     /* Prevent cursor from switching to text cursor */
     cursor: default;
 }
 
 .toolbar-window-controls {
-    height: 25px;
+    height: 26px;
+    background-color: #3c3c3c;
     
     -webkit-app-region: drag;
     
@@ -46,7 +64,7 @@ button {
 
 .close, .minimize, .maximize {
     width: 30px;
-    height: 25px;
+    height: 26px;
     border: none;
     background-repeat: no-repeat;
     background-position: center;
@@ -74,9 +92,9 @@ button {
 }
 
 #subwindow-container {
-    /* -25px for .toolbar-window-controls */
+    /* -26px for .toolbar-window-controls */
     /* -35px for #top-icon-container */
-    height: calc(100vh - 25px - 35px);
+    height: calc(100vh - 26px - 35px);
 }
 
 .ui-element-container {
