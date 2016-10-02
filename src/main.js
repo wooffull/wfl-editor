@@ -58,7 +58,8 @@ function createWindow() {
         width: 800,
         height: 600,
         frame: false,
-        backgroundColor: '#333333'
+        backgroundColor: '#333333',
+        icon: './src/media/icon.png'
     });
     
     win.setMinimumSize(720, 540);

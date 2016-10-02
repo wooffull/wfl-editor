@@ -1,8 +1,9 @@
 "use strict";
 
-var $      = wfl.jquery;
-var scenes = require('./scenes');
-var tools  = require('./tools');
+let $             = wfl.jquery;
+let scenes        = require('./scenes');
+let tools         = require('./tools');
+let componentViews = require('./componentViews');
 
 class WflEditor {
     constructor() {
@@ -11,6 +12,11 @@ class WflEditor {
         this.worldEditor     = wfl.create(this.canvasDomObject);
         this.animationId     = 0;
         this.prevUpdateTime  = 0;
+        
+        this._curEditorTool    = null;
+        this._curComponentTool = null;
+        this._curComponentView = null;
+        this._curWorldTool     = null;
 
         // Set main editor's iniital scene
         this.worldEditorScene = new scenes.WorldEditorScene(
@@ -60,6 +66,8 @@ class WflEditor {
         for (let tool of componentTools) {
             $(tool).on("click", () => {
                 this._selectTool(tool, "#component-iconwindow");
+                this._updateComponentView(tool);
+                this._curComponentTool = tool;
             });
         }
 
@@ -77,7 +85,7 @@ class WflEditor {
             });
         }
 
-        // Select the first component tool
+        // Select the first world tool
         if (worldTools.length > 0) $(worldTools[0]).click();
     }
 
@@ -100,6 +108,32 @@ class WflEditor {
         }
 
         $(tool).addClass("tool-selected");
+    }
+    
+    /**
+     * Updates the component sub-window to reflect the currently selected
+     * component tool
+     */
+    _updateComponentView(tool) {
+        var newToolId  = $(tool).attr("id");
+        var prevToolId = $(this._curComponentTool).attr("id");
+        
+        // Return early if there is no change in tools being used
+        if (newToolId === prevToolId) return;
+        
+        if (this._curComponentView) {
+            this._curComponentView.destroy();
+            this._curComponentView = null;
+        }
+        
+        switch (newToolId) {
+            case 'ctool-entity':
+                this._curComponentView = new componentViews.EntityView();
+                this._curComponentView.show();
+                break;
+        
+            default:
+        }
     }
 }
 

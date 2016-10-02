@@ -17,6 +17,10 @@ $(".ui-element-container").on("mousedown", (e) => {
     return false;
 });
 
+$(".app-icon").on('click', (e) => {
+    
+});
+
 $(".close").on("click", (e) => {
     ipcRenderer.send('window-close');
 });

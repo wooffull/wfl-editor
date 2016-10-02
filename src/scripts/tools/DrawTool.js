@@ -1,7 +1,7 @@
 "use strict";
 
-var Tool       = require('./Tool');
-var SelectTool = require('./SelectTool');
+let Tool       = require('./Tool');
+let SelectTool = require('./SelectTool');
 
 class DrawTool extends Tool {
     constructor(editor) {
