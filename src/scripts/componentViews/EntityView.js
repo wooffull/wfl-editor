@@ -1,16 +1,16 @@
 "use strict";
 
-let $ = wfl.jquery;
-let ComponentView = require('./ComponentView');
-let {ExpandableMenu} = require('../ui');
+const $                = wfl.jquery;
+const ComponentView    = require('./ComponentView');
+const {ExpandableMenu} = require('../ui');
 
 class EntityView extends ComponentView {
-    constructor() {
-        super();
-        
-        this.entitiesMenu = new ExpandableMenu();
-        this.add(this.entitiesMenu);
-    }
+  constructor() {
+    super();
+    
+    this.entitiesMenu = new ExpandableMenu();
+    this.add(this.entitiesMenu);
+  }
 }
 
 module.exports = EntityView;

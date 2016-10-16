@@ -1,9 +1,9 @@
 "use strict";
 
-let ComponentView = require('./ComponentView');
-let EntityView = require('./EntityView');
+const ComponentView = require('./ComponentView');
+const EntityView    = require('./EntityView');
 
 module.exports = {
-    ComponentView: ComponentView,
-    EntityView: EntityView
+  ComponentView: ComponentView,
+  EntityView: EntityView
 };

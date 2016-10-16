@@ -1,7 +1,7 @@
 "use strict";
 
-var Selector = require('./Selector');
+const Selector = require('./Selector');
 
 module.exports = {
-    Selector: Selector
+  Selector: Selector
 };

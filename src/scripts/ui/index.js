@@ -1,9 +1,9 @@
 "use strict";
 
-let HtmlElement    = require('./HtmlElement');
-let ExpandableMenu = require('./ExpandableMenu');
+const HtmlElement    = require('./HtmlElement');
+const ExpandableMenu = require('./ExpandableMenu');
 
 module.exports = {
-    HtmlElement: HtmlElement,
-    ExpandableMenu: ExpandableMenu
+  HtmlElement: HtmlElement,
+  ExpandableMenu: ExpandableMenu
 };

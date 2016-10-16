@@ -1,15 +1,15 @@
 "use strict";
 
-var Tool       = require('./Tool');
-var DrawTool   = require('./DrawTool');
-var SelectTool = require('./SelectTool');
+const Tool       = require('./Tool');
+const DrawTool   = require('./DrawTool');
+const SelectTool = require('./SelectTool');
 
-var idMap = {
+const idMap = {
     DRAW:   "#tool-draw",
     SELECT: "#tool-select"
 };
 
-var toolMap = {
+const toolMap = {
     "#tool-draw":   DrawTool,
     "#tool-select": SelectTool
 };

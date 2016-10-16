@@ -1,7 +1,7 @@
 "use strict";
 
-var WorldEditorScene = require('./WorldEditorScene');
+const WorldEditorScene = require('./WorldEditorScene');
 
 module.exports = {
-    WorldEditorScene: WorldEditorScene
+  WorldEditorScene: WorldEditorScene
 };

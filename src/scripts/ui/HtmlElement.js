@@ -1,6 +1,6 @@
 "use strict";
 
-let $ = wfl.jquery;
+const $ = wfl.jquery;
 
 class HtmlElement {
     constructor() {

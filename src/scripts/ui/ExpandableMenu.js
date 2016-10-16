@@ -1,8 +1,8 @@
 "use strict";
 
-let $ = wfl.jquery;
-let HtmlElement = require('./HtmlElement');
-let CssClass = require('../CssClasses');
+const $ = wfl.jquery;
+const HtmlElement = require('./HtmlElement');
+const CssClass = require('../CssClasses');
 
 class ExpandableMenu extends HtmlElement {
     constructor() {
@@ -21,7 +21,6 @@ class ExpandableMenu extends HtmlElement {
         this.collapseBtn = $('<button>');
         this.collapseBtn.html($('<i class="material-icons">arrow_drop_up</i>'));
         this.collapseBtn.addClass(CssClass.EXPANDABLE_MENU_COLLAPSE_BUTTON);
-        
         this.collapseBtn.on('click', (e) => this._onToggleCollapse(e));
         
         this.element.append(this.label);
