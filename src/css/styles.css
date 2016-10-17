@@ -1,203 +1,203 @@
 @font-face {
-    font-family: "Material Icons";
-    font-style: normal;
-    font-weight: 400;
-    src: url("../media/MaterialIcons-Regular.woff2") format("woff2");
+  font-family: "Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../media/MaterialIcons-Regular.woff2") format("woff2");
 }
 
 html, body {
-    font-family: Segoe UI, sans-serif;
-    width: 100vw;
-    height: 100vh;
-    margin: 0;
-    
-    -webkit-app-region: no-drag;
-    -webkit-user-select: none;
+  font-family: Segoe UI, sans-serif;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  
+  -webkit-app-region: no-drag;
+  -webkit-user-select: none;
 }
 
 button {
-    -webkit-app-region: no-drag;
+  -webkit-app-region: no-drag;
 }
 
 .app-icon {
-    margin: 6px;
+  margin: 6px;
 }
 
 #window-name {
-    display: block;
-    position: absolute;
-    text-align: center;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 0;
-    padding: 3px;
-    font-size: 14px;
-    color: #ccc;
+  display: block;
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  padding: 3px;
+  font-size: 14px;
+  color: #ccc;
 }
 
 .toolbar-window-controls, .subwindow, .iconwindow {   
-    /* Prevent cursor from switching to text cursor */
-    cursor: default;
+  /* Prevent cursor from switching to text cursor */
+  cursor: default;
 }
 
 .toolbar-window-controls {
-    height: 26px;
-    background-color: #3c3c3c;
-    
-    -webkit-app-region: drag;
-    
-    /* Ensure there's no white-space between the buttons */
-    font-size: 0px;
+  height: 26px;
+  background-color: #3c3c3c;
+  
+  -webkit-app-region: drag;
+  
+  /* Ensure there's no white-space between the buttons */
+  font-size: 0px;
 }
 
 .close {
-    background: url('../media/close.png');
+  background: url('../media/close.png');
 }
 
 .minimize {
-    background: url('../media/minimize.png');
+  background: url('../media/minimize.png');
 }
 
 .maximize {
-    background: url('../media/maximize.png');
+  background: url('../media/maximize.png');
 }
 
 .close, .minimize, .maximize {
-    width: 30px;
-    height: 26px;
-    border: none;
-    background-repeat: no-repeat;
-    background-position: center;
-    cursor: default;
+  width: 30px;
+  height: 26px;
+  border: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: default;
 }
 
 .close:hover, .minimize:hover, .maximize:hover {
-    background-color: #000000;
+  background-color: #000000;
 }
 
 .close:focus, .minimize:focus, .maximize:focus {
-    outline: none;
+  outline: none;
 }
 
 .toolbar-button-container {
-    position: absolute;
-    right: 0px;
+  position: absolute;
+  right: 0px;
 }
 
 /**
  * MAIN SECTIONS
  */
 #top-icon-container {
-    height: 35px;
+  height: 35px;
 }
 
 #subwindow-container {
-    /* -26px for .toolbar-window-controls */
-    /* -35px for #top-icon-container */
-    height: calc(100vh - 26px - 35px);
+  /* -26px for .toolbar-window-controls */
+  /* -35px for #top-icon-container */
+  height: calc(100vh - 26px - 35px);
 }
 
 .ui-element-container {
-    width: 100vw;
-    display: flex;
+  width: 100vw;
+  display: flex;
 }
 
 /**
  * SUBWINDOWS & ICONWINDOWS
  */
 .subwindow, .iconwindow {
-    display: inline-block;
-    box-sizing: border-box;
-    padding: 5px;
-    background-color: #333333;
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 5px;
+  background-color: #333333;
 }
 
 .subwindow:not(:last-of-type), .iconwindow:not(:last-of-type) {
-    border-right: 1px solid #000000;
+  border-right: 1px solid #000000;
 }
 
 .iconwindow > .tool {
-    display: inline-block;
-    margin: 4px 0;
+  display: inline-block;
+  margin: 4px 0;
 }
 
 .subwindow:nth-child(even), .iconwindow:nth-child(even) {
-    background-color: #000000;
+  background-color: #000000;
 }
 
 /**
  * TOOL BAR SUBWINDOW
  */
 #tool-bar-subwindow, #tool-bar-iconwindow {
-    width: 42px;
+  width: 42px;
 }
 
 #tool-bar-subwindow > .tool {
-    margin: auto;
+  margin: auto;
 }
 
 .material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;  /* Preferred icon size */
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
 
-    /* Support for all WebKit browsers. */
-    -webkit-font-smoothing: antialiased;
-    /* Support for Safari and Chrome. */
-    text-rendering: optimizeLegibility;
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
 
-    /* Support for Firefox. */
-    -moz-osx-font-smoothing: grayscale;
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
 
-    /* Support for IE. */
-    font-feature-settings: 'liga';
+  /* Support for IE. */
+  font-feature-settings: 'liga';
 }
 
 .tool {
-    position: relative;
-    display: block;
-    text-align: center;
-    color: #cccccc;
-    cursor: pointer;
-    width: 32px;
+  position: relative;
+  display: block;
+  text-align: center;
+  color: #cccccc;
+  cursor: pointer;
+  width: 32px;
 }
 
 .tool-selected {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 .tool-selected::before, .tool:hover::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #cc99cc;
-    opacity: 0.25;
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #cc99cc;
+  opacity: 0.25;
 }
 
 .tool-selected::after, .tool:hover::after {
-    content: "";
-    position: absolute;
-    border-right: 1px solid #cc99cc;
-    border-left:  1px solid #cc99cc;
-    width:  calc(100% - 2px); /* -2px -- compensation for border */
-    height: 100%;
-    top:  0;
-    left: 0;
+  content: "";
+  position: absolute;
+  border-right: 1px solid #cc99cc;
+  border-left:  1px solid #cc99cc;
+  width:  calc(100% - 2px); /* -2px -- compensation for border */
+  height: 100%;
+  top:  0;
+  left: 0;
 }
 
 .tool:hover {
-    color: #cc99cc;
+  color: #cc99cc;
 }
 
 #tool-draw {
@@ -216,14 +216,14 @@ button {
  * COMPONENT EDITOR
  */
 #component-subwindow, #component-iconwindow {
-     /* +10px -- padding
-        +1px  -- border-right */
-     width: calc(25% + 10px + 1px);
-     max-width: calc(250px + 10px + 1px);
+   /* +10px -- padding
+    +1px  -- border-right */
+   width: calc(25% + 10px + 1px);
+   max-width: calc(250px + 10px + 1px);
 }
 
 #component-subwindow > div {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 #component-subwindow > div:not(:last-child) {
@@ -231,47 +231,47 @@ button {
 }
 
 #sprite-sheet {
-    overflow: auto;
-    outline: 1px solid #000000;
-    background-image: url("../media/TransparencyBG.png");
-    background-repeat: repeat;
-    width: 100%;
-    height: 80%;
+  overflow: auto;
+  outline: 1px solid #000000;
+  background-image: url("../media/TransparencyBG.png");
+  background-repeat: repeat;
+  width: 100%;
+  height: 80%;
 
-    /**
-     * -5px -- padding from .subwindow
-     */
-    max-height: calc(100% - 200px - 5px);
+  /**
+   * -5px -- padding from .subwindow
+   */
+  max-height: calc(100% - 200px - 5px);
 }
 
 #sprite-sheet > img {
-    /* block -- so that scrollbars get triggered at the correct size */
-    display: block;
+  /* block -- so that scrollbars get triggered at the correct size */
+  display: block;
 }
 
 #sprite-sheet-options {
-    width: 100%;
-    height: 20%;
-    min-height: 200px;
+  width: 100%;
+  height: 20%;
+  min-height: 200px;
 }
 
 #sprite-sheet-options > .tool {
-    margin: auto;
-    display: inline-block;
+  margin: auto;
+  display: inline-block;
 }
 
 /**
  * WORLD EDITOR
  */
 #world-subwindow, #world-iconwindow {
-    width: calc(100vw - 42px - (250px + 10px + 200px + 1px));
-    min-width: calc(100vw - 42px - (25% + 10px + 20% + 1px));
+  width: calc(100vw - 42px - (250px + 10px + 200px + 1px));
+  min-width: calc(100vw - 42px - (25% + 10px + 20% + 1px));
 }
 
 /**
  * LAYER EDITOR
  */
 #layer-subwindow, #layer-iconwindow {
-    width: 20%;
-    max-width: 200px;
+  width: 20%;
+  max-width: 200px;
 }

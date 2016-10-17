@@ -10,40 +10,8 @@ const {BrowserWindow} = electron;
 // processes
 const {ipcMain} = electron;
 
-// File system
 const fs = require('fs');
-
-
-
-
-let wflConfig = {};
-
-// Writes the config for the game editor
-function writeConfig(config = {}) {
-  var configJson = JSON.stringify(config, null, '  ');
-  
-  fs.writeFile('./projects/config.json', configJson, {flag: 'wx'}, (err) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-  });
-}
-
-// Loads the config for the game editor
-// ./projects/config.json will be created if it does not already exist
-function loadConfig() {
-  fs.readFile('./projects/config.json', (err, data) => {
-    if (err) {
-      writeConfig();
-      return;
-    }
-    
-    wflConfig = JSON.parse(data);
-  });
-}
-
-loadConfig();
+const file = require('./scripts/file');
 
 
 
