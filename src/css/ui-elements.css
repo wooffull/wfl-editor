@@ -81,3 +81,45 @@
 .menu-item:hover {
   background-color: #f3e6f3;
 }
+
+
+
+
+.preview-window {
+  border-radius: 1px;
+  background-color: #cccccc;
+  position: absolute;
+  margin: 5px;
+  left: 0;
+  top: 0;
+  font-size: 0;
+}
+
+.preview-window > .image-container {
+  padding: 5px;
+  min-width: 50px;
+  min-height: 50px;
+}
+
+.image-container > img {
+  display: block;
+  margin: auto;
+}
+
+
+
+
+
+*.arrow-left::before {
+  content: '';
+  width: 0;
+  height: 0;
+  position: absolute;
+  border-bottom: 4px solid transparent;
+  border-left: 4px solid transparent;
+  border-top: 4px solid #cccccc;
+  border-right: 4px solid #cccccc;
+  
+  /* -4px for this border-right size */
+  left: -4px;
+}

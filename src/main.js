@@ -10,7 +10,6 @@ const {BrowserWindow} = electron;
 // processes
 const {ipcMain} = electron;
 
-const fs = require('fs');
 const file = require('./scripts/file');
 
 
