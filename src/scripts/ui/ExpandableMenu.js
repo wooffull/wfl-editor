@@ -47,6 +47,10 @@ class ExpandableMenu extends HtmlElement {
     this.mainInterior.append(htmlElement.element);
   }
   
+  getLastSelected() {
+    return this._lastSelected;
+  }
+  
   _onMouseMove(e) {
     this._mousePos.x = e.clientX;
     this._mousePos.y = e.clientY;

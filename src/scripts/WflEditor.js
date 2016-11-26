@@ -98,6 +98,18 @@ class WflEditor {
     this.canvasDomObject.width  = width  - padding * 2;
     this.canvasDomObject.height = height - padding * 2;
   }
+  
+  onCurrentComponentViewClick() {
+    var toolId = $(this._curComponentTool).attr("id");
+    
+    switch (toolId) {
+      case 'ctool-entity':
+        // Get current selected Entity
+        var selected = this._curComponentView.getEntity();
+        // Set the entity to be drawn to scene
+        this.worldEditorScene.curEntity = selected;
+    }
+  }
 
   /**
    * Deselects all tools in a given context, then selects the given tool
@@ -129,6 +141,7 @@ class WflEditor {
     switch (newToolId) {
       case 'ctool-entity':
         this._curComponentView = new componentViews.EntityView();
+        this._curComponentView.container.on("click", () => this.onCurrentComponentViewClick());
         this._curComponentView.show();
         break;
     

@@ -12,11 +12,12 @@ class WorldEditorScene extends Scene {
   constructor(canvas, mouse, keyboard) {
     super(canvas);
 
-    this.canvas   = canvas;
-    this.mouse    = mouse;
-    this.keyboard = keyboard;
-    this.tool     = undefined;
-    this.tools    = [];
+    this.canvas    = canvas;
+    this.mouse     = mouse;
+    this.keyboard  = keyboard;
+    this.tool      = undefined;
+    this.tools     = [];
+    this.curEntity = undefined;
 
     this.selector = new util.Selector();
     this.tileSize = WorldEditorScene.DEFAULT_TILE_SIZE;
@@ -199,7 +200,17 @@ class WorldEditorScene extends Scene {
   }
   
   addCurrentGameObject(x, y) {
-    let currentGameObject = null;
+    var en = this.curEntity;
+    var go = new wfl.core.entities.PhysicsObject();
+    var img = new Image();
+    
+    img.src = en.data.imageSource;
+    img.onload = function () {
+      go.graphic = img;
+      go.position.x = x;
+      go.position.y = y;
+      this.addGameObject(go);
+    }.bind(this);
   }
 
   handleInput() {
