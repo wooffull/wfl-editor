@@ -15,7 +15,8 @@
     "predef": [
       "wfl",
       "window",
-      "document"
+      "document",
+	  "Image"
     ]
   },
   "repository": {

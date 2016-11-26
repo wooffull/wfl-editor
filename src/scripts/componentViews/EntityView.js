@@ -32,6 +32,10 @@ class EntityView extends ComponentView {
     let menuItem = new MenuItem(entity.name, entity);
     this.entitiesMenu.add(menuItem);
   }
+  
+  getSelectedEntity() {
+    return this.entitiesMenu.getLastSelected();
+  }
 }
 
 module.exports = EntityView;

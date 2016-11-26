@@ -42,15 +42,15 @@ class WflEditor {
   }
 
   initEditorTools() {
-    var editorTools = $(".tool", "#tool-bar-subwindow");
+    let editorTools = $(".tool", "#tool-bar-subwindow");
 
     // Add listeners to each tool so they can be clicked and used
     for (let tool of editorTools) {
       $(tool).on("click", () => {
         this._selectTool(tool, "#tool-bar-subwindow");
 
-        var toolId    = "#" + $(tool).attr("id");
-        var currentScene  = this.worldEditor.getScene();
+        let toolId    = "#" + $(tool).attr("id");
+        let currentScene  = this.worldEditor.getScene();
         currentScene.tool = new tools.list[toolId](currentScene);
       });
     }
@@ -60,7 +60,7 @@ class WflEditor {
   }
 
   initComponentTools() {
-    var componentTools = $(".tool", "#component-iconwindow");
+    let componentTools = $(".tool", "#component-iconwindow");
 
     // Add listeners to each tool so they can be clicked and used
     for (let tool of componentTools) {
@@ -76,7 +76,7 @@ class WflEditor {
   }
 
   initWorldTools() {
-    var worldTools = $(".tool", "#world-iconwindow");
+    let worldTools = $(".tool", "#world-iconwindow");
 
     // Add listeners to each tool so they can be clicked and used
     for (let tool of worldTools) {
@@ -90,13 +90,25 @@ class WflEditor {
   }
 
   onResize(e) {
-    var style   = window.getComputedStyle(this.worldSubwindow, null);
-    var width   = parseInt(style.getPropertyValue("width"));
-    var height  = parseInt(style.getPropertyValue("height"));
-    var padding = parseInt(style.getPropertyValue("padding"));
+    let style   = window.getComputedStyle(this.worldSubwindow, null);
+    let width   = parseInt(style.getPropertyValue("width"));
+    let height  = parseInt(style.getPropertyValue("height"));
+    let padding = parseInt(style.getPropertyValue("padding"));
 
     this.canvasDomObject.width  = width  - padding * 2;
     this.canvasDomObject.height = height - padding * 2;
+  }
+  
+  onCurrentComponentViewClick() {
+    let toolId = $(this._curComponentTool).attr("id");
+    
+    switch (toolId) {
+      case 'ctool-entity':
+        // Get current selected Entity
+        let selected = this._curComponentView.getSelectedEntity();
+        // Set the entity to be drawn to scene
+        this.worldEditorScene.curEntity = selected;
+    }
   }
 
   /**
@@ -115,8 +127,8 @@ class WflEditor {
    * component tool
    */
   _updateComponentView(tool) {
-    var newToolId  = $(tool).attr("id");
-    var prevToolId = $(this._curComponentTool).attr("id");
+    let newToolId  = $(tool).attr("id");
+    let prevToolId = $(this._curComponentTool).attr("id");
     
     // Return early if there is no change in tools being used
     if (newToolId === prevToolId) return;
@@ -129,6 +141,7 @@ class WflEditor {
     switch (newToolId) {
       case 'ctool-entity':
         this._curComponentView = new componentViews.EntityView();
+        this._curComponentView.container.on("click", () => this.onCurrentComponentViewClick());
         this._curComponentView.show();
         break;
     
