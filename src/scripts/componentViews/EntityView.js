@@ -33,7 +33,7 @@ class EntityView extends ComponentView {
     this.entitiesMenu.add(menuItem);
   }
   
-  getEntity() {
+  getSelectedEntity() {
     return this.entitiesMenu.getLastSelected();
   }
 }

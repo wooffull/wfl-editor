@@ -200,16 +200,16 @@ class WorldEditorScene extends Scene {
   }
   
   addCurrentGameObject(x, y) {
-    var en = this.curEntity;
-    var go = new wfl.core.entities.PhysicsObject();
-    var img = new Image();
+    let entity = this.curEntity;
+    let gameObject = new wfl.core.entities.PhysicsObject();
+    let image = new Image();
     
-    img.src = en.data.imageSource;
-    img.onload = function () {
-      go.graphic = img;
-      go.position.x = x;
-      go.position.y = y;
-      this.addGameObject(go);
+    image.src = entity.data.imageSource;
+    image.onload = function () {
+      gameObject.graphic = image;
+      gameObject.position.x = x;
+      gameObject.position.y = y;
+      this.addGameObject(gameObject);
     }.bind(this);
   }
 
