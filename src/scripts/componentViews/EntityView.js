@@ -3,7 +3,8 @@
 const $                = wfl.jquery;
 const ComponentView    = require('./ComponentView');
 const {ExpandableMenu,
-       MenuItem}       = require('../ui');
+       MenuItem,
+       MenuButton}       = require('../ui');
 const {Entity}         = require('../world');
 
 class EntityView extends ComponentView {
@@ -26,6 +27,22 @@ class EntityView extends ComponentView {
       
       this.addEntity(ent);
     }
+    
+    this.addEntityEntryBtn = new MenuButton('add_box');
+    this.addEntityEntryBtn.onClick(this.addEntityEntry);
+    this.entitiesMenu.addButton(this.addEntityEntryBtn);
+    
+    this.removeEntityEntryBtn = new MenuButton('indeterminate_check_box');
+    this.removeEntityEntryBtn.onClick(this.removeEntityEntry);
+    this.entitiesMenu.addButton(this.removeEntityEntryBtn);
+  }
+  
+  addEntityEntry() {
+    console.log("Add Entity");
+  }
+  
+  removeEntityEntry() {
+    console.log("Remove Entity");
   }
   
   addEntity(entity) {
