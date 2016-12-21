@@ -47,6 +47,10 @@ class ExpandableMenu extends HtmlElement {
     this.mainInterior.append(htmlElement.element);
   }
   
+  addButton(button) {
+    this.element.prepend(button.getElement());
+  }
+  
   getLastSelected() {
     return this._lastSelected;
   }
