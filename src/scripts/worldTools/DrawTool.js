@@ -1,9 +1,9 @@
 "use strict";
 
-const Tool       = require('./Tool');
+const WorldTool  = require('./WorldTool');
 const SelectTool = require('./SelectTool');
 
-class DrawTool extends Tool {
+class DrawTool extends WorldTool {
   constructor(editor) {
     super(editor);
 

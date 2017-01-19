@@ -82,7 +82,7 @@ class Selector {
   }
 
   add(obj) {
-    // Remove first just in case to prevet duplicates
+    // Remove it first just in case to prevet duplicates
     this.remove(obj);
 
     this.selectedObjects.push(obj);

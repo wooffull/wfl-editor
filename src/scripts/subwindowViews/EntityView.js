@@ -1,13 +1,13 @@
 "use strict";
 
 const $                = wfl.jquery;
-const ComponentView    = require('./ComponentView');
+const SubwindowView    = require('./SubwindowView');
 const {ExpandableMenu,
        MenuItem,
-       MenuButton}       = require('../ui');
+       MenuButton}     = require('../ui');
 const {Entity}         = require('../world');
 
-class EntityView extends ComponentView {
+class EntityView extends SubwindowView {
   constructor() {
     super();
     
@@ -35,6 +35,10 @@ class EntityView extends ComponentView {
     this.removeEntityEntryBtn = new MenuButton('indeterminate_check_box');
     this.removeEntityEntryBtn.onClick(this.removeEntityEntry);
     this.entitiesMenu.addButton(this.removeEntityEntryBtn);
+    
+    $(this.entitiesMenu.element).on('click', () => {
+      $(this).trigger('entity-select', this.getSelectedEntity());
+    });
   }
   
   addEntityEntry() {

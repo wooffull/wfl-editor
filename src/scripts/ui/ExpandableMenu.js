@@ -45,6 +45,11 @@ class ExpandableMenu extends HtmlElement {
     htmlElement.element.on('mouseout',  () => this._onItemLeave(htmlElement));
     
     this.mainInterior.append(htmlElement.element);
+    
+    // Select the first item added
+    if (this._lastSelected === null) {
+      htmlElement.element.click();
+    }
   }
   
   addButton(button) {

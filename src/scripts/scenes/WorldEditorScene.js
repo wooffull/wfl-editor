@@ -1,12 +1,12 @@
 "use strict";
 
-const $     = wfl.jquery;
-const geom  = wfl.geom;
-const input = wfl.input;
-const Mouse = input.Mouse;
-const Scene = wfl.display.Scene;
-const tools = require('../tools');
-const util  = require('../util');
+const $          = wfl.jquery;
+const geom       = wfl.geom;
+const input      = wfl.input;
+const Mouse      = input.Mouse;
+const Scene      = wfl.display.Scene;
+const worldTools = require('../worldTools');
+const util       = require('../util');
 
 class WorldEditorScene extends Scene {
   constructor(canvas, mouse, keyboard) {
@@ -16,17 +16,12 @@ class WorldEditorScene extends Scene {
     this.mouse     = mouse;
     this.keyboard  = keyboard;
     this.tool      = undefined;
-    this.tools     = [];
     this.curEntity = undefined;
 
     this.selector = new util.Selector();
     this.tileSize = WorldEditorScene.DEFAULT_TILE_SIZE;
     
     this.camera.zoom = WorldEditorScene.DEFAULT_SCALE;
-
-    // Add tools
-    this.tools.push(tools.ids.DRAW);
-    this.tools.push(tools.ids.SELECT);
 
     // Set up listeners
     $(this.mouse).on(Mouse.Event.MOVE,      ($e, e) => this.onMouseMove(e));
@@ -105,7 +100,7 @@ class WorldEditorScene extends Scene {
 
   drawMouseHoverTile(ctx) {
     let cameraPos = this.camera.position;
-    let offset  = this.getCenterOffset();
+    let offset    = this.getCenterOffset();
 
     ctx.save();
 
@@ -130,8 +125,8 @@ class WorldEditorScene extends Scene {
 
   drawSelection(ctx) {
     let selectedObjects = this.selector.selectedObjects;
-    let cameraPos     = this.camera.position;
-    let offset      = this.getCenterOffset();
+    let cameraPos       = this.camera.position;
+    let offset          = this.getCenterOffset();
 
     // Only draw when there are selected objects
     if (selectedObjects.length > 0) {
@@ -200,17 +195,21 @@ class WorldEditorScene extends Scene {
   }
   
   addCurrentGameObject(x, y) {
-    let entity = this.curEntity;
-    let gameObject = new wfl.core.entities.PhysicsObject();
-    let image = new Image();
-    
-    image.src = entity.data.imageSource;
-    image.onload = function () {
-      gameObject.graphic = image;
-      gameObject.position.x = x;
-      gameObject.position.y = y;
-      this.addGameObject(gameObject);
-    }.bind(this);
+    if (this.curEntity) {
+      let entity     = this.curEntity;
+      let gameObject = new wfl.core.entities.PhysicsObject();
+      let image      = new Image();
+
+      image.src = entity.data.imageSource;
+      image.onload = function () {
+        gameObject.graphic    = image;
+        gameObject.position.x = x;
+        gameObject.position.y = y;
+        this.addGameObject(gameObject);
+        this.selector.clear();
+        this.selector.add(gameObject);
+      }.bind(this);
+    }
   }
 
   handleInput() {

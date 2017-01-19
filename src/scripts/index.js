@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const {ipcRenderer} = require('electron');
 
@@ -6,10 +6,10 @@ const $         = wfl.jquery;
 const WflEditor = require('./scripts/WflEditor');
 
 // Create a new WFL Editor when the window loads
-$(window).on("load", () => new WflEditor());
+$(window).on('load', () => new WflEditor());
 
 // Prevent highlighting elements when dragging on UI
-$(".ui-element-container").on("mousedown", (e) => {
+$('.ui-element-container').on('mousedown', (e) => {
   if (e.stopPropagation) e.stopPropagation();
   if (e.preventDefault)  e.preventDefault();
   e.cancelBubble = true;
@@ -17,18 +17,18 @@ $(".ui-element-container").on("mousedown", (e) => {
   return false;
 });
 
-$(".app-icon").on('click', (e) => {
+$('.app-icon').on('click', (e) => {
   
 });
 
-$(".close").on("click", (e) => {
+$('.close').on('click', (e) => {
   ipcRenderer.send('window-close');
 });
 
-$(".minimize").on("click", (e) => {
+$('.minimize').on('click', (e) => {
   ipcRenderer.send('window-minimize');
 });
 
-$(".maximize").on("click", (e) => {
+$('.maximize').on('click', (e) => {
   ipcRenderer.send('window-maximize');
 });

@@ -15,6 +15,7 @@
 }
 
 .expandable-menu {
+  font-size: 1rem;
 }
 
 .expandable-menu-label {
@@ -84,15 +85,15 @@
   padding: 0 3px;
   overflow: hidden;
   text-overflow: ellipsis;
-  background-color: #aaaaaa;
+  background-color: #bbb;
 }
 
 .menu-item:nth-child(odd) {
-  background-color: #cccccc;
+  background-color: #ccc;
 }
 
 .menu-item.selected {
-  background-color: #cc99cc;
+  background-color: #ddaadd;
 }
 
 .menu-item:hover {

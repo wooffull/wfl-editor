@@ -1,24 +1,15 @@
 "use strict";
 
-const Tool       = require('./Tool');
-const DrawTool   = require('./DrawTool');
-const SelectTool = require('./SelectTool');
-
-const idMap = {
-    DRAW:   "#tool-draw",
-    SELECT: "#tool-select"
-};
-
-const toolMap = {
-    "#tool-draw":   DrawTool,
-    "#tool-select": SelectTool
-};
+const Tool        = require('./Tool');
+const EntityTool  = require('./EntityTool');
+const WorldTool   = require('./WorldTool');
+const ToolBarTool = require('./ToolBarTool');
+const LayerTool   = require('./LayerTool');
 
 module.exports = {
-    Tool:       Tool,
-    DrawTool:   DrawTool,
-    SelectTool: SelectTool,
-
-    ids:        idMap,
-    list:       toolMap
+  Tool:        Tool,
+  EntityTool:  EntityTool,
+  WorldTool:   WorldTool,
+  ToolBarTool: ToolBarTool,
+  LayerTool:   LayerTool
 };

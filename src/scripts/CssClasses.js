@@ -1,6 +1,16 @@
 'use strict';
 
 module.exports = {
+  MATERIAL_ICON: 'material-icons',
+  TOOL: 'tool',
+  
+  SUBWINDOW: 'subwindow',
+  SUBWINDOW_TOOLBAR: 'subwindow-toolbar',
+  SUBWINDOW_VIEW: 'subwindow-view',
+  
+  WORLD_CANVAS: 'world-canvas',
+  TOOL_BAR_TOOL_ICON: 'tool-bar-tool-icon',
+  
   /* Classes for ExpandableMenu */
   EXPANDABLE_MENU: 'expandable-menu',
   EXPANDABLE_MENU_LABEL: 'expandable-menu-label',
