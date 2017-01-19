@@ -29,11 +29,11 @@ class EntityView extends SubwindowView {
     }
     
     this.addEntityEntryBtn = new MenuButton('add_box');
-    this.addEntityEntryBtn.onClick(this.addEntityEntry);
+    this.addEntityEntryBtn.element.on('click', () => this.addEntityEntry());
     this.entitiesMenu.addButton(this.addEntityEntryBtn);
     
     this.removeEntityEntryBtn = new MenuButton('indeterminate_check_box');
-    this.removeEntityEntryBtn.onClick(this.removeEntityEntry);
+    this.removeEntityEntryBtn.element.on('click', () => this.removeEntityEntry());
     this.entitiesMenu.addButton(this.removeEntityEntryBtn);
     
     $(this.entitiesMenu.element).on('click', () => {
@@ -51,7 +51,7 @@ class EntityView extends SubwindowView {
   
   addEntity(entity) {
     let menuItem = new MenuItem(entity.name, entity);
-    this.entitiesMenu.add(menuItem);
+    this.entitiesMenu.append(menuItem);
   }
   
   getSelectedEntity() {

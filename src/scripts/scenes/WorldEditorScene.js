@@ -17,6 +17,7 @@ class WorldEditorScene extends Scene {
     this.keyboard  = keyboard;
     this.tool      = undefined;
     this.curEntity = undefined;
+    this.layerId   = 0;
 
     this.selector = new util.Selector();
     this.tileSize = WorldEditorScene.DEFAULT_TILE_SIZE;
@@ -194,6 +195,29 @@ class WorldEditorScene extends Scene {
     return tilePos;
   }
   
+  addLayer(layerId) {
+    if (!(layerId in this._gameObjectLayers)) {
+      this._gameObjectLayers[layerId] = [];
+    }
+  }
+  
+  removeLayer(layerId) {
+    // Clear the selector so it can't draw a selected entity after it's
+    // been removed with its layer
+    this.selector.clear();
+    
+    if (layerId in this._gameObjectLayers) {
+      let layer = this._gameObjectLayers[layerId].concat();
+
+      for (let gameObject of layer) {
+        this.removeGameObject(gameObject);
+      }
+    
+      this._gameObjectLayers[layerId] = null;
+      delete this._gameObjectLayers[layerId];
+    }
+  }
+  
   addCurrentGameObject(x, y) {
     if (this.curEntity) {
       let entity     = this.curEntity;
@@ -205,7 +229,7 @@ class WorldEditorScene extends Scene {
         gameObject.graphic    = image;
         gameObject.position.x = x;
         gameObject.position.y = y;
-        this.addGameObject(gameObject);
+        this.addGameObject(gameObject, this.layerId);
         this.selector.clear();
         this.selector.add(gameObject);
       }.bind(this);

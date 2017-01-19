@@ -7,7 +7,11 @@ class LayerTool extends Tool {
   constructor() {
     super('layers');
     
-    this.subwindowView = new subwindowViews.SubwindowView();
+    this.subwindowView = new subwindowViews.LayerView();
+  }
+  
+  subwindowInit() {
+    $(this.subwindowView.getSelectedLayer().element).click();
   }
 }
 

@@ -23,6 +23,21 @@ class WflEditor {
       scene.curEntity = entity;
     });
     
+    $(this.layerTool.subwindowView).on('layer-select', (e, layerId) => {
+      let scene = this.worldTool.subwindowView.worldEditorScene;
+      scene.layerId = layerId;
+    });
+    
+    $(this.layerTool.subwindowView).on('layer-add', (e, layerId) => {
+      let scene = this.worldTool.subwindowView.worldEditorScene;
+      scene.addLayer(layerId);
+    });
+    
+    $(this.layerTool.subwindowView).on('layer-remove', (e, layerId) => {
+      let scene = this.worldTool.subwindowView.worldEditorScene;
+      scene.removeLayer(layerId);
+    });
+    
     // Create subwindows
     this.toolSubwindow = new Subwindow();
     this.toolSubwindow.element[0].id = 'tool-bar-subwindow';

@@ -19,14 +19,6 @@ class MenuButton extends HtmlElement {
     
     this.element.append(this.icon);
   }
-  
-  onClick(handler) {
-    this.element.on('click', handler);
-  }
-  
-  getElement() {
-    return this.element;
-  }
 }
 
 module.exports = MenuButton;

@@ -16,6 +16,8 @@ class ExpandableMenu extends HtmlElement {
     this._previewWindow = new PreviewWindow();
     this._previewWindow.hide();
     
+    this.length = 0;
+    
     this.label = $("<span>");
     this.label.html(label);
     this.label.addClass(CssClass.EXPANDABLE_MENU_LABEL);
@@ -36,28 +38,60 @@ class ExpandableMenu extends HtmlElement {
     this.element.append(this._previewWindow.element);
     
     this.element.on('mousemove', (e) => this._onMouseMove(e));
-    this.element.on('mouseout', (e) => this._onMouseOut(e));
+    this.element.on('mouseout',  (e) => this._onMouseOut(e));
   }
   
-  add(htmlElement) {
+  prepend(htmlElement) {
+    this._addElement(htmlElement);
+    this.mainInterior.prepend(htmlElement.element);
+  }
+  
+  append(htmlElement) {
+    this._addElement(htmlElement);
+    this.mainInterior.append(htmlElement.element);
+  }
+  
+  remove(htmlElement) {
+    if (typeof htmlElement === 'undefined') {
+      htmlElement = this._lastSelected;
+    }
+    
+    if ($.contains(this.mainInterior[0], htmlElement.element[0])) {
+      if (htmlElement === this._lastSelected) {
+        let sibling = htmlElement.element.next();
+
+        if (sibling.length === 0) {
+          sibling = htmlElement.element.prev();
+        }
+        
+        // Select the sibling to switch this._lastSelected to it
+        sibling.click();
+      }
+      
+      htmlElement.element.remove();
+      this.length--;
+    }
+  }
+  
+  addButton(button) {
+    this.element.prepend(button.element);
+  }
+  
+  getLastSelected() {
+    return this._lastSelected;
+  }
+  
+  _addElement(htmlElement) {
     htmlElement.element.on('click',     () => this._onItemSelect(htmlElement));
     htmlElement.element.on('mouseover', () => this._onItemHover(htmlElement));
     htmlElement.element.on('mouseout',  () => this._onItemLeave(htmlElement));
-    
-    this.mainInterior.append(htmlElement.element);
     
     // Select the first item added
     if (this._lastSelected === null) {
       htmlElement.element.click();
     }
-  }
-  
-  addButton(button) {
-    this.element.prepend(button.getElement());
-  }
-  
-  getLastSelected() {
-    return this._lastSelected;
+    
+    this.length++;
   }
   
   _onMouseMove(e) {
@@ -86,15 +120,17 @@ class ExpandableMenu extends HtmlElement {
     let elemWidth    = htmlElement.element.outerWidth();
     let elemPosition = htmlElement.element.position();
     
-    // Show the element's image in the preview window
-    this._previewWindow.setImageSource(htmlElement.data.imageSource);
-    this._previewWindow.show();
-    
-    // Move the preview window to the right of the menu item in the list
-    this._previewWindow.element.css({
-      left: elemPosition.left + elemWidth,
-      top: elemPosition.top,
-    });
+    if (htmlElement.data && htmlElement.data.imageSource) {
+      // Show the element's image in the preview window
+      this._previewWindow.setImageSource(htmlElement.data.imageSource);
+      this._previewWindow.show();
+
+      // Move the preview window to the right of the menu item in the list
+      this._previewWindow.element.css({
+        left: elemPosition.left + elemWidth,
+        top: elemPosition.top,
+      });
+    }
     
     this._lastHovered = htmlElement;
   }

@@ -5,7 +5,7 @@ const subwindowViews = require('../subwindowViews');
 
 class WorldTool extends Tool {
   constructor() {
-    super('web_asset');
+    super('terrain');
     
     this.subwindowView = new subwindowViews.WorldView();
   }
