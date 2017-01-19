@@ -23,6 +23,13 @@ class WorldView extends SubwindowView {
     this.element = $(this.canvas);
   }
   
+  reset() {
+    this.worldEditorScene.reset();
+    this.worldEditorScene.camera.zoom = 1;
+    this.worldEditorScene.camera.position.x = 0;
+    this.worldEditorScene.camera.position.y = 0;
+  }
+  
   resize(e) {
     let parent  = this.element.parent().parent();
     let toolbar = parent.find('.' + CssClasses.SUBWINDOW_TOOLBAR);

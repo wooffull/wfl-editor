@@ -15,6 +15,12 @@ class Tool extends HtmlElement {
     this.element.addClass(CssClasses.TOOL);
   }
   
+  reset() {
+    if (this.subwindowView) {
+      this.subwindowView.reset();
+    }
+  }
+  
   /**
    * This init happens some time after the constructor is called.
    * It's intended to be called whenever a tool is added to a subwindow.

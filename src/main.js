@@ -37,7 +37,7 @@ function createWindow() {
 
   // Open the DevTools.
   win.webContents.openDevTools();
-
+  
   // Emitted when the window is closed.
   win.on('closed', () => {
     // Dereference the window object, usually you would store windows
@@ -45,6 +45,9 @@ function createWindow() {
     // when you should delete the corresponding element.
     win = null;
   });
+  
+  // Create a new project on start-up
+  file.Project.reset(win);
 }
 
 
@@ -90,4 +93,20 @@ ipcMain.on('window-maximize', () => {
   } else {
     win.maximize();   
   }
+});
+
+ipcMain.on('project-new', () => {
+  file.Project.reset(win);
+});
+
+ipcMain.on('project-save', () => {
+  file.Project.save();
+});
+
+ipcMain.on('project-save-as', () => {
+  file.Project.saveAs();
+});
+
+ipcMain.on('project-load', () => {
+  file.Project.load();
 });

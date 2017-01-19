@@ -10,7 +10,7 @@ function createToolData(type) {
     classReference:    classMap[type],
     materialIconLabel: materialIconLabels[type]
   };
-};
+}
 
 const classMap = {
   DRAW:   DrawTool,

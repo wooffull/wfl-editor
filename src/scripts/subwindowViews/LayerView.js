@@ -19,12 +19,25 @@ class LayerView extends SubwindowView {
     this.layersMenu.addButton(this.addLayerBtn);
     
     this.removeLayerBtn = new MenuButton('indeterminate_check_box');
-    this.removeLayerBtn.element.on('click', () => this.removeLayer());
+    this.removeLayerBtn.element.on('click', () => {
+      if (this.layersMenu.length > 1) {
+        this.removeLayer();
+      }
+    });
     this.layersMenu.addButton(this.removeLayerBtn);
     
     this._layerCount = 0;
     
     // Add layer0 immediately
+    this.addLayer();
+  }
+  
+  reset() {
+    while (this.getSelectedLayer()) {
+      this.removeLayer();
+    }
+    
+    this._layerCount = 0;
     this.addLayer();
   }
   
@@ -41,10 +54,8 @@ class LayerView extends SubwindowView {
   }
   
   removeLayer() {
-    if (this.layersMenu.length > 1) {
-      $(this).trigger('layer-remove', this.getSelectedLayer().element.html());
-      this.layersMenu.remove(this.getSelectedLayer());
-    }
+    $(this).trigger('layer-remove', this.getSelectedLayer().element.html());
+    this.layersMenu.remove(this.getSelectedLayer());
   }
   
   getSelectedLayer() {

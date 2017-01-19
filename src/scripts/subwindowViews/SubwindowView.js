@@ -14,6 +14,8 @@ class SubwindowView extends HtmlElement {
     this.element.remove();
   }
   
+  reset() {}
+  
   add(htmlElement) {
     this.element.append(htmlElement.element);
   }

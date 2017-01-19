@@ -10,6 +10,7 @@ html, body {
   width: 100vw;
   height: 100vh;
   margin: 0;
+  overflow: hidden;
   
   -webkit-app-region: no-drag;
   -webkit-user-select: none;
@@ -40,14 +41,17 @@ button {
   cursor: default;
 }
 
-.toolbar-window-controls {
-  height: 26px;
+.toolbar-window-controls, .toolbar-menu {
   background-color: #3c3c3c;
-  
-  -webkit-app-region: drag;
   
   /* Ensure there's no white-space between the buttons */
   font-size: 0px;
+  
+}
+
+.toolbar-window-controls {
+  height: 26px;
+  -webkit-app-region: drag;
 }
 
 .close {
@@ -85,6 +89,24 @@ button {
 }
 
 /**
+ * TOOLBAR MENU
+ */
+.toolbar-menu {
+  height: 22px;
+  color: #ccc;
+}
+
+.toolbar-menu > span {
+  font-size: 12px;
+  padding: 2px 8px;
+  cursor: default;
+}
+
+.toolbar-menu > span:hover {
+  background-color: #222;
+}
+
+/**
  * MAIN SECTIONS
  */
 #top-icon-container {
@@ -93,7 +115,8 @@ button {
 
 #subwindow-container {
   /* -26px for .toolbar-window-controls */
-  height: calc(100vh - 26px - 25vh);
+  /* -22px for .toolbar-menu */
+  height: calc(100vh - 26px - 22px - 25vh);
 }
 
 .ui-element-container {
