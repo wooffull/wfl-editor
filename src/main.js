@@ -80,7 +80,7 @@ app.on('activate', () => {
 
 // Set up listeners on renderer
 ipcMain.on('window-close', () => {
-  win.close();
+  file.Project.confirmSavedChanges(() => win.close());
 });
 
 ipcMain.on('window-minimize', () => {
@@ -109,4 +109,7 @@ ipcMain.on('project-save-as', () => {
 
 ipcMain.on('project-load', () => {
   file.Project.load();
+});
+
+ipcMain.on('game-export', () => {
 });

@@ -173,8 +173,10 @@ function sendProjectUpdate() {
 
 
 module.exports = {
-  reset:  newProject,
-  save:   saveProject,
-  saveAs: saveAsProject,
-  load:   loadProject
+  reset:               newProject,
+  save:                saveProject,
+  saveAs:              saveAsProject,
+  load:                loadProject,
+  hasChanges:          hasChanges,
+  confirmSavedChanges: confirmSavedChanges
 };

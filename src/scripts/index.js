@@ -67,6 +67,14 @@ const fileMenuTemplate = [
     type: 'separator'
   },
   {
+    label: 'Export Game',
+    role: 'export',
+    click: () => ipcRenderer.send('game-export')
+  },
+  {
+    type: 'separator'
+  },
+  {
     label: 'Exit',
     accelerator: 'Ctrl+Q',
     role: 'exit',
