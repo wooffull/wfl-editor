@@ -31,11 +31,13 @@ $('.maximize').on('click', () => ipcRenderer.send('window-maximize'));
 
 // Listener for when project updates are received
 ipcRenderer.on('project-update', (e, msg) => {
+  let projectTitle = msg.title;
+  
   if (typeof msg.title === 'undefined') {
-    msg.title = 'untitled';
+    projectTitle = 'untitled';
   }
   
-  $('#project-title').html(msg.title);
+  $('#project-title').html(projectTitle);
   
   editor.projectUpdate(msg);
 });

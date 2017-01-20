@@ -87,7 +87,8 @@ class FileList extends HtmlElement {
     
     this._lastSelected = undefined;
     this.rootPath      = undefined;
-    this.rootFileItem  = new FileListItem('untitled');
+    this.rootFileItem  = new FileListItem();
+    this.rootFileItem.addFile('project.wfl');
     this.rootFileItem.expand();
     this.append(this.rootFileItem);
   }
@@ -97,9 +98,7 @@ class FileList extends HtmlElement {
   }
   
   update() {
-    if (typeof this.rootPath === 'undefined') {
-      this.rootFileItem.setTitle('untitled');
-    } else {
+    if (typeof this.rootPath !== 'undefined') {
       this.rootFileItem.setTitle(path.basename(this.rootPath));
       this.rootFileItem.setFilepath(this.rootPath);
     }

@@ -10,7 +10,7 @@ class FileListItem extends HtmlElement {
   constructor(filepath) {
     super();
     
-    this.isFolder      = path.extname(filepath) === '';
+    this.isFolder      = (typeof filepath === 'undefined') || path.extname(filepath) === '';
     this.filepath      = filepath;
     this.files         = undefined;
     this.expanded      = undefined;
@@ -49,7 +49,12 @@ class FileListItem extends HtmlElement {
       this.folderWrapper.hide();
     }
     
-    this.setTitle(path.basename(filepath));
+    if (typeof filepath === 'undefined') {
+      this.setTitle('untitled');  
+    } else {
+      this.setTitle(path.basename(filepath));
+    }
+    
     this.setDepth(this.depth);
   }
   
@@ -115,7 +120,7 @@ class FileListItem extends HtmlElement {
   
   update() {
     if (this.isFolder && this.expanded) {
-      if (this.filepath == 'untitled') {
+      if (typeof this.filepath === 'undefined') {
         return;
       }
       

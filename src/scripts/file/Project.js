@@ -20,7 +20,7 @@ function confirmSavedChanges(forcedNext) {
   // If changes were made, ask the user if they want to save the project before
   // closing this one
   if (hasChanges()) {
-    dialog.showMessageBox({
+    dialog.showMessageBox(win, {
       type:    'question',
       title:   'Save Changes?',
       buttons: ['Yes', 'No', 'Cancel'],
@@ -74,7 +74,7 @@ function saveAsProject(next) {
   let projectJson  = JSON.stringify(project, null, '  ');
   let projectsPath = path.join(basePath, 'projects');
   
-  dialog.showSaveDialog({
+  dialog.showSaveDialog(win, {
     title:       'Save Project',
     defaultPath: projectsPath
   },
@@ -137,7 +137,7 @@ function loadProject(projectTitle = 'test', _preventConfirmation = false) {
   
   let projectsPath = path.join(basePath, 'projects');
   
-  dialog.showOpenDialog({
+  dialog.showOpenDialog(win, {
     title:       'Open Project',
     defaultPath: projectsPath,
     filters:     [
