@@ -18,7 +18,7 @@ class ExpandableMenu extends HtmlElement {
     
     this.length = 0;
     
-    this.label = $("<span>");
+    this.label = $("<div>");
     this.label.html(label);
     this.label.addClass(CssClass.EXPANDABLE_MENU_LABEL);
     
@@ -56,6 +56,10 @@ class ExpandableMenu extends HtmlElement {
       htmlElement = this._lastSelected;
     }
     
+    if (typeof htmlElement === 'undefined') {
+      return;
+    }
+    
     if ($.contains(this.mainInterior[0], htmlElement.element[0])) {
       if (htmlElement === this._lastSelected) {
         let sibling = htmlElement.element.next();
@@ -70,6 +74,10 @@ class ExpandableMenu extends HtmlElement {
       
       htmlElement.element.remove();
       this.length--;
+    }
+    
+    if (this.length === 0) {
+      this._lastSelected = null;
     }
   }
   

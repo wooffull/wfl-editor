@@ -8,7 +8,8 @@ const {remote}         = require('electron');
 const {Menu, MenuItem} = remote;
 
 // Create a new WFL Editor when the window loads
-$(window).on('load', () => new WflEditor());
+let editor;
+$(window).on('load', () => editor = new WflEditor());
 
 // Prevent highlighting elements when dragging on UI
 $('.ui-element-container').on('mousedown', (e) => {
@@ -35,6 +36,8 @@ ipcRenderer.on('project-update', (e, msg) => {
   }
   
   $('#project-title').html(msg.title);
+  
+  editor.projectUpdate(msg);
 });
 
 
@@ -47,21 +50,21 @@ const fileMenuTemplate = [
     click: () => ipcRenderer.send('project-new')
   },
   {
+    label: 'Open...',
+    role: 'open',
+    click: () => ipcRenderer.send('project-load')
+  },
+  {
     label: 'Save',
     accelerator: 'Ctrl+S',
     role: 'save',
     click: () => ipcRenderer.send('project-save')
   },
   {
-    label: 'Save As',
+    label: 'Save As...',
     accelerator: 'Ctrl+Shift+S',
     role: 'save as',
     click: () => ipcRenderer.send('project-save-as')
-  },
-  {
-    label: 'Load',
-    role: 'load',
-    click: () => ipcRenderer.send('project-load')
   },
   {
     type: 'separator'

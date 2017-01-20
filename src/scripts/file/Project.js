@@ -178,5 +178,7 @@ module.exports = {
   saveAs:              saveAsProject,
   load:                loadProject,
   hasChanges:          hasChanges,
-  confirmSavedChanges: confirmSavedChanges
+  confirmSavedChanges: confirmSavedChanges,
+  
+  getProject:          () => project
 };

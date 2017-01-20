@@ -27,6 +27,12 @@ class Tool extends HtmlElement {
    * This late init is intended for catching events after construction.
    */
   subwindowInit() {}
+  
+  /**
+   * This update is called when something significant changes in the project,
+   * like loading a new project
+   */
+  projectUpdate(project) {}
 }
 
 module.exports = Tool;

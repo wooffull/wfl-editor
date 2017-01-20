@@ -7,10 +7,11 @@ const tools       = require('./tools');
 class WflEditor {
   constructor() {
     // Create tools
-    this.toolBarTool = new tools.ToolBarTool();
-    this.entityTool  = new tools.EntityTool();
-    this.worldTool   = new tools.WorldTool();
-    this.layerTool   = new tools.LayerTool();
+    this.toolBarTool      = new tools.ToolBarTool();
+    this.fileExplorerTool = new tools.FileExplorerTool();
+    this.entityTool       = new tools.EntityTool();
+    this.worldTool        = new tools.WorldTool();
+    this.layerTool        = new tools.LayerTool();
     
     // Set up listeners for tools
     $(this.toolBarTool.subwindowView).on('icon-click', (e, toolData) => {
@@ -45,6 +46,7 @@ class WflEditor {
     
     this.componentSubwindow = new Subwindow();
     this.componentSubwindow.element[0].id = 'component-subwindow';
+    this.componentSubwindow.addTool(this.fileExplorerTool);
     this.componentSubwindow.addTool(this.entityTool);
     
     this.primarySubwindow = new Subwindow();
@@ -66,6 +68,13 @@ class WflEditor {
     this.subwindows.push(this.primarySubwindow);
     this.subwindows.push(this.secondarySubwindow);
     
+    this.tools = [];
+    this.tools.push(this.toolBarTool);
+    this.tools.push(this.fileExplorerTool);
+    this.tools.push(this.entityTool);
+    this.tools.push(this.worldTool);
+    this.tools.push(this.layerTool);
+    
     // Resize main editor's canvas when window resizes
     $(window).on("resize", () => this.onResize());
 
@@ -76,6 +85,13 @@ class WflEditor {
   onResize(e) {
     for (const subwindow of this.subwindows) {
       subwindow.resize(e);
+    }
+  }
+  
+  projectUpdate(project) {
+    for (const tool of this.tools) {
+      tool.reset();
+      tool.projectUpdate(project);
     }
   }
 }

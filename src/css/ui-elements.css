@@ -18,7 +18,7 @@
   font-size: 1rem;
 }
 
-.expandable-menu-label {
+.expandable-menu-label, .file-explorer-label {
   font-size: 0.9em;
   color: #ccc;
 }
@@ -92,11 +92,11 @@
   background-color: #ccc;
 }
 
-.menu-item.selected {
+.menu-item.selected, .file-list-item.selected {
   background-color: #ddaadd;
 }
 
-.menu-item:hover {
+.menu-item:hover, .file-list-label-wrapper:hover {
   background-color: #f3e6f3;
 }
 
@@ -122,6 +122,46 @@
 .image-container > img {
   display: block;
   margin: auto;
+}
+
+
+
+
+
+.file-explorer {
+  font-size: 1rem;
+}
+
+.file-explorer-main-interior {
+  background-color: #999999;
+  min-height: 100px;
+  border-radius: 2px;
+  height: 100%;
+  max-height: 400px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.file-explorer-folder-ul {
+  padding: 0;
+}
+
+.file-list-item {
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background-color: #bbb;
+  white-space: pre;
+}
+
+.file-list-label.folder::before {
+  content: "▸";
+}
+
+.file-list-label.folder.expanded::before {
+  content: "▾";
 }
 
 
