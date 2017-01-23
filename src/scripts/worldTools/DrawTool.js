@@ -39,6 +39,7 @@ class DrawTool extends WorldTool {
       keyboard.isPressed(keyboard.SHIFT)) {
 
       this.selectTool.leftDown();
+      this.clickedSelection = this.selectTool.clickedSelection;
 
     // Clicked on an empty spot on the canvas, so add the new game
     // object there
@@ -79,13 +80,19 @@ class DrawTool extends WorldTool {
     }
 
     this.clickedSelection = false;
+    this.selectTool.clickedSelection = false;
   }
 
   rightDown() {
-    let keyboard      = this.editor.keyboard;
-    let mouse         = this.editor.mouse;
-    let mouseWorldPos = this.editor.convertPagePosToWorldPos(mouse.position);
-    let clickObj      = this.editor.find(mouseWorldPos.x, mouseWorldPos.y);
+    let keyboard       = this.editor.keyboard;
+    let mouse          = this.editor.mouse;
+    let mouseWorldPos  = this.editor.convertPagePosToWorldPos(mouse.position);
+    let clickObj       = this.editor.find(mouseWorldPos.x, mouseWorldPos.y);
+    let leftMouseState = mouse.getState(1);
+    
+    if (leftMouseState.isDown) {
+      return;
+    }
 
     // Holding Shift with the draw tool is a shortcut for the
     // Select tool
@@ -95,7 +102,7 @@ class DrawTool extends WorldTool {
     } else {
       // Clicked an object, so remove it
       if (clickObj) {
-        this.editor.removeGameObject(clickObj);
+        this.editor.removeGameObject(clickObj, clickObj.layer);
       }
     }
   }
@@ -103,7 +110,6 @@ class DrawTool extends WorldTool {
   mouseMove() {
     let keyboard = this.editor.keyboard;
     let mouse    = this.editor.mouse;
-    let selector = this.editor.selector;
     let zoom     = this.editor.camera.zoom;
 
     // Holding Shift with the draw tool is a shortcut for the
@@ -113,19 +119,16 @@ class DrawTool extends WorldTool {
 
       let leftMouseState = mouse.getState(1);
       if (leftMouseState.dragging) {
-        selector.pan(
-          (leftMouseState.dragEnd.x - leftMouseState.prevPos.x) / zoom,
-          (leftMouseState.dragEnd.y - leftMouseState.prevPos.y) / zoom
-        );
+        let dx = (leftMouseState.dragEnd.x - leftMouseState.prevPos.x) / zoom;
+        let dy = (leftMouseState.dragEnd.y - leftMouseState.prevPos.y) / zoom;
+        this.editor.panSelection(dx, dy);
       }
     }
   }
 
   pan(dx, dy) {
-    let selector = this.editor.selector;
-
     if (this.clickedSelection) {
-      selector.pan(dx, dy);
+      this.editor.panSelection(dx, dy);
     }
   }
 }

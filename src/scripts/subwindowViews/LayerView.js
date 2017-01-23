@@ -6,6 +6,7 @@ const {ExpandableMenu,
        MenuItem,
        MenuButton}     = require('../ui');
 const {Entity}         = require('../world');
+const {Action}         = require('../tools');
 
 class LayerView extends SubwindowView {
   constructor() {
@@ -20,7 +21,7 @@ class LayerView extends SubwindowView {
     
     this.removeLayerBtn = new MenuButton('indeterminate_check_box');
     this.removeLayerBtn.element.on('click', () => {
-      if (this.layersMenu.length > 1) {
+      if (this.layersMenu.list.length > 1) {
         this.removeLayer();
       }
     });
@@ -33,9 +34,7 @@ class LayerView extends SubwindowView {
   }
   
   reset() {
-    while (this.getSelectedLayer()) {
-      this.removeLayer();
-    }
+    this.layersMenu.clear();
     
     this._layerCount = 0;
     this.addLayer();
@@ -46,18 +45,32 @@ class LayerView extends SubwindowView {
     this.layersMenu.prepend(menuItem);
     
     $(menuItem.element).on('click', () => {
-      $(this).trigger('layer-select', this.getSelectedLayer().element.html());
+      this.perform(
+        Action.Type.LAYER_SELECT,
+        this.getSelectedLayer().element.html(),
+        false
+      );
     });
-    
-    this._layerCount++;
-    $(this).trigger('layer-add', this.getSelectedLayer().element.html());
     
     // Select the new layer
     $(menuItem.element).click();
+    
+    // If it's the first layer, the action cannot be undone
+    let isFirstLayer = this._layerCount === 0;
+    
+    this._layerCount++;
+    this.perform(
+      Action.Type.LAYER_ADD,
+      this.getSelectedLayer().element.html(),
+      !isFirstLayer
+    );
   }
   
   removeLayer() {
-    $(this).trigger('layer-remove', this.getSelectedLayer().element.html());
+    this.perform(
+      Action.Type.LAYER_REMOVE,
+      this.getSelectedLayer().element.html()
+    );
     this.layersMenu.remove(this.getSelectedLayer());
   }
   

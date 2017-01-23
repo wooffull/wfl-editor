@@ -6,7 +6,7 @@ const path        = require('path');
 const HtmlElement = require('./HtmlElement');
 const CssClass    = require('../CssClasses');
 
-class FileListItem extends HtmlElement {
+class FileMenuItem extends HtmlElement {
   constructor(filepath) {
     super();
     
@@ -21,9 +21,9 @@ class FileListItem extends HtmlElement {
     
     this.labelSpacing = $('<span>');
     this.label = $('<span>');
-    this.label.addClass(CssClass.FILE_LIST_LABEL);
+    this.label.addClass(CssClass.FILE_MENU_LABEL);
     this.labelWrapper = $('<div>');
-    this.labelWrapper.addClass(CssClass.FILE_LIST_LABEL_WRAPPER);
+    this.labelWrapper.addClass(CssClass.FILE_MENU_LABEL_WRAPPER);
     this.labelWrapper.append(this.labelSpacing);
     this.labelWrapper.append(this.label);
     $(this.labelWrapper).on('click', () => {
@@ -32,7 +32,7 @@ class FileListItem extends HtmlElement {
     });
     
     this.element = $('<li>');
-    this.element.addClass(CssClass.FILE_LIST_ITEM);
+    this.element.addClass(CssClass.FILE_MENU_ITEM);
     this.element.append(this.labelWrapper);
     
     if (this.isFolder) {
@@ -41,9 +41,9 @@ class FileListItem extends HtmlElement {
       this.folderWrapper = $('<div>');
       this.folderUl      = $('<ul>');
       
-      this.folderWrapper.addClass(CssClass.FILE_LIST_FOLDER_WRAPPER);
-      this.folderUl.addClass(CssClass.FILE_LIST_FOLDER_UL);
-      this.label.addClass(CssClass.FILE_LIST_FOLDER);
+      this.folderWrapper.addClass(CssClass.FILE_MENU_FOLDER_WRAPPER);
+      this.folderUl.addClass(CssClass.FILE_MENU_FOLDER_UL);
+      this.label.addClass(CssClass.FILE_MENU_FOLDER);
       this.folderWrapper.append(this.folderUl);
       this.element.append(this.folderWrapper);
       this.folderWrapper.hide();
@@ -86,7 +86,7 @@ class FileListItem extends HtmlElement {
   
   addFile(filepath, _allowUpdate = true) {
     if (this.isFolder) {
-      let fileItem = new FileListItem(filepath);
+      let fileItem = new FileMenuItem(filepath);
       fileItem.rootFile = this.rootFile;
       fileItem.setDepth(this.depth + 1);
       this.files.push(fileItem);
@@ -181,4 +181,4 @@ class FileListItem extends HtmlElement {
   }
 }
 
-module.exports = FileListItem;
+module.exports = FileMenuItem;

@@ -4,6 +4,7 @@ const $             = wfl.jquery;
 const SubwindowView = require('./SubwindowView');
 const CssClasses    = require('../CssClasses');
 const worldTools    = require('../worldTools');
+const {Action}      = require('../tools');
 
 class ToolBarView extends SubwindowView {
   constructor() {
@@ -27,7 +28,11 @@ class ToolBarView extends SubwindowView {
         
         $(this._currentToolIcon).addClass('selected');
         
-        $(this).trigger('icon-click', toolData[key]);
+        this.perform(
+          Action.Type.MAIN_TOOL_SELECT,
+          toolData[key],
+          false
+        );
       });
       this._toolIcons.push(toolIcon);
     }

@@ -92,11 +92,11 @@
   background-color: #ccc;
 }
 
-.menu-item.selected, .file-list-item.selected {
+.menu-item.selected, .file-menu-item.selected {
   background-color: #ddaadd;
 }
 
-.menu-item:hover, .file-list-label-wrapper:hover {
+.menu-item:hover, .file-menu-label-wrapper:hover {
   background-color: #f3e6f3;
 }
 
@@ -148,7 +148,7 @@
   padding: 0;
 }
 
-.file-list-item {
+.file-menu-item {
   font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -156,11 +156,11 @@
   white-space: pre;
 }
 
-.file-list-label.folder::before {
+.file-menu-label.folder::before {
   content: "▸";
 }
 
-.file-list-label.folder.expanded::before {
+.file-menu-label.folder.expanded::before {
   content: "▾";
 }
 

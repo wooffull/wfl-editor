@@ -4,15 +4,15 @@ const $            = wfl.jquery;
 const path         = require('path');
 const HtmlElement  = require('./HtmlElement');
 const CssClass     = require('../CssClasses');
-const FileListItem = require('./FileListItem');
+const FileMenuItem = require('./FileMenuItem');
 
-class FileList extends HtmlElement {
+class FileMenu extends HtmlElement {
   constructor(label = 'Menu') {
     super();
     
     this._lastSelected = undefined;
     
-    this.length = 0;
+    this.list = [];
     
     this.label = $("<div>");
     this.label.html(label);
@@ -63,12 +63,14 @@ class FileList extends HtmlElement {
         // Select the sibling to switch this._lastSelected to it
         sibling.click();
       }
-      
-      htmlElement.element.remove();
-      this.length--;
     }
+
+    let index = this.list.indexOf(htmlElement);
+    if (index > -1) this.list.splice(index, 1);
+
+    htmlElement.element.remove();
     
-    if (this.length === 0) {
+    if (this.list.length === 0) {
       this._lastSelected = undefined;
     }
   }
@@ -79,7 +81,8 @@ class FileList extends HtmlElement {
       this._lastSelected = this.rootFileItem;
     }
     
-    while(this.length > 0) {
+    while(this.list.length > 0) {
+      this._lastSelected = this.list[0];
       this.remove();
     }
     
@@ -87,7 +90,7 @@ class FileList extends HtmlElement {
     
     this._lastSelected = undefined;
     this.rootPath      = undefined;
-    this.rootFileItem  = new FileListItem();
+    this.rootFileItem  = new FileMenuItem();
     this.rootFileItem.addFile('project.wfl');
     this.rootFileItem.expand();
     this.append(this.rootFileItem);
@@ -112,17 +115,17 @@ class FileList extends HtmlElement {
       this._onItemSelect(htmlElement);
     }
     
-    this.length++;
+    this.list.push(htmlElement);
   }
   
   _onItemSelect(htmlElement) {
     if (this._lastSelected) {
-      this._lastSelected.element.toggleClass('selected');
+      this._lastSelected.element.removeClass('selected');
     }
     
-    htmlElement.element.toggleClass('selected');
+    htmlElement.element.addClass('selected');
     this._lastSelected = htmlElement;
   }
 }
 
-module.exports = FileList;
+module.exports = FileMenu;

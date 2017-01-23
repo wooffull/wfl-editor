@@ -5,9 +5,7 @@ const subwindowViews = require('../subwindowViews');
 
 class LayerTool extends Tool {
   constructor() {
-    super('layers');
-    
-    this.subwindowView = new subwindowViews.LayerView();
+    super('layers', new subwindowViews.LayerView());
   }
   
   subwindowInit() {

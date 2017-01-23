@@ -9,14 +9,14 @@ class ExpandableMenu extends HtmlElement {
   constructor(label = 'Menu') {
     super();
     
-    this._lastSelected = null;
-    this._lastHovered  = null;
+    this._lastSelected = undefined;
+    this._lastHovered  = undefined;
     this._mousePos     = {x: 0, y: 0};
     
     this._previewWindow = new PreviewWindow();
     this._previewWindow.hide();
     
-    this.length = 0;
+    this.list = [];
     
     this.label = $("<div>");
     this.label.html(label);
@@ -71,14 +71,26 @@ class ExpandableMenu extends HtmlElement {
         // Select the sibling to switch this._lastSelected to it
         sibling.click();
       }
+    }
       
-      htmlElement.element.remove();
-      this.length--;
+    let index = this.list.indexOf(htmlElement);
+    if (index > -1) this.list.splice(index, 1);
+      
+    htmlElement.element.remove();
+    
+    if (this.list.length === 0) {
+      this._lastSelected = undefined;
+    }
+  }
+  
+  clear() {
+    while(this.list.length > 0) {
+      this._lastSelected = this.list[0];
+      this.remove();
     }
     
-    if (this.length === 0) {
-      this._lastSelected = null;
-    }
+    this.mainInterior.html('');
+    this._lastSelected = undefined;
   }
   
   addButton(button) {
@@ -95,11 +107,11 @@ class ExpandableMenu extends HtmlElement {
     htmlElement.element.on('mouseout',  () => this._onItemLeave(htmlElement));
     
     // Select the first item added
-    if (this._lastSelected === null) {
-      htmlElement.element.click();
+    if (this._lastSelected === undefined) {
+      this._onItemSelect(htmlElement);
     }
     
-    this.length++;
+    this.list.push(htmlElement);
   }
   
   _onMouseMove(e) {
@@ -112,15 +124,15 @@ class ExpandableMenu extends HtmlElement {
     this._mousePos.y = 0;
     
     this._previewWindow.hide();
-    this._previewWindow.setImage(null);
+    this._previewWindow.setImage(undefined);
   }
   
   _onItemSelect(htmlElement) {
     if (this._lastSelected) {
-      this._lastSelected.element.toggleClass('selected');
+      this._lastSelected.element.removeClass('selected');
     }
     
-    htmlElement.element.toggleClass('selected');
+    htmlElement.element.addClass('selected');
     this._lastSelected = htmlElement;
   }
   
@@ -145,7 +157,7 @@ class ExpandableMenu extends HtmlElement {
   
   _onItemLeave(htmlElement) {
     if (htmlElement === this._lastHovered) {
-      this._lastHovered = null;
+      this._lastHovered = undefined;
     }
   }
   

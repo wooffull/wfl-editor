@@ -3,28 +3,28 @@
 const $             = wfl.jquery;
 const SubwindowView = require('./SubwindowView');
 const CssClasses    = require('../CssClasses');
-const {FileList}    = require('../ui');
+const {FileMenu}    = require('../ui');
 
 class FileExplorerView extends SubwindowView {
   constructor() {
     super();
     
-    this.fileList = new FileList('Project Explorer');
-    this.add(this.fileList);
+    this.FileMenu = new FileMenu('Project Explorer');
+    this.add(this.FileMenu);
   }
   
   reset() {
-    this.fileList.clear();
+    this.FileMenu.clear();
   }
   
   setRoot(filepath) {
     // The root has changed, so recreate the entire file list
-    if (this.fileList.rootPath !== filepath) {
-      this.fileList.clear();
-      this.fileList.rootPath = filepath;
+    if (this.FileMenu.rootPath !== filepath) {
+      this.FileMenu.clear();
+      this.FileMenu.rootPath = filepath;
     }
     
-    this.fileList.update();
+    this.FileMenu.update();
   }
 }
 

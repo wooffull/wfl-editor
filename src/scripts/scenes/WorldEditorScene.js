@@ -1,14 +1,16 @@
 "use strict";
 
-const $          = wfl.jquery;
-const geom       = wfl.geom;
-const input      = wfl.input;
-const Mouse      = input.Mouse;
-const Scene      = wfl.display.Scene;
-const worldTools = require('../worldTools');
-const util       = require('../util');
+const $           = wfl.jquery;
+const geom        = wfl.geom;
+const input       = wfl.input;
+const Mouse       = input.Mouse;
+const Scene       = wfl.display.Scene;
+const {Action}    = require('../tools');
+const EditorScene = require('./EditorScene');
+const worldTools  = require('../worldTools');
+const util        = require('../util');
 
-class WorldEditorScene extends Scene {
+class WorldEditorScene extends EditorScene {
   constructor(canvas, mouse, keyboard) {
     super(canvas);
 
@@ -23,6 +25,17 @@ class WorldEditorScene extends Scene {
     this.tileSize = WorldEditorScene.DEFAULT_TILE_SIZE;
     
     this.camera.zoom = WorldEditorScene.DEFAULT_SCALE;
+    
+    // Increments every time an entity is added -- used for IDs
+    this._entityCounter = 0;
+    
+    // Used to send out action data for panning entites only when the
+    // action is ready (mouse up)
+    this._panActionData = {dx: 0, dy: 0};
+    
+    // Used to send out action data for adding entities only when the
+    // action is ready (mouse up)
+    this._addEntityActionData = {gameObject: undefined, layerId: undefined};
 
     // Set up listeners
     $(this.mouse).on(Mouse.Event.MOVE,      ($e, e) => this.onMouseMove(e));
@@ -45,6 +58,7 @@ class WorldEditorScene extends Scene {
     this.camera.position.x = 0;
     this.camera.position.y = 0;
     this.camera.zoom       = WorldEditorScene.DEFAULT_SCALE;
+    this._entityCounter    = 0;
   }
 
   update(dt) {
@@ -210,7 +224,9 @@ class WorldEditorScene extends Scene {
       let layer = this._gameObjectLayers[layerId].concat();
 
       for (let gameObject of layer) {
-        this.removeGameObject(gameObject);
+        // 'false' because each entity's removal shouldn't be added to history,
+        // only the layer's removal
+        this.removeGameObject(gameObject, layerId, false);
       }
     
       this._gameObjectLayers[layerId] = null;
@@ -218,7 +234,21 @@ class WorldEditorScene extends Scene {
     }
   }
   
-  addCurrentGameObject(x, y) {
+  addGameObject(obj, layerId, _allowAction = true) {
+    super.addGameObject(obj, layerId);
+    
+    if (_allowAction) {
+      this._addEntityActionData.gameObject = obj;
+      this._addEntityActionData.layerId    = layerId;
+
+      let leftMouseState = this.mouse.getState(1);
+      if (!leftMouseState.isDown) {
+        this._performAddEntity();
+      }
+    }
+  }
+  
+  addCurrentGameObject(x, y, _allowAction = true) {
     if (this.curEntity) {
       let entity     = this.curEntity;
       let gameObject = new wfl.core.entities.PhysicsObject();
@@ -226,13 +256,32 @@ class WorldEditorScene extends Scene {
 
       image.src = entity.data.imageSource;
       image.onload = function () {
-        gameObject.graphic    = image;
-        gameObject.position.x = x;
-        gameObject.position.y = y;
-        this.addGameObject(gameObject, this.layerId);
+        gameObject.graphic           = image;
+        gameObject.position.x        = x;
+        gameObject.position.y        = y;
+        gameObject.customData.entity = entity;
+        gameObject.customData.id     = this._entityCounter;
+        this.addGameObject(gameObject, this.layerId, _allowAction);
         this.selector.clear();
         this.selector.add(gameObject);
+        this._entityCounter++;
       }.bind(this);
+    }
+  }
+  
+  removeGameObject(obj, layerId, _allowAction = true) {
+    super.removeGameObject(obj, layerId);
+    
+    if (_allowAction) {
+      let data = {
+        gameObject: obj,
+        layerId:    layerId
+      };
+
+      this.perform(
+        Action.Type.WORLD_ENTITY_REMOVE,
+        data
+      );
     }
   }
 
@@ -290,6 +339,13 @@ class WorldEditorScene extends Scene {
     this.camera.position.y += dy;
 
     if (this.tool) this.tool.pan(dx, dy);
+  }
+  
+  panSelection(dx, dy) {
+    this.selector.pan(dx, dy);
+    
+    this._panActionData.dx += dx;
+    this._panActionData.dy += dy;
   }
 
   find(x, y, width = undefined, height = undefined) {
@@ -374,6 +430,22 @@ class WorldEditorScene extends Scene {
 
     e.stopPropagation();
     e.preventDefault();
+    
+    // Just added a new entity (and possibly dragged it)
+    if (this._addEntityActionData.gameObject) {
+      this._performAddEntity();
+      
+      // Reset the panning since the added entity's position will already
+      // reflect the position it was moved to
+      this._panActionData.dx = 0;
+      this._panActionData.dy = 0;
+    }
+    
+    // If no entity was added, send out action data if entities were just
+    // being dragged
+    else if (this._panActionData.dx !== 0 || this._panActionData.dy !== 0) {
+      this._performPan();
+    }
   }
 
   onMouseLeave(e) {
@@ -383,8 +455,45 @@ class WorldEditorScene extends Scene {
   }
 
   onContextMenu(e) {
-    this.selector.clear();
+    let leftMouseState = this.mouse.getState(1);
+    if (!leftMouseState.isDown) {
+      this.selector.clear();
+    }
+    
     return false;
+  }
+  
+  _performAddEntity() {
+    // Make a clone that won't be affected by the upcoming resetting
+    let data = {
+      gameObject: this._addEntityActionData.gameObject,
+      layerId:    this._addEntityActionData.layerId
+    };
+    
+    this.perform(
+      Action.Type.WORLD_ENTITY_ADD,
+      data
+    );
+    
+    this._addEntityActionData.gameObject = undefined;
+    this._addEntityActionData.layerId    = undefined;
+  }
+  
+  _performPan() {
+    // Make a clone that won't be affected by the upcoming zeroing-out for dx, dy
+    let data = {
+      dx:          this._panActionData.dx,
+      dy:          this._panActionData.dy,
+      gameObjects: this.selector.selectedObjects.slice(0)
+    };
+
+    this.perform(
+      Action.Type.WORLD_SELECTION_MOVE,
+      data
+    );
+
+    this._panActionData.dx = 0;
+    this._panActionData.dy = 0;
   }
 }
 

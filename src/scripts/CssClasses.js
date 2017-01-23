@@ -11,17 +11,17 @@ module.exports = {
   WORLD_CANVAS: 'world-canvas',
   TOOL_BAR_TOOL_ICON: 'tool-bar-tool-icon',
   
-  /* Classes for FileList */
+  /* Classes for FileMenu */
   FILE_EXPLORER: 'file-explorer',
   FILE_EXPLORER_LABEL: 'file-explorer-label',
   FILE_EXPLORER_MAIN_INTERIOR: 'file-explorer-main-interior',
   
-  FILE_LIST_ITEM: 'file-list-item',
-  FILE_LIST_LABEL: 'file-list-label',
-  FILE_LIST_LABEL_WRAPPER: 'file-list-label-wrapper',
-  FILE_LIST_FOLDER: 'folder',
-  FILE_LIST_FOLDER_WRAPPER: 'file-explorer-folder-wrapper',
-  FILE_LIST_FOLDER_UL: 'file-explorer-folder-ul',
+  FILE_MENU_ITEM: 'file-menu-item',
+  FILE_MENU_LABEL: 'file-menu-label',
+  FILE_MENU_LABEL_WRAPPER: 'file-menu-label-wrapper',
+  FILE_MENU_FOLDER: 'folder',
+  FILE_MENU_FOLDER_WRAPPER: 'file-explorer-folder-wrapper',
+  FILE_MENU_FOLDER_UL: 'file-explorer-folder-ul',
   
   /* Classes for ExpandableMenu */
   EXPANDABLE_MENU: 'expandable-menu',

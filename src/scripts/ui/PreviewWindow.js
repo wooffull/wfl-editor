@@ -8,7 +8,7 @@ class PreviewWindow extends HtmlElement {
   constructor() {
     super();
     
-    this._previewImage = null;
+    this._previewImage = undefined;
     
     this.imageContainer = $('<div>');
     this.imageContainer.addClass(CssClass.IMAGE_CONTAINER);
@@ -43,7 +43,7 @@ class PreviewWindow extends HtmlElement {
       this._previewImage.onload = (e) => this._onImageLoadSuccess(e);
       this._previewImage.src = imgSrc;
     } else {
-      this._previewImage = null;
+      this._previewImage = undefined;
     }
   }
   

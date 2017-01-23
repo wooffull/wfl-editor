@@ -1,6 +1,7 @@
 "use strict";
 
 const $             = wfl.jquery;
+const {Action}      = require('../tools');
 const SubwindowView = require('./SubwindowView');
 const CssClasses    = require('../CssClasses');
 const scenes        = require('../scenes');
@@ -21,6 +22,11 @@ class WorldView extends SubwindowView {
     this.wflGame.setScene(this.worldEditorScene);
     
     this.element = $(this.canvas);
+    
+    // TODO: Clean this up when perform() is cleaned up from EditorScene.js
+    $(this.worldEditorScene).on(Action.Event.DEFAULT, (e, action) => {
+      this.perform(action);
+    });
   }
   
   reset() {

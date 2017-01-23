@@ -2,6 +2,7 @@
 
 const $             = wfl.jquery;
 const {HtmlElement} = require('../ui');
+const {Action}      = require('../tools');
 
 class SubwindowView extends HtmlElement {
   constructor() {
@@ -21,6 +22,18 @@ class SubwindowView extends HtmlElement {
   }
   
   resize(e) {}
+  
+  perform(type = Action.Type.DEFAULT, data = {}, state = Action.State.IN_PROGRESS) {
+    let action;
+    
+    if (type instanceof Action) {
+      action = type;
+    } else {
+      action = new Action(type, data, state);
+    }
+    
+    $(this).trigger(Action.Event.DEFAULT, action);
+  }
 }
 
 module.exports = SubwindowView;

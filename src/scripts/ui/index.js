@@ -6,8 +6,8 @@ const ExpandableMenu = require('./ExpandableMenu');
 const MenuItem       = require('./MenuItem');
 const PreviewWindow  = require('./PreviewWindow');
 const MenuButton     = require('./MenuButton');
-const FileList       = require('./FileList');
-const FileListItem   = require('./FileListItem');
+const FileMenu       = require('./FileMenu');
+const FileMenuItem   = require('./FileMenuItem');
 
 module.exports = {
   HtmlElement:    HtmlElement,
@@ -16,6 +16,6 @@ module.exports = {
   MenuItem:       MenuItem,
   PreviewWindow:  PreviewWindow,
   MenuButton:     MenuButton,
-  FileList:       FileList,
-  FileListItem:   FileListItem
+  FileMenu:       FileMenu,
+  FileMenuItem:   FileMenuItem
 };

@@ -2,13 +2,12 @@
 
 const Tool           = require('./Tool');
 const CssClasses     = require('../CssClasses');
+const Action         = require('./Action');
 const subwindowViews = require('../subwindowViews');
 
 class ToolBarTool extends Tool {
   constructor() {
-    super('layers');
-    
-    this.subwindowView = new subwindowViews.ToolBarView();
+    super('layers', new subwindowViews.ToolBarView());
     this.element.addClass(CssClasses.TOOL_BAR_TOOL_ICON);
   }
   

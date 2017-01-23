@@ -5,9 +5,7 @@ const subwindowViews = require('../subwindowViews');
 
 class FileExplorerTool extends Tool {
   constructor() {
-    super('web_asset');
-    
-    this.subwindowView = new subwindowViews.FileExplorerView();
+    super('web_asset', new subwindowViews.FileExplorerView());
   }
   
   subwindowInit() {

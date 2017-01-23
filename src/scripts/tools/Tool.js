@@ -3,16 +3,23 @@
 const $             = wfl.jquery;
 const CssClasses    = require('../CssClasses');
 const {HtmlElement} = require('../ui');
+const Action        = require('./Action');
 
 class Tool extends HtmlElement {
-  constructor(materialIconLabel) {
+  constructor(materialIconLabel, subwindowView) {
     super();
     
-    this.subwindowView = null;
+    this.subwindowView = subwindowView;
     this.element = $('<i>');
     this.element.html(materialIconLabel);
     this.element.addClass(CssClasses.MATERIAL_ICON);
     this.element.addClass(CssClasses.TOOL);
+    
+    if (this.subwindowView) {
+      $(this.subwindowView).on(Action.Event.DEFAULT, (e, action) => {
+        $(this).trigger(Action.Event.DEFAULT, action);
+      });
+    }
   }
   
   reset() {
@@ -33,6 +40,12 @@ class Tool extends HtmlElement {
    * like loading a new project
    */
   projectUpdate(project) {}
+  
+  /**
+   * This is how tools communicate with each other. They dispatch actions (events)
+   * and other tools will parse the action based on its type if necessary.
+   */
+  parseAction(action) {}
 }
 
 module.exports = Tool;

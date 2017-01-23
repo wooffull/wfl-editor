@@ -3,6 +3,7 @@
 const $           = wfl.jquery;
 const {Subwindow} = require('./ui');
 const tools       = require('./tools');
+const Action      = tools.Action;
 
 class WflEditor {
   constructor() {
@@ -10,34 +11,43 @@ class WflEditor {
     this.toolBarTool      = new tools.ToolBarTool();
     this.fileExplorerTool = new tools.FileExplorerTool();
     this.entityTool       = new tools.EntityTool();
+    this.historyTool      = new tools.HistoryTool();
     this.worldTool        = new tools.WorldTool();
     this.layerTool        = new tools.LayerTool();
     
+    this.tools = [];
+    this.tools.push(this.toolBarTool);
+    this.tools.push(this.fileExplorerTool);
+    this.tools.push(this.entityTool);
+    this.tools.push(this.historyTool);
+    this.tools.push(this.worldTool);
+    this.tools.push(this.layerTool);
+    
     // Set up listeners for tools
-    $(this.toolBarTool.subwindowView).on('icon-click', (e, toolData) => {
-      let scene = this.worldTool.subwindowView.worldEditorScene;
-      scene.tool = new toolData.classReference(scene);
-    });
-    
-    $(this.entityTool.subwindowView).on('entity-select', (e, entity) => {
-      let scene = this.worldTool.subwindowView.worldEditorScene;
-      scene.curEntity = entity;
-    });
-    
-    $(this.layerTool.subwindowView).on('layer-select', (e, layerId) => {
-      let scene = this.worldTool.subwindowView.worldEditorScene;
-      scene.layerId = layerId;
-    });
-    
-    $(this.layerTool.subwindowView).on('layer-add', (e, layerId) => {
-      let scene = this.worldTool.subwindowView.worldEditorScene;
-      scene.addLayer(layerId);
-    });
-    
-    $(this.layerTool.subwindowView).on('layer-remove', (e, layerId) => {
-      let scene = this.worldTool.subwindowView.worldEditorScene;
-      scene.removeLayer(layerId);
-    });
+    for (let tool of this.tools) {
+      $(tool).on('tool-action', (e, action) => {
+        switch (action.state) {
+          case Action.State.IN_PROGRESS:
+            for (let otherTool of this.tools) {
+              otherTool.parseAction(action);
+            }
+            
+            // If the action's state hasn't changed, it can be treated
+            // as COMPLETED
+            if (action.state === Action.State.IN_PROGRESS) {
+              action.state = Action.State.COMPLETED;
+              
+            // Otherwise, do not allow fallthrough into the COMPLETED state
+            } else {
+              break;
+            }
+            
+          case Action.State.COMPLETED:
+            this.historyTool.addAction(action);
+            break;
+        }
+      });
+    }
     
     // Create subwindows
     this.toolSubwindow = new Subwindow();
@@ -48,6 +58,7 @@ class WflEditor {
     this.componentSubwindow.element[0].id = 'component-subwindow';
     this.componentSubwindow.addTool(this.fileExplorerTool);
     this.componentSubwindow.addTool(this.entityTool);
+    this.componentSubwindow.addTool(this.historyTool);
     
     this.primarySubwindow = new Subwindow();
     this.primarySubwindow.element[0].id = 'world-subwindow';
@@ -67,13 +78,6 @@ class WflEditor {
     this.subwindows.push(this.componentSubwindow);
     this.subwindows.push(this.primarySubwindow);
     this.subwindows.push(this.secondarySubwindow);
-    
-    this.tools = [];
-    this.tools.push(this.toolBarTool);
-    this.tools.push(this.fileExplorerTool);
-    this.tools.push(this.entityTool);
-    this.tools.push(this.worldTool);
-    this.tools.push(this.layerTool);
     
     // Resize main editor's canvas when window resizes
     $(window).on("resize", () => this.onResize());

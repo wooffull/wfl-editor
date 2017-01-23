@@ -6,6 +6,7 @@ const {ExpandableMenu,
        MenuItem,
        MenuButton}     = require('../ui');
 const {Entity}         = require('../world');
+const {Action}         = require('../tools');
 
 class EntityView extends SubwindowView {
   constructor() {
@@ -37,8 +38,16 @@ class EntityView extends SubwindowView {
     this.entitiesMenu.addButton(this.removeEntityEntryBtn);
     
     $(this.entitiesMenu.element).on('click', () => {
-      $(this).trigger('entity-select', this.getSelectedEntity());
+      this.perform(
+        Action.Type.ENTITY_SELECT,
+        this.getSelectedEntity(),
+        false
+      );
     });
+  }
+  
+  reset() {
+    this.entitiesMenu.clear();
   }
   
   addEntityEntry() {

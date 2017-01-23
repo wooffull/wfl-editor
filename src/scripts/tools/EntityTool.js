@@ -5,9 +5,7 @@ const subwindowViews = require('../subwindowViews');
 
 class EntityTool extends Tool {
   constructor() {
-    super('nature');
-    
-    this.subwindowView = new subwindowViews.EntityView();
+    super('nature', new subwindowViews.EntityView());
   }
   
   subwindowInit() {
