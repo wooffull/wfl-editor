@@ -51,6 +51,9 @@ class LayerView extends SubwindowView {
     
     this._layerCount++;
     $(this).trigger('layer-add', this.getSelectedLayer().element.html());
+    
+    // Select the new layer
+    $(menuItem.element).click();
   }
   
   removeLayer() {
