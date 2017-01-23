@@ -11,10 +11,12 @@ class HistoryView extends SubwindowView {
   constructor() {
     super();
     
-    this.entitiesMenu = new ExpandableMenu('History');
-    this.add(this.entitiesMenu);
+    this.historyMenu = new ExpandableMenu('History');
+    this.add(this.historyMenu);
     
-    /*$(this.entitiesMenu.element).on('click', () => {
+    this.lastChanged = undefined;
+    
+    /*$(this.historyMenu.element).on('click', () => {
       this.perform(
         Action.Type.ENTITY_SELECT,
         this.getSelectedEntity(),
@@ -24,16 +26,18 @@ class HistoryView extends SubwindowView {
   }
   
   reset() {
-    this.entitiesMenu.clear();
+    this.historyMenu.clear();
+    this.lastChanged = undefined;
   }
   
   addAction(action) {
     let menuItem = this.createMenuItem(action);
-    this.entitiesMenu.append(menuItem);
-  }
-  
-  getSelectedEntity() {
-    return this.entitiesMenu.getLastSelected();
+    this.historyMenu.append(menuItem);
+    
+    this.lastChanged = action.time;
+    
+    // Select the new layer
+    $(menuItem.element).click();
   }
   
   createMenuItem(action) {

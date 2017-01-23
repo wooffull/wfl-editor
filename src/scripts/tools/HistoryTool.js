@@ -12,9 +12,7 @@ class HistoryTool extends Tool {
   }
   
   addAction(action) {
-    if (action.reversable) {
-      this.subwindowView.addAction(action);
-    }
+    this.subwindowView.addAction(action);
   }
 }
 

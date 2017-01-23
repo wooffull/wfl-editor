@@ -9,22 +9,22 @@ class FileExplorerView extends SubwindowView {
   constructor() {
     super();
     
-    this.FileMenu = new FileMenu('Project Explorer');
-    this.add(this.FileMenu);
+    this.fileMenu = new FileMenu('Project Explorer');
+    this.add(this.fileMenu);
   }
   
   reset() {
-    this.FileMenu.clear();
+    this.fileMenu.clear();
   }
   
   setRoot(filepath) {
     // The root has changed, so recreate the entire file list
-    if (this.FileMenu.rootPath !== filepath) {
-      this.FileMenu.clear();
-      this.FileMenu.rootPath = filepath;
+    if (this.fileMenu.rootPath !== filepath) {
+      this.fileMenu.clear();
+      this.fileMenu.rootPath = filepath;
     }
     
-    this.FileMenu.update();
+    this.fileMenu.update();
   }
 }
 

@@ -111,5 +111,12 @@ ipcMain.on('project-load', () => {
   file.Project.load();
 });
 
+ipcMain.on('history-update', (e, time) => {
+  // When time is sent from ipcRenderer as undefined, it's forced to null,
+  // so switch it back for consistency
+  if (!time) time = undefined;
+  file.Project.updateHistory(time);
+});
+
 ipcMain.on('game-export', () => {
 });

@@ -7,13 +7,19 @@ const {dialog,
 const AppConfig = require('./AppConfig');
 const mkdirp    = require('mkdirp');
 
-let win      = undefined;
-let project  = undefined;
-let basePath = AppConfig.basePath;
+let win         = undefined;
+let project     = undefined;
+let lastChanged = undefined;
+let basePath    = AppConfig.basePath;
 
 // TODO: Implement detection for if the project has been changed
 function hasChanges() {
-  return typeof win !== 'undefined';
+  return typeof win !== 'undefined' && project.lastChanged !== lastChanged;
+}
+
+function updateHistory(time) {
+  lastChanged = time;
+  win.webContents.send('project-altered', project, hasChanges());
 }
 
 function confirmSavedChanges(forcedNext) {
@@ -59,12 +65,14 @@ function newProject(winRef, _preventConfirmation = false) {
   }
   
   win = winRef;
+  lastChanged = undefined;
   
   project = {
-    title:   undefined,
-    dirname: undefined
+    title:       undefined,
+    dirname:     undefined,
+    lastChanged: undefined
   };
-  sendProjectUpdate();
+  win.webContents.send('project-new', project);
 }
 
 /**
@@ -105,6 +113,9 @@ function saveProject(next) {
     return;
   }
   
+  // Update the time reference for when the project was last changed
+  project.lastChanged = lastChanged;
+  
   let projectJson  = JSON.stringify(project, null, '  ');
   let projectsPath = path.join(basePath, 'projects');
   
@@ -119,7 +130,7 @@ function saveProject(next) {
       if (err) {
         throw err;
       }
-      sendProjectUpdate();
+      win.webContents.send('project-save', project);
       
       if (next) next();
     });
@@ -157,16 +168,12 @@ function loadProject(projectTitle = 'test', _preventConfirmation = false) {
       }
 
       project = JSON.parse(data);
-      sendProjectUpdate();
+      win.webContents.send('project-load', project);
+      
+      lastChanged = project.lastChanged;
+      win.webContents.send('project-altered', project, hasChanges());
     });
   });
-}
-
-/**
- * Sends an event to the renderer process to notify an update in the project
- */
-function sendProjectUpdate() {
-  win.webContents.send('project-update', project);
 }
 
 
@@ -178,6 +185,7 @@ module.exports = {
   saveAs:              saveAsProject,
   load:                loadProject,
   hasChanges:          hasChanges,
+  updateHistory:       updateHistory,
   confirmSavedChanges: confirmSavedChanges,
   
   getProject:          () => project

@@ -9,7 +9,11 @@ const {Menu, MenuItem} = remote;
 
 // Create a new WFL Editor when the window loads
 let editor;
-$(window).on('load', () => editor = new WflEditor());
+$(window).on('load', () => {
+  editor = new WflEditor();
+  
+  $(editor).on('history-update', (e, lastChanged) => ipcRenderer.send('history-update', lastChanged));
+});
 
 // Prevent highlighting elements when dragging on UI
 $('.ui-element-container').on('mousedown', (e) => {
@@ -30,16 +34,26 @@ $('.maximize').on('click', () => ipcRenderer.send('window-maximize'));
 
 
 // Listener for when project updates are received
-ipcRenderer.on('project-update', (e, msg) => {
-  let projectTitle = msg.title;
-  
-  if (typeof msg.title === 'undefined') {
-    projectTitle = 'untitled';
-  }
-  
-  $('#project-title').html(projectTitle);
-  
-  editor.projectUpdate(msg);
+ipcRenderer.on('project-new', (e, project) => {
+  $('#project-title').html('untitled');
+  editor.reset(project);
+});
+
+ipcRenderer.on('project-save', (e, project) => {
+  $('#project-title').html(project.title);
+  editor.projectUpdate(project);
+});
+
+ipcRenderer.on('project-load', (e, project) => {
+  $('#project-title').html(project.title);
+  editor.reset(project);
+  editor.projectUpdate(project);
+});
+
+ipcRenderer.on('project-altered', (e, project, altered) => {
+  let prefix = altered ? '*' : '';
+  if (!project.title) project.title = 'untitled';
+  $('#project-title').html(prefix + project.title);
 });
 
 

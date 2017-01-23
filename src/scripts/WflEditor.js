@@ -43,7 +43,14 @@ class WflEditor {
             }
             
           case Action.State.COMPLETED:
-            this.historyTool.addAction(action);
+            if (action.reversable) {
+              this.historyTool.addAction(action);
+
+              $(this).trigger(
+                'history-update',
+                this.historyTool.subwindowView.lastChanged
+              );
+            }
             break;
         }
       });
@@ -86,6 +93,12 @@ class WflEditor {
     this.onResize();
   }
   
+  reset() {
+    for (const tool of this.tools) {
+      tool.reset();
+    }
+  }
+  
   onResize(e) {
     for (const subwindow of this.subwindows) {
       subwindow.resize(e);
@@ -94,7 +107,6 @@ class WflEditor {
   
   projectUpdate(project) {
     for (const tool of this.tools) {
-      tool.reset();
       tool.projectUpdate(project);
     }
   }
