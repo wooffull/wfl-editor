@@ -10,9 +10,7 @@ class ExpandableMenu extends Menu {
   constructor(label) {
     super(label);
     
-    this.label.addClass(CssClass.EXPANDABLE_MENU_LABEL);
     this.mainInterior.addClass(CssClass.EXPANDABLE_MENU_MAIN_INTERIOR);
-    this.element.addClass(CssClass.EXPANDABLE_MENU);
     
     this.collapseBtn = $('<button>');
     this.collapseBtn.html($('<i class="material-icons">arrow_drop_up</i>'));

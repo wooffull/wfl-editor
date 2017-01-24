@@ -48,6 +48,20 @@ class EntityView extends SubwindowView {
   
   reset() {
     this.entitiesMenu.clear();
+    
+    // TODO: Remove these test entities and add scroll bars when
+    // there are too many entities
+    for (let i = 0; i < 10; i++) {
+      let ent = null;
+      
+      if (i % 2 === 1) {
+        ent = new Entity({name: i, imageSource: './media/Sprites1.png'});
+      } else {
+        ent = new Entity({name: i, imageSource: './media/icon.png'});
+      }
+      
+      this.addEntity(ent);
+    }
   }
   
   addEntityEntry() {

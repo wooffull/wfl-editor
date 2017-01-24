@@ -10,13 +10,13 @@ class EditorScene extends Scene {
   
   // TODO: Figure out a neater way to trigger events instead of copying
   // perform() from SubwindowView
-  perform(type = Action.Type.DEFAULT, data = {}, reversable = true, state = Action.State.IN_PROGRESS) {
+  perform(type, data, reversable, direction, state) {
     let action;
     
     if (type instanceof Action) {
       action = type;
     } else {
-      action = new Action(type, data, reversable, state);
+      action = new Action(type, data, reversable, direction, state);
     }
     
     $(this).trigger(Action.Event.DEFAULT, action);

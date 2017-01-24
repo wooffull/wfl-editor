@@ -15,11 +15,12 @@ class WflEditor {
     this.worldTool        = new tools.WorldTool();
     this.layerTool        = new tools.LayerTool();
     
+    // Ordered in terms of which should be reset first
     this.tools = [];
+    this.tools.push(this.historyTool);
     this.tools.push(this.toolBarTool);
     this.tools.push(this.fileExplorerTool);
     this.tools.push(this.entityTool);
-    this.tools.push(this.historyTool);
     this.tools.push(this.worldTool);
     this.tools.push(this.layerTool);
     
@@ -43,12 +44,14 @@ class WflEditor {
             }
             
           case Action.State.COMPLETED:
-            if (action.reversable) {
+            if (action.reversable && action.direction === Action.Direction.DEFAULT) {
               this.historyTool.addAction(action);
+            }
 
+            if (action.reversable || action.direction !== Action.Direction.DEFAULT) {
               $(this).trigger(
                 'history-update',
-                this.historyTool.subwindowView.lastChanged
+                this.historyTool.subwindowView.getLastChangedTime()
               );
             }
             break;
@@ -91,6 +94,7 @@ class WflEditor {
 
     // Give canvas its initial size
     this.onResize();
+    this.reset();
   }
   
   reset() {

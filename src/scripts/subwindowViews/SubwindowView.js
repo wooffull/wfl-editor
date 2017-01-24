@@ -23,13 +23,13 @@ class SubwindowView extends HtmlElement {
   
   resize(e) {}
   
-  perform(type = Action.Type.DEFAULT, data = {}, state = Action.State.IN_PROGRESS) {
+  perform(type, data, reversable, direction, state) {
     let action;
     
     if (type instanceof Action) {
       action = type;
     } else {
-      action = new Action(type, data, state);
+      action = new Action(type, data, reversable, direction, state);
     }
     
     $(this).trigger(Action.Event.DEFAULT, action);

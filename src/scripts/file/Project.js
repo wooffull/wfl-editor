@@ -13,7 +13,7 @@ let lastChanged = undefined;
 let basePath    = AppConfig.basePath;
 
 function hasChanges() {
-  return typeof win !== 'undefined' && project.lastChanged !== lastChanged;
+  return typeof win !== 'undefined' && typeof lastChanged !== 'undefined' && project.lastChanged !== lastChanged;
 }
 
 function updateHistory(time) {

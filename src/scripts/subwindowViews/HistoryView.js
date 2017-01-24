@@ -1,47 +1,53 @@
 "use strict";
 
-const $                = wfl.jquery;
-const SubwindowView    = require('./SubwindowView');
-const {ExpandableMenu,
-       MenuItem,
-       MenuButton}     = require('../ui');
-const {Action}         = require('../tools');
+const $             = wfl.jquery;
+const SubwindowView = require('./SubwindowView');
+const {HistoryMenu,
+       MenuItem}    = require('../ui');
+const {Action}      = require('../tools');
 
 class HistoryView extends SubwindowView {
   constructor() {
     super();
     
-    this.historyMenu = new ExpandableMenu('History');
+    this.historyMenu = new HistoryMenu('History');
     this.add(this.historyMenu);
     
-    this.lastChanged = undefined;
+    $(this.historyMenu).on('undo-set', (e, list) => {
+      for (let action of list) {
+        this.perform(
+          action.type,
+          action.data,
+          false,
+          Action.Direction.UNDO
+        );
+      }
+    });
     
-    $(this.historyMenu.element).on('click', () => {
-      let last = this.historyMenu._lastSelected;
-      this.historyMenu.remove(last);
-      console.log(last);
-      
-      /*
-      this.perform(
-        Action.Type.ENTITY_SELECT,
-        this.getSelectedEntity(),
-        false
-      );
-      */
-      
+    $(this.historyMenu).on('redo-set', (e, list) => {
+      for (let action of list) {
+        this.perform(
+          action.type,
+          action.data,
+          false,
+          Action.Direction.REDO
+        );
+      }
     });
   }
   
   reset() {
     this.historyMenu.clear();
-    this.lastChanged = undefined;
+  }
+  
+  getLastChangedTime() {
+    let currentAction = this.historyMenu.getLastSelected().data;
+    return currentAction.time;
   }
   
   addAction(action) {
     let menuItem = this.createMenuItem(action);
     this.historyMenu.append(menuItem);
-    
-    this.lastChanged = action.time;
     
     // Select the new layer
     this.historyMenu._onItemSelect(menuItem);
@@ -51,6 +57,16 @@ class HistoryView extends SubwindowView {
     let label = '';
     
     switch (action.type) {
+      case Action.Type.FILE_INIT:
+        label = 'Start Project';
+        
+        // Force the time to be undefined so that when this action is the current
+        // one in the history menu, the project thinks it hasn't been changed. This
+        // works because the FILE_INIT is supposed to be the very first action, and
+        // that cannot be undone.
+        action.time = undefined;
+        break;
+        
       case Action.Type.LAYER_ADD:
         label = 'Add Layer: ' + action.data;
         break;
@@ -98,6 +114,14 @@ class HistoryView extends SubwindowView {
     }
     
     return new MenuItem(label, action);
+  }
+  
+  undo(action) {
+    
+  }
+  
+  redo(action) {
+    
   }
 }
 

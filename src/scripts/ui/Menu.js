@@ -28,6 +28,10 @@ class Menu extends HtmlElement {
     this.element.append(this._previewWindow.element);
     this.element.append(this.mainInterior);
     
+    this.label.addClass(CssClass.MENU_LABEL);
+    this.mainInterior.addClass(CssClass.MENU_MAIN_INTERIOR);
+    this.element.addClass(CssClass.MENU);
+    
     this.element.on('mousemove', (e) => this._onMouseMove(e));
     this.element.on('mouseout',  (e) => this._onMouseOut(e));
   }
@@ -98,6 +102,8 @@ class Menu extends HtmlElement {
   }
   
   _addElement(htmlElement) {
+    this.list.push(htmlElement);
+    
     htmlElement.element.on('click',     () => this._onItemSelect(htmlElement));
     htmlElement.element.on('mouseover', () => this._onItemHover(htmlElement));
     htmlElement.element.on('mouseout',  () => this._onItemLeave(htmlElement));
@@ -106,8 +112,6 @@ class Menu extends HtmlElement {
     if (this._lastSelected === undefined) {
       this._onItemSelect(htmlElement);
     }
-    
-    this.list.push(htmlElement);
   }
   
   _onMouseMove(e) {

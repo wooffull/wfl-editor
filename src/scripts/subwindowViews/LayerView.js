@@ -27,21 +27,28 @@ class LayerView extends SubwindowView {
     });
     this.layersMenu.addButton(this.removeLayerBtn);
     
-    this._layerCount = 0;
-    
-    // Add layer0 immediately
-    this.addLayer();
+    this.reset();
   }
   
   reset() {
     this.layersMenu.clear();
     
     this._layerCount = 0;
+    
+    // Add layer0 immediately
     this.addLayer();
   }
   
-  addLayer() {
-    let menuItem = new MenuItem('layer' + this._layerCount);
+  addLayer(layerId, _actionDirection = Action.Direction.DEFAULT) {
+    // If it's the first layer, the action cannot be undone
+    let isFirstLayer = this._layerCount === 0;
+    
+    if (typeof layerId === 'undefined') {
+      layerId = 'layer' + this._layerCount;
+      this._layerCount++;
+    }
+    
+    let menuItem = new MenuItem(layerId);
     this.layersMenu.prepend(menuItem);
     
     $(menuItem.element).on('click', () => {
@@ -55,14 +62,11 @@ class LayerView extends SubwindowView {
     // Select the new layer
     this.layersMenu._onItemSelect(menuItem);
     
-    // If it's the first layer, the action cannot be undone
-    let isFirstLayer = this._layerCount === 0;
-    
-    this._layerCount++;
     this.perform(
       Action.Type.LAYER_ADD,
       this.getSelectedLayer().element.html(),
-      !isFirstLayer
+      !isFirstLayer,
+      _actionDirection
     );
     
     // Select the newest layer

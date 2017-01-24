@@ -1,11 +1,12 @@
 "use strict";
 
 class Action {
-  constructor(type = Action.Type.DEFAULT, data = {}, reversable = true, state = Action.State.IN_PROGRESS) {
+  constructor(type = Action.Type.DEFAULT, data = {}, reversable = true, direction = Action.Direction.DEFAULT, state = Action.State.IN_PROGRESS) {
     this.time       = Date.now();
     this.type       = type;
     this.data       = data;
     this.reversable = reversable;
+    this.direction  = direction;
     this.state      = state;
   }
 }
@@ -23,6 +24,9 @@ Object.defineProperties(Action, {
   Type: {
     value: {
       DEFAULT:              'default',
+      
+      // FileExplorerTool
+      FILE_INIT:            'file-init',
       
       // ToolBarTool
       MAIN_TOOL_SELECT:     'main-tool-select',
@@ -45,6 +49,14 @@ Object.defineProperties(Action, {
   Event: {
     value: {
       DEFAULT: 'tool-action'
+    }
+  },
+  
+  Direction: {
+    value: {
+      DEFAULT: 'default',
+      UNDO:    'undo',
+      REDO:    'redo'
     }
   }
 });
