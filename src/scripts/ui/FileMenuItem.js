@@ -21,9 +21,9 @@ class FileMenuItem extends HtmlElement {
     
     this.labelSpacing = $('<span>');
     this.label = $('<span>');
-    this.label.addClass(CssClass.FILE_MENU_LABEL);
+    this.label.addClass(CssClass.FILE_MENU_ITEM_LABEL);
     this.labelWrapper = $('<div>');
-    this.labelWrapper.addClass(CssClass.FILE_MENU_LABEL_WRAPPER);
+    this.labelWrapper.addClass(CssClass.FILE_MENU_ITEM_LABEL_WRAPPER);
     this.labelWrapper.append(this.labelSpacing);
     this.labelWrapper.append(this.label);
     $(this.labelWrapper).on('click', () => {
@@ -41,9 +41,9 @@ class FileMenuItem extends HtmlElement {
       this.folderWrapper = $('<div>');
       this.folderUl      = $('<ul>');
       
-      this.folderWrapper.addClass(CssClass.FILE_MENU_FOLDER_WRAPPER);
-      this.folderUl.addClass(CssClass.FILE_MENU_FOLDER_UL);
-      this.label.addClass(CssClass.FILE_MENU_FOLDER);
+      this.folderWrapper.addClass(CssClass.FILE_MENU_ITEM_FOLDER_WRAPPER);
+      this.folderUl.addClass(CssClass.FILE_MENU_ITEM_FOLDER_UL);
+      this.label.addClass(CssClass.FILE_MENU_ITEM_FOLDER);
       this.folderWrapper.append(this.folderUl);
       this.element.append(this.folderWrapper);
       this.folderWrapper.hide();

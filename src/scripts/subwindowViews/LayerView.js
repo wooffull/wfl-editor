@@ -53,7 +53,7 @@ class LayerView extends SubwindowView {
     });
     
     // Select the new layer
-    $(menuItem.element).click();
+    this.layersMenu._onItemSelect(menuItem);
     
     // If it's the first layer, the action cannot be undone
     let isFirstLayer = this._layerCount === 0;
@@ -64,6 +64,13 @@ class LayerView extends SubwindowView {
       this.getSelectedLayer().element.html(),
       !isFirstLayer
     );
+    
+    // Select the newest layer
+    this.perform(
+      Action.Type.LAYER_SELECT,
+      this.getSelectedLayer().element.html(),
+      false
+    );
   }
   
   removeLayer() {
@@ -72,6 +79,13 @@ class LayerView extends SubwindowView {
       this.getSelectedLayer().element.html()
     );
     this.layersMenu.remove(this.getSelectedLayer());
+    
+    // Select the newest layer
+    this.perform(
+      Action.Type.LAYER_SELECT,
+      this.getSelectedLayer().element.html(),
+      false
+    );
   }
   
   getSelectedLayer() {

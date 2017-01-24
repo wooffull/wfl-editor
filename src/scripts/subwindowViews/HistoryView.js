@@ -16,13 +16,20 @@ class HistoryView extends SubwindowView {
     
     this.lastChanged = undefined;
     
-    /*$(this.historyMenu.element).on('click', () => {
+    $(this.historyMenu.element).on('click', () => {
+      let last = this.historyMenu._lastSelected;
+      this.historyMenu.remove(last);
+      console.log(last);
+      
+      /*
       this.perform(
         Action.Type.ENTITY_SELECT,
         this.getSelectedEntity(),
         false
       );
-    });*/
+      */
+      
+    });
   }
   
   reset() {
@@ -37,7 +44,7 @@ class HistoryView extends SubwindowView {
     this.lastChanged = action.time;
     
     // Select the new layer
-    $(menuItem.element).click();
+    this.historyMenu._onItemSelect(menuItem);
   }
   
   createMenuItem(action) {

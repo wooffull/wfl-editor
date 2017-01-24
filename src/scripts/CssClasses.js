@@ -17,11 +17,11 @@ module.exports = {
   FILE_EXPLORER_MAIN_INTERIOR: 'file-explorer-main-interior',
   
   FILE_MENU_ITEM: 'file-menu-item',
-  FILE_MENU_LABEL: 'file-menu-label',
-  FILE_MENU_LABEL_WRAPPER: 'file-menu-label-wrapper',
-  FILE_MENU_FOLDER: 'folder',
-  FILE_MENU_FOLDER_WRAPPER: 'file-explorer-folder-wrapper',
-  FILE_MENU_FOLDER_UL: 'file-explorer-folder-ul',
+  FILE_MENU_ITEM_LABEL: 'file-menu-item-label',
+  FILE_MENU_ITEM_LABEL_WRAPPER: 'file-menu-item-label-wrapper',
+  FILE_MENU_ITEM_FOLDER: 'folder',
+  FILE_MENU_ITEM_FOLDER_WRAPPER: 'file-menu-item-folder-wrapper',
+  FILE_MENU_ITEM_FOLDER_UL: 'file-menu-item-folder-ul',
   
   /* Classes for ExpandableMenu */
   EXPANDABLE_MENU: 'expandable-menu',

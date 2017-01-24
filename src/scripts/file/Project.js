@@ -12,7 +12,6 @@ let project     = undefined;
 let lastChanged = undefined;
 let basePath    = AppConfig.basePath;
 
-// TODO: Implement detection for if the project has been changed
 function hasChanges() {
   return typeof win !== 'undefined' && project.lastChanged !== lastChanged;
 }
