@@ -1,14 +1,15 @@
 "use strict";
 
-const $           = wfl.jquery;
-const geom        = wfl.geom;
-const input       = wfl.input;
-const Mouse       = input.Mouse;
-const Scene       = wfl.display.Scene;
-const {Action}    = require('../tools');
-const EditorScene = require('./EditorScene');
-const worldTools  = require('../worldTools');
-const util        = require('../util');
+const $                 = wfl.jquery;
+const geom              = wfl.geom;
+const input             = wfl.input;
+const Mouse             = input.Mouse;
+const Scene             = wfl.display.Scene;
+const EditorScene       = require('./EditorScene');
+const {Action,
+       ActionPerformer} = require('../action');
+const worldTools        = require('../worldTools');
+const util              = require('../util');
 
 class WorldEditorScene extends EditorScene {
   constructor(canvas, mouse, keyboard) {
@@ -254,7 +255,7 @@ class WorldEditorScene extends EditorScene {
       let gameObject = new wfl.core.entities.PhysicsObject();
       let image      = new Image();
 
-      image.src = entity.data.imageSource;
+      image.src = entity.imageSource;
       image.onload = function () {
         gameObject.graphic           = image;
         gameObject.position.x        = x;
@@ -278,7 +279,7 @@ class WorldEditorScene extends EditorScene {
         layerId:    layerId
       };
 
-      this.perform(
+      ActionPerformer.do(
         Action.Type.WORLD_ENTITY_REMOVE,
         data
       );
@@ -470,7 +471,7 @@ class WorldEditorScene extends EditorScene {
       layerId:    this._addEntityActionData.layerId
     };
     
-    this.perform(
+    ActionPerformer.do(
       Action.Type.WORLD_ENTITY_ADD,
       data
     );
@@ -487,7 +488,7 @@ class WorldEditorScene extends EditorScene {
       gameObjects: this.selector.selectedObjects.slice(0)
     };
 
-    this.perform(
+    ActionPerformer.do(
       Action.Type.WORLD_SELECTION_MOVE,
       data
     );
@@ -495,6 +496,11 @@ class WorldEditorScene extends EditorScene {
     this._panActionData.dx = 0;
     this._panActionData.dy = 0;
   }
+  
+  
+  
+  
+  
 }
 
 // Define constants

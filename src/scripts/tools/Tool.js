@@ -3,11 +3,13 @@
 const $             = wfl.jquery;
 const CssClasses    = require('../CssClasses');
 const {HtmlElement} = require('../ui');
-const Action        = require('./Action');
+const {Action}      = require('../action');
 
 class Tool extends HtmlElement {
   constructor(materialIconLabel, subwindowView) {
     super();
+    
+    this.actionMap = {};
     
     this.subwindowView = subwindowView;
     this.element = $('<i>');
@@ -43,9 +45,25 @@ class Tool extends HtmlElement {
   
   /**
    * This is how tools communicate with each other. They dispatch actions (events)
-   * and other tools will parse the action based on its type if necessary.
+   * and other tools will parse the action, calling the associated function that's
+   * registered with register(action, callback)
    */
-  parseAction(action) {}
+  parseAction(action) {
+    const registeredTypes = Object.keys(this.actionMap);
+    
+    for (const actionType of registeredTypes) {
+      // If the action's type matches a registered action type, call the
+      // associated callback
+      if (action.type === actionType) {
+        this.actionMap[actionType](action);
+        break;
+      }
+    }
+  }
+  
+  register(actionType, callback) {
+    this.actionMap[actionType] = callback;
+  }
 }
 
 module.exports = Tool;

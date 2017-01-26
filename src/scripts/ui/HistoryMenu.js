@@ -12,11 +12,15 @@ class HistoryMenu extends Menu {
     this.lastActiveIndex = -1;
   }
   
-  prepend(htmlElement) {
+  prepend(htmlElement, position) {
     throw 'History Error: Cannot prepend history.';
   }
   
-  _addElement(htmlElement) {
+  insert(htmlElement, position = this.list.length) {
+    if (position !== this.list.length) {
+      throw 'History Error: Cannot prepend history.';
+    }
+    
     // If the history menu does not have the most recent action as
     // active, then all later actions need to be undone before the
     // new one is added
@@ -24,13 +28,12 @@ class HistoryMenu extends Menu {
       this._undoRange(this.lastActiveIndex + 1, this.list.length);
       this._removeRange(this.lastActiveIndex + 1, this.list.length);
     }
-    
-    super._addElement(htmlElement);
+    super.insert(htmlElement, position);
     this.lastActiveIndex = this.list.length - 1;
   }
   
-  _onItemSelect(htmlElement) {
-    super._onItemSelect(htmlElement);
+  select(htmlElement) {
+    super.select(htmlElement);
     
     let itemIndex = this.list.indexOf(htmlElement);
     

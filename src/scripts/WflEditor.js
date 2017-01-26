@@ -1,9 +1,10 @@
 "use strict";
 
-const $           = wfl.jquery;
-const {Subwindow} = require('./ui');
-const tools       = require('./tools');
-const Action      = tools.Action;
+const $                 = wfl.jquery;
+const {Subwindow}       = require('./ui');
+const {Action,
+       ActionPerformer} = require('./action');
+const tools             = require('./tools');
 
 class WflEditor {
   constructor() {
@@ -24,40 +25,33 @@ class WflEditor {
     this.tools.push(this.worldTool);
     this.tools.push(this.layerTool);
     
-    // Set up listeners for tools
-    for (let tool of this.tools) {
-      $(tool).on('tool-action', (e, action) => {
-        switch (action.state) {
-          case Action.State.IN_PROGRESS:
-            for (let otherTool of this.tools) {
-              otherTool.parseAction(action);
-            }
-            
-            // If the action's state hasn't changed, it can be treated
-            // as COMPLETED
-            if (action.state === Action.State.IN_PROGRESS) {
-              action.state = Action.State.COMPLETED;
-              
-            // Otherwise, do not allow fallthrough into the COMPLETED state
-            } else {
-              break;
-            }
-            
-          case Action.State.COMPLETED:
-            if (action.reversable && action.direction === Action.Direction.DEFAULT) {
-              this.historyTool.addAction(action);
-            }
-
-            if (action.reversable || action.direction !== Action.Direction.DEFAULT) {
-              $(this).trigger(
-                'history-update',
-                this.historyTool.subwindowView.getLastChangedTime()
-              );
-            }
-            break;
+    // Set up listeners for Actions
+    $(ActionPerformer).on(Action.Event.DEFAULT, (e, action) => {
+      if (action.state === Action.State.IN_PROGRESS) {
+        for (let tool of this.tools) {
+          tool.parseAction(action);
         }
-      });
-    }
+        
+        // If the action's state hasn't changed, it can be treated
+        // as COMPLETED
+        if (action.state === Action.State.IN_PROGRESS) {
+          action.state = Action.State.COMPLETED;
+        }
+      }
+      
+      if (action.state === Action.State.COMPLETED) {
+        if (action.reversable && action.direction === Action.Direction.DEFAULT) {
+          this.historyTool.addAction(action);
+        }
+
+        if (action.reversable || action.direction !== Action.Direction.DEFAULT) {
+          $(this).trigger(
+            'history-update',
+            this.historyTool.subwindowView.getLastChangedTime()
+          );
+        }
+      }
+    });
     
     // Create subwindows
     this.toolSubwindow = new Subwindow();

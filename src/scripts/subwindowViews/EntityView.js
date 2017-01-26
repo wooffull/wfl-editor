@@ -1,12 +1,13 @@
 "use strict";
 
-const $                = wfl.jquery;
-const SubwindowView    = require('./SubwindowView');
+const $                 = wfl.jquery;
+const SubwindowView     = require('./SubwindowView');
 const {ExpandableMenu,
        MenuItem,
-       MenuButton}     = require('../ui');
-const {Entity}         = require('../world');
-const {Action}         = require('../tools');
+       MenuButton}      = require('../ui');
+const {Entity}          = require('../world');
+const {Action,
+       ActionPerformer} = require('../action');
 
 class EntityView extends SubwindowView {
   constructor() {
@@ -21,9 +22,9 @@ class EntityView extends SubwindowView {
       let ent = null;
       
       if (i % 2 === 1) {
-        ent = new Entity({name: i, imageSource: './media/Sprites1.png'});
+        ent = new Entity({name: i.toString(), imageSource: './media/Sprites1.png'});
       } else {
-        ent = new Entity({name: i, imageSource: './media/icon.png'});
+        ent = new Entity({name: i.toString(), imageSource: './media/icon.png'});
       }
       
       this.addEntity(ent);
@@ -38,12 +39,12 @@ class EntityView extends SubwindowView {
     this.entitiesMenu.addButton(this.removeEntityEntryBtn);
     
     $(this.entitiesMenu.element).on('click', () => {
-      this.perform(
-        Action.Type.ENTITY_SELECT,
-        this.getSelectedEntity(),
-        false
-      );
+      this.selectEntity(this.getSelectedEntity().element.html());
     });
+  }
+  
+  getSelectedEntity() {
+    return this.entitiesMenu.getLastSelected();
   }
   
   reset() {
@@ -55,13 +56,27 @@ class EntityView extends SubwindowView {
       let ent = null;
       
       if (i % 2 === 1) {
-        ent = new Entity({name: i, imageSource: './media/Sprites1.png'});
+        ent = new Entity({name: i.toString(), imageSource: './media/Sprites1.png'});
       } else {
-        ent = new Entity({name: i, imageSource: './media/icon.png'});
+        ent = new Entity({name: i.toString(), imageSource: './media/icon.png'});
       }
       
       this.addEntity(ent);
     }
+  }
+  
+  selectEntity(entityId) {
+    let entityData = {
+      entityId: entityId,
+      entity:   this.entitiesMenu.find(entityId).data
+    };
+    
+    // Select the newest entity
+    ActionPerformer.do(
+      Action.Type.ENTITY_SELECT,
+      entityData,
+      false
+    );
   }
   
   addEntityEntry() {
@@ -77,8 +92,13 @@ class EntityView extends SubwindowView {
     this.entitiesMenu.append(menuItem);
   }
   
-  getSelectedEntity() {
-    return this.entitiesMenu.getLastSelected();
+  
+  
+  onActionEntitySelect(action) {
+    let {entity}   = action.data;
+    let entityName = entity.name;
+    let menuItem   = this.entitiesMenu.find(entityName);
+    this.entitiesMenu.select(menuItem);
   }
 }
 

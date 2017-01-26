@@ -1,10 +1,11 @@
 "use strict";
 
-const $             = wfl.jquery;
-const SubwindowView = require('./SubwindowView');
+const $                 = wfl.jquery;
+const SubwindowView     = require('./SubwindowView');
 const {HistoryMenu,
-       MenuItem}    = require('../ui');
-const {Action}      = require('../tools');
+       MenuItem}        = require('../ui');
+const {Action,
+       ActionPerformer} = require('../action');
 
 class HistoryView extends SubwindowView {
   constructor() {
@@ -15,23 +16,13 @@ class HistoryView extends SubwindowView {
     
     $(this.historyMenu).on('undo-set', (e, list) => {
       for (let action of list) {
-        this.perform(
-          action.type,
-          action.data,
-          false,
-          Action.Direction.UNDO
-        );
+        this.undo(action);
       }
     });
     
     $(this.historyMenu).on('redo-set', (e, list) => {
       for (let action of list) {
-        this.perform(
-          action.type,
-          action.data,
-          false,
-          Action.Direction.REDO
-        );
+        this.redo(action);
       }
     });
   }
@@ -50,7 +41,15 @@ class HistoryView extends SubwindowView {
     this.historyMenu.append(menuItem);
     
     // Select the new layer
-    this.historyMenu._onItemSelect(menuItem);
+    this.historyMenu.select(menuItem);
+  }
+  
+  undo(action) {
+    ActionPerformer.undo(action);
+  }
+  
+  redo(action) {
+    ActionPerformer.redo(action);
   }
   
   createMenuItem(action) {
@@ -80,7 +79,7 @@ class HistoryView extends SubwindowView {
         let addedLayerId    = action.data.layerId;
         let addedEntity     = addedGameObject.customData.entity;
         let addedId         = addedGameObject.customData.id;
-        label = 'Place Entity: ' + addedEntity.data.name + '@' + addedId +
+        label = 'Place Entity: ' + addedEntity.name + '@' + addedId +
                 ' [' + addedLayerId + ']';
         break;
         
@@ -89,7 +88,7 @@ class HistoryView extends SubwindowView {
         let removedLayerId    = action.data.layerId;
         let removedEntity     = removedGameObject.customData.entity;
         let removedId         = removedGameObject.customData.id;
-        label = 'Remove Entity: ' + removedEntity.data.name + '@' + removedId +
+        label = 'Remove Entity: ' + removedEntity.name + '@' + removedId +
                 ' [' + removedLayerId + ']';
         break;
       
@@ -102,7 +101,7 @@ class HistoryView extends SubwindowView {
           let movedLayerId    = movedGameObject.layer;
           let movedEntity     = movedGameObject.customData.entity;
           let movedId         = movedGameObject.customData.id;
-          label = 'Moved Entity: ' + movedEntity.data.name + '@' + movedId +
+          label = 'Moved Entity: ' + movedEntity.name + '@' + movedId +
                 ' [' + movedLayerId + ']';
         } else {
           label = 'Moved ' + length + ' Entities';
@@ -114,14 +113,6 @@ class HistoryView extends SubwindowView {
     }
     
     return new MenuItem(label, action);
-  }
-  
-  undo(action) {
-    
-  }
-  
-  redo(action) {
-    
   }
 }
 

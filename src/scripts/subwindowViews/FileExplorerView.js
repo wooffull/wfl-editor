@@ -1,10 +1,11 @@
 "use strict";
 
-const $             = wfl.jquery;
-const SubwindowView = require('./SubwindowView');
-const CssClasses    = require('../CssClasses');
-const {Action}      = require('../tools');
-const {FileMenu}    = require('../ui');
+const $                 = wfl.jquery;
+const SubwindowView     = require('./SubwindowView');
+const CssClasses        = require('../CssClasses');
+const {Action,
+       ActionPerformer} = require('../action');
+const {FileMenu}        = require('../ui');
 
 class FileExplorerView extends SubwindowView {
   constructor() {
@@ -17,7 +18,7 @@ class FileExplorerView extends SubwindowView {
   reset() {
     this.fileMenu.clear();
     
-    this.perform(Action.Type.FILE_INIT);
+    ActionPerformer.do(Action.Type.FILE_INIT);
   }
   
   setRoot(filepath) {

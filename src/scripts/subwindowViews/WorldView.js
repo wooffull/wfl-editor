@@ -1,10 +1,11 @@
 "use strict";
 
-const $             = wfl.jquery;
-const {Action}      = require('../tools');
-const SubwindowView = require('./SubwindowView');
-const CssClasses    = require('../CssClasses');
-const scenes        = require('../scenes');
+const $                 = wfl.jquery;
+const {Action,
+       ActionPerformer} = require('../action');
+const SubwindowView     = require('./SubwindowView');
+const CssClasses        = require('../CssClasses');
+const scenes            = require('../scenes');
 
 class WorldView extends SubwindowView {
   constructor() {
@@ -22,11 +23,6 @@ class WorldView extends SubwindowView {
     this.wflGame.setScene(this.worldEditorScene);
     
     this.element = $(this.canvas);
-    
-    // TODO: Clean this up when perform() is cleaned up from EditorScene.js
-    $(this.worldEditorScene).on(Action.Event.DEFAULT, (e, action) => {
-      this.perform(action);
-    });
   }
   
   reset() {
@@ -48,6 +44,57 @@ class WorldView extends SubwindowView {
     this.canvas.width  = width  - padding * 2;
     this.canvas.height = height - padding * 2 - toolbar.outerHeight();
   }
+  
+  
+  
+  onActionMainToolSelect(action) {
+    let {tool} = action.data;
+    let scene  = this.worldEditorScene;
+    scene.tool = new tool.classReference(scene);
+  }
+  
+  onActionEntitySelect(action) {
+    let {entity}    = action.data;
+    let scene       = this.worldEditorScene;
+    scene.curEntity = entity;
+  }
+  
+  onActionLayerSelect(action) {
+    let {layerId} = action.data;
+    let scene     = this.worldEditorScene;
+    scene.layerId = layerId;
+  }
+  
+  onActionLayerAdd(action) {
+    let {layerId} = action.data;
+    let scene     = this.worldEditorScene;
+    scene.addLayer(layerId);
+    
+    if (typeof action.data.entities !== 'undefined') {
+      for (let entity of action.data.entities) {
+        scene.addGameObject(entity, layerId, false);
+      }
+    }
+  }
+  
+  onActionLayerRemove(action) {
+    let {layerId}        = action.data;
+    let scene            = this.worldEditorScene;
+    let existingEntities = scene._gameObjectLayers[layerId].concat();
+    
+    // When the layer is removed, the action holds onto the entities removed with it
+    // (so that during undo, they can be added back)
+    if (typeof action.data.entities === 'undefined') {
+      // DATA_APPEND
+      action.data.entities = existingEntities;
+    }
+    
+    scene.removeLayer(layerId);
+  }
+  
+  onActionWorldEntityAdd(action) {}
+  onActionWorldEntityRemove(action) {}
+  onActionWorldSelectionMove(action) {}
 }
 
 module.exports = WorldView;

@@ -36,14 +36,54 @@ class Menu extends HtmlElement {
     this.element.on('mouseout',  (e) => this._onMouseOut(e));
   }
   
+  find(label) {
+    for (let menuItem of this.list) {
+      if (menuItem.element.html() === label) {
+        return menuItem;
+      }
+    }
+    
+    return null;
+  }
+  
+  indexOf(menuItem) {
+    for (var i = 0; i < this.list.length; i++) {
+      if (this.list[i] === menuItem) {
+        return i;
+      }
+    }
+    
+    return -1;
+  }
+  
   prepend(htmlElement) {
-    this._addElement(htmlElement);
-    this.mainInterior.prepend(htmlElement.element);
+    return this.insert(htmlElement, 0);
   }
   
   append(htmlElement) {
-    this._addElement(htmlElement);
-    this.mainInterior.append(htmlElement.element);
+    return this.insert(htmlElement, this.list.length);
+  }
+  
+  insert(htmlElement, position = this.list.length) {
+    // Force position to be between 0 and the list's length
+    position = Math.max(0, Math.min(position, this.list.length));
+    this._addElement(htmlElement, position);
+    
+    // _addElement will add the htmlElement into the list at position,
+    // so try to get the element before that and append after it
+    if (position - 1 >= 0 && this.list[position - 1]) {
+      this.list[position - 1].element.after(htmlElement.element);
+      
+    // Otherwise if the position isn't 0, append to the mainInterior 
+    } else if (position !== 0) {
+      this.mainInterior.append(htmlElement.element);
+      
+    // Prepend if the position is 0
+    } else {
+      this.mainInterior.prepend(htmlElement.element);      
+    }
+    
+    return htmlElement;
   }
   
   remove(htmlElement) {
@@ -66,7 +106,7 @@ class Menu extends HtmlElement {
         // Select the sibling to switch this._lastSelected to it
         for (let item of this.list) {
           if (item.element.is(sibling)) {
-            this._onItemSelect(item);
+            this.select(item);
             break;
           }
         }
@@ -81,6 +121,17 @@ class Menu extends HtmlElement {
     if (this.list.length === 0) {
       this._lastSelected = undefined;
     }
+    
+    return htmlElement;
+  }
+  
+  select(htmlElement) {
+    if (this._lastSelected) {
+      this._lastSelected.element.removeClass('selected');
+    }
+    
+    htmlElement.element.addClass('selected');
+    this._lastSelected = htmlElement;
   }
   
   clear() {
@@ -101,16 +152,16 @@ class Menu extends HtmlElement {
     return this._lastSelected;
   }
   
-  _addElement(htmlElement) {
-    this.list.push(htmlElement);
+  _addElement(htmlElement, position) {
+    this.list.splice(position, 0, htmlElement);
     
-    htmlElement.element.on('click',     () => this._onItemSelect(htmlElement));
+    htmlElement.element.on('click',     () => this.select(htmlElement));
     htmlElement.element.on('mouseover', () => this._onItemHover(htmlElement));
     htmlElement.element.on('mouseout',  () => this._onItemLeave(htmlElement));
     
     // Select the first item added
     if (this._lastSelected === undefined) {
-      this._onItemSelect(htmlElement);
+      this.select(htmlElement);
     }
   }
   
@@ -125,15 +176,6 @@ class Menu extends HtmlElement {
     
     this._previewWindow.hide();
     this._previewWindow.setImage(undefined);
-  }
-  
-  _onItemSelect(htmlElement) {
-    if (this._lastSelected) {
-      this._lastSelected.element.removeClass('selected');
-    }
-    
-    htmlElement.element.addClass('selected');
-    this._lastSelected = htmlElement;
   }
   
   _onItemHover(htmlElement) {

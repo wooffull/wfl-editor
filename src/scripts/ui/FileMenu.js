@@ -47,14 +47,14 @@ class FileMenu extends Menu {
     }
   }
   
-  _addElement(htmlElement) {
-    this.list.push(htmlElement);
+  _addElement(htmlElement, position) {
+    this.list.splice(position, 0, htmlElement);
     
-    $(htmlElement).on('click', (e, elem = htmlElement) => this._onItemSelect(elem));
+    $(htmlElement).on('click', (e, elem = htmlElement) => this.select(elem));
     
     // Select the first item added
     if (this._lastSelected === undefined) {
-      this._onItemSelect(htmlElement);
+      this.select(htmlElement);
     }
   }
 }
