@@ -235,21 +235,53 @@ class WorldEditorScene extends EditorScene {
     }
   }
   
-  addGameObject(obj, layerId, _allowAction = true) {
+  addGameObject(obj, layerId) {
     super.addGameObject(obj, layerId);
-    
-    if (_allowAction) {
-      this._addEntityActionData.gameObject = obj;
-      this._addEntityActionData.layerId    = layerId;
-
-      let leftMouseState = this.mouse.getState(1);
-      if (!leftMouseState.isDown) {
-        this._performAddEntity();
-      }
-    }
   }
   
-  addCurrentGameObject(x, y, _allowAction = true) {
+  removeGameObject(obj, layerId) {
+    this.selector.remove(obj);
+    super.removeGameObject(obj, layerId);
+  }
+  
+  scheduleAddGameObject(obj, layerId) {
+    let data = {
+      gameObject: obj,
+      layerId:    layerId
+    };
+    
+    ActionPerformer.do(
+      Action.Type.WORLD_ENTITY_ADD,
+      data
+    );
+  }
+  
+  scheduleRemoveGameObject(obj, layerId) {
+    let data = {
+      gameObject: obj,
+      layerId:    layerId
+    };
+
+    ActionPerformer.do(
+      Action.Type.WORLD_ENTITY_REMOVE,
+      data
+    );
+  }
+  
+  scheduleSelectionMove(dx, dy) {
+    let data = {
+      dx:          dx,
+      dy:          dy,
+      gameObjects: this.selector.selectedObjects.slice(0)
+    };
+
+    ActionPerformer.do(
+      Action.Type.WORLD_SELECTION_MOVE,
+      data
+    );
+  }
+  
+  addCurrentGameObject(x, y) {
     if (this.curEntity) {
       let entity     = this.curEntity;
       let gameObject = new wfl.core.entities.PhysicsObject();
@@ -262,27 +294,22 @@ class WorldEditorScene extends EditorScene {
         gameObject.position.y        = y;
         gameObject.customData.entity = entity;
         gameObject.customData.id     = this._entityCounter;
-        this.addGameObject(gameObject, this.layerId, _allowAction);
+        
+        // If the mouse is up, then the entity has been placed.
+        // If the mouse is still down, the entity is being dragged and we'll 
+        // add it later (onBeforeMouseUp)
+        let leftMouseState = this.mouse.getState(1);
+        if (!leftMouseState.isDown) {
+          this.scheduleAddGameObject(gameObject, this.layerId);
+        } else {
+          this._addEntityActionData.gameObject = gameObject;
+          this._addEntityActionData.layerId    = this.layerId;
+        }
+        
         this.selector.clear();
         this.selector.add(gameObject);
         this._entityCounter++;
       }.bind(this);
-    }
-  }
-  
-  removeGameObject(obj, layerId, _allowAction = true) {
-    super.removeGameObject(obj, layerId);
-    
-    if (_allowAction) {
-      let data = {
-        gameObject: obj,
-        layerId:    layerId
-      };
-
-      ActionPerformer.do(
-        Action.Type.WORLD_ENTITY_REMOVE,
-        data
-      );
     }
   }
 
@@ -434,7 +461,14 @@ class WorldEditorScene extends EditorScene {
     
     // Just added a new entity (and possibly dragged it)
     if (this._addEntityActionData.gameObject) {
-      this._performAddEntity();
+      this.scheduleAddGameObject(
+        this._addEntityActionData.gameObject,
+        this._addEntityActionData.layerId
+      );
+    
+      // Clear our references for the next entity to be added
+      this._addEntityActionData.gameObject = undefined;
+      this._addEntityActionData.layerId    = undefined;
       
       // Reset the panning since the added entity's position will already
       // reflect the position it was moved to
@@ -445,7 +479,13 @@ class WorldEditorScene extends EditorScene {
     // If no entity was added, send out action data if entities were just
     // being dragged
     else if (this._panActionData.dx !== 0 || this._panActionData.dy !== 0) {
-      this._performPan();
+      this.scheduleSelectionMove(
+        this._panActionData.dx,
+        this._panActionData.dy
+      );
+      
+      this._panActionData.dx = 0;
+      this._panActionData.dy = 0;
     }
   }
 
@@ -463,44 +503,6 @@ class WorldEditorScene extends EditorScene {
     
     return false;
   }
-  
-  _performAddEntity() {
-    // Make a clone that won't be affected by the upcoming resetting
-    let data = {
-      gameObject: this._addEntityActionData.gameObject,
-      layerId:    this._addEntityActionData.layerId
-    };
-    
-    ActionPerformer.do(
-      Action.Type.WORLD_ENTITY_ADD,
-      data
-    );
-    
-    this._addEntityActionData.gameObject = undefined;
-    this._addEntityActionData.layerId    = undefined;
-  }
-  
-  _performPan() {
-    // Make a clone that won't be affected by the upcoming zeroing-out for dx, dy
-    let data = {
-      dx:          this._panActionData.dx,
-      dy:          this._panActionData.dy,
-      gameObjects: this.selector.selectedObjects.slice(0)
-    };
-
-    ActionPerformer.do(
-      Action.Type.WORLD_SELECTION_MOVE,
-      data
-    );
-
-    this._panActionData.dx = 0;
-    this._panActionData.dy = 0;
-  }
-  
-  
-  
-  
-  
 }
 
 // Define constants

@@ -25,7 +25,7 @@ Object.defineProperties(Action, {
   // what data it contains in its COMPLETED state (for DEFAULT directions)
   //
   // Search for DATA_APPEND in comments to see where data is added onto
-  // Actions while they are IN_PROGRESS, so see which properties are prepended
+  // Actions while they are IN_PROGRESS, or see which properties are prepended
   // with a @ symbol below
   Type: {
     value: {

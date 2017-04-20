@@ -41,40 +41,6 @@ class WorldTool extends Tool {
       (action) => this.subwindowView.onActionWorldSelectionMove(action)
     );
   }
-  
- /* parseAction(action) {
-    let scene = this.subwindowView.worldEditorScene;
-    let data  = action.data;
-
-    if (action.direction === Action.Direction.DEFAULT) {
-      switch (action.type) {
-        case Action.Type.MAIN_TOOL_SELECT:
-          scene.tool = new data.classReference(scene);
-          break;
-
-        case Action.Type.ENTITY_SELECT:
-          scene.curEntity = data;
-          break;
-
-        case Action.Type.LAYER_SELECT:
-          scene.layerId = data;
-          break;
-
-        case Action.Type.LAYER_ADD:
-          scene.addLayer(data);
-          break;
-
-        case Action.Type.LAYER_REMOVE:
-          scene.removeLayer(data);
-          break;
-      }
-      
-    } else if (action.direction === Action.Direction.UNDO) {
-      
-    } else if (action.direction === Action.Direction.REDO) {
-      
-    }
-  }*/
 }
 
 module.exports = WorldTool;

@@ -92,9 +92,35 @@ class WorldView extends SubwindowView {
     scene.removeLayer(layerId);
   }
   
-  onActionWorldEntityAdd(action) {}
-  onActionWorldEntityRemove(action) {}
-  onActionWorldSelectionMove(action) {}
+  onActionWorldEntityAdd(action) {
+    let {layerId, gameObject} = action.data;
+    let scene                 = this.worldEditorScene;
+    
+    scene.addGameObject(gameObject, layerId);
+  }
+  
+  onActionWorldEntityRemove(action) {
+    let {layerId, gameObject} = action.data;
+    let scene                 = this.worldEditorScene;
+    
+    scene.removeGameObject(gameObject, layerId);
+  }
+  
+  onActionWorldSelectionMove(action) {
+    if (action.direction !== Action.Direction.DEFAULT) {
+      let {dx, dy, gameObjects} = action.data;
+      let scene                 = this.worldEditorScene;
+      
+      // dx and dy are negated if necessary by the ActionPerformer, so
+      // use addition
+      for (let obj of gameObjects) {
+        obj.position.x += dx;
+        obj.position.y += dy;
+      }
+      
+      scene.selector.update();
+    }
+  }
 }
 
 module.exports = WorldView;

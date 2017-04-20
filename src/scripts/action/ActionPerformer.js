@@ -50,8 +50,23 @@ const ActionPerformer = {
         );
         break;
       
+      case Action.Type.WORLD_ENTITY_ADD:
+        revAction = new Action(
+          Action.Type.WORLD_ENTITY_REMOVE,
+          data
+        );
+        break;
+      
+      case Action.Type.WORLD_ENTITY_REMOVE:
+        revAction = new Action(
+          Action.Type.WORLD_ENTITY_ADD,
+          data
+        );
+        break;
+      
       case Action.Type.WORLD_SELECTION_MOVE:
         revAction = new Action(
+          Action.Type.WORLD_SELECTION_MOVE,
           {
             dx: -data.dx,
             dy: -data.dy,
