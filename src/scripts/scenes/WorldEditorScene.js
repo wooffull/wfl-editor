@@ -60,6 +60,8 @@ class WorldEditorScene extends EditorScene {
     this.camera.position.y = 0;
     this.camera.zoom       = WorldEditorScene.DEFAULT_SCALE;
     this._entityCounter    = 0;
+    this.curEntity         = undefined;
+    this.layerId           = 0;
   }
 
   update(dt) {
@@ -269,16 +271,20 @@ class WorldEditorScene extends EditorScene {
   }
   
   scheduleSelectionMove(dx, dy) {
-    let data = {
-      dx:          dx,
-      dy:          dy,
-      gameObjects: this.selector.selectedObjects.slice(0)
-    };
+    let selectedGameObjects = this.selector.selectedObjects;
+    
+    if (selectedGameObjects.length > 0) {
+      let data = {
+        dx:          dx,
+        dy:          dy,
+        gameObjects: selectedGameObjects.slice(0)
+      };
 
-    ActionPerformer.do(
-      Action.Type.WORLD_SELECTION_MOVE,
-      data
-    );
+      ActionPerformer.do(
+        Action.Type.WORLD_SELECTION_MOVE,
+        data
+      );
+    }
   }
   
   addCurrentGameObject(x, y) {

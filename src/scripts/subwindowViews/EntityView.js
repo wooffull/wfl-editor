@@ -8,6 +8,10 @@ const {ExpandableMenu,
 const {Entity}          = require('../world');
 const {Action,
        ActionPerformer} = require('../action');
+const {remote}          = require('electron');
+const {dialog}          = remote;
+const fs                = remote.require('fs');
+const path              = remote.require('path');
 
 class EntityView extends SubwindowView {
   constructor() {
@@ -15,20 +19,6 @@ class EntityView extends SubwindowView {
     
     this.entitiesMenu = new ExpandableMenu('Entities');
     this.add(this.entitiesMenu);
-    
-    // TODO: Remove these test entities and add scroll bars when
-    // there are too many entities
-    for (let i = 0; i < 10; i++) {
-      let ent = null;
-      
-      if (i % 2 === 1) {
-        ent = new Entity({name: i.toString(), imageSource: './media/Sprites1.png'});
-      } else {
-        ent = new Entity({name: i.toString(), imageSource: './media/icon.png'});
-      }
-      
-      this.addEntity(ent);
-    }
     
     this.addEntityEntryBtn = new MenuButton('add_box');
     this.addEntityEntryBtn.element.on('click', () => this.addEntityEntry());
@@ -38,8 +28,9 @@ class EntityView extends SubwindowView {
     this.removeEntityEntryBtn.element.on('click', () => this.removeEntityEntry());
     this.entitiesMenu.addButton(this.removeEntityEntryBtn);
     
-    $(this.entitiesMenu.element).on('click', () => {
-      this.selectEntity(this.getSelectedEntity().element.html());
+    $(this.entitiesMenu).on('change', (e, data) => {
+      let elem = data.element;
+      this.selectEntity(elem[0].innerHTML);
     });
   }
   
@@ -49,26 +40,18 @@ class EntityView extends SubwindowView {
   
   reset() {
     this.entitiesMenu.clear();
-    
-    // TODO: Remove these test entities and add scroll bars when
-    // there are too many entities
-    for (let i = 0; i < 10; i++) {
-      let ent = null;
-      
-      if (i % 2 === 1) {
-        ent = new Entity({name: i.toString(), imageSource: './media/Sprites1.png'});
-      } else {
-        ent = new Entity({name: i.toString(), imageSource: './media/icon.png'});
-      }
-      
-      this.addEntity(ent);
-    }
   }
   
   selectEntity(entityId) {
+    let entity = null;
+    
+    if (entityId) {
+      entity = this.entitiesMenu.find(entityId).data;
+    }
+    
     let entityData = {
       entityId: entityId,
-      entity:   this.entitiesMenu.find(entityId).data
+      entity:   entity
     };
     
     // Select the newest entity
@@ -80,11 +63,59 @@ class EntityView extends SubwindowView {
   }
   
   addEntityEntry() {
-    console.log("Add Entity");
+    dialog.showOpenDialog({
+      properties: [
+        'openFile',
+        'multiSelections'
+      ],
+      filters: [
+        {name: 'Images', extensions: ['png', 'jpg', 'gif']},
+        {name: 'All Files', extensions: ['*']}
+      ]
+    },
+                          
+    (filePaths) => {
+      if (filePaths === undefined) {
+        return;
+      }
+      
+      for (let filePath of filePaths) {
+        fs.readFile(filePath, 'utf-8', (err, data) => {
+          if (err) {
+            alert("An error occurred while reading the file: " + err.message);
+            return;
+          }
+          
+          let entityName = path.parse(filePath).name;
+          let entity     = new Entity({
+            name: entityName,
+            imageSource: filePath
+          });
+          this.addEntity(entity);
+          
+          // Select the last added entity
+          this.selectEntity(entityName);
+        })
+      }
+    });
   }
   
   removeEntityEntry() {
-    console.log("Remove Entity");
+    let selected = this.getSelectedEntity();
+    
+    if (selected) {
+      this.entitiesMenu.remove(selected);
+      
+      // After removing the previously selected element, get the currently
+      // selected one and perform an ENTITY_SELECT
+      selected = this.getSelectedEntity();
+      
+      if (selected) {
+        this.selectEntity(selected.element.html());
+      } else {
+        this.selectEntity(null);
+      }
+    }
   }
   
   addEntity(entity) {
@@ -95,10 +126,13 @@ class EntityView extends SubwindowView {
   
   
   onActionEntitySelect(action) {
-    let {entity}   = action.data;
-    let entityName = entity.name;
-    let menuItem   = this.entitiesMenu.find(entityName);
-    this.entitiesMenu.select(menuItem);
+    let {entity} = action.data;
+    
+    if (entity) {
+      let entityName = entity.name;
+      let menuItem   = this.entitiesMenu.find(entityName);
+      this.entitiesMenu.select(menuItem);
+    }
   }
 }
 

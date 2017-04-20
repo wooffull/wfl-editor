@@ -30,6 +30,8 @@ class WorldView extends SubwindowView {
     this.worldEditorScene.camera.zoom = 1;
     this.worldEditorScene.camera.position.x = 0;
     this.worldEditorScene.camera.position.y = 0;
+    this.worldEditorScene.curEntity = null;
+    this.worldEditorScene.curEntity = null;
   }
   
   resize(e) {

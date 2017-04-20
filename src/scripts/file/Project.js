@@ -2,8 +2,7 @@
 
 const fs        = require('fs');
 const path      = require('path');
-const {dialog,
-      ipcMain}  = require('electron');
+const {dialog}  = require('electron');
 const AppConfig = require('./AppConfig');
 const mkdirp    = require('mkdirp');
 

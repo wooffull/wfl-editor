@@ -48,7 +48,6 @@ class LayerView extends SubwindowView {
   }
 
   onMenuChange(e, data) {
-    console.log(data);
     var layerId = data.element[0].innerHTML;
     this.selectLayer(layerId);
   }
