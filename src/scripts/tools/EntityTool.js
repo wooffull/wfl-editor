@@ -14,6 +14,10 @@ class EntityTool extends Tool {
       (action) => this.subwindowView.onActionEntitySelect(action)
     );
     this.register(
+      Action.Type.ENTITY_ADD,
+      (action) => this.subwindowView.onActionEntityAdd(action)
+    );
+    this.register(
       Action.Type.ENTITY_REMOVE,
       (action) => this.subwindowView.onActionEntityRemove(action)
     );

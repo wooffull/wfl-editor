@@ -63,8 +63,17 @@ Object.defineProperties(Action, {
       //
       //  data: {
       //    entityId: <The entity's name in the entity list>
+      //    entity: <TODO: Finish Entity -- An Entity instance>
+      //      - name: <Same as entityId>
+      //      - imageSource: <Path to the entity's image>
+      //  }
+      ENTITY_ADD: 'entity-add',
+      //
+      //  data: {
+      //    entityId: <The entity's name in the entity list>
       //  }
       ENTITY_REMOVE: 'entity-remove',
+      
       
       // WorldTool
       //

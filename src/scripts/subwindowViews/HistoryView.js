@@ -74,6 +74,10 @@ class HistoryView extends SubwindowView {
         label = 'Remove Layer: ' + action.data;
         break;
       
+      case Action.Type.ENTITY_ADD:
+        label = 'Add entity: ' + action.data.entityId;
+        break;
+      
       case Action.Type.WORLD_ENTITY_ADD:
         let addedGameObject = action.data.gameObject;
         let addedLayerId    = action.data.layerId;

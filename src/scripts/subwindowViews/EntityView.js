@@ -62,6 +62,17 @@ class EntityView extends SubwindowView {
     );
   }
   
+  addEntity(entity) {
+    let entityData = {
+      entityId: entity.name,
+      entity:   entity
+    };
+    ActionPerformer.do(
+      Action.Type.ENTITY_ADD,
+      entityData
+    );
+  }
+  
   addEntityEntry() {
     dialog.showOpenDialog({
       properties: [
@@ -93,9 +104,6 @@ class EntityView extends SubwindowView {
               imageSource: filePath
             });
             this.addEntity(entity);
-
-            // Select the last added entity
-            this.selectEntity(entityName);
           }
         })
       }
@@ -103,6 +111,11 @@ class EntityView extends SubwindowView {
   }
   
   removeEntityEntry() {
+    let selected = this.getSelectedEntity();
+    
+    // If no entry is selected none can be removed, so exit early
+    if (!selected) return;
+
     dialog.showMessageBox({
       type:    'question',
       title:   'Remove entity?',
@@ -112,8 +125,6 @@ class EntityView extends SubwindowView {
       switch (res) {
         // Yes: Remove the entity from the game
         case 0:
-          let selected = this.getSelectedEntity();
-
           if (selected) {
             // Remove the selected entity
             let entityData = {
@@ -139,11 +150,6 @@ class EntityView extends SubwindowView {
     });
   }
   
-  addEntity(entity) {
-    let menuItem = new MenuItem(entity.name, entity);
-    this.entitiesMenu.append(menuItem);
-  }
-  
   
   
   onActionEntitySelect(action) {
@@ -153,6 +159,16 @@ class EntityView extends SubwindowView {
       let menuItem = this.entitiesMenu.find(entityId);
       this.entitiesMenu.select(menuItem);
     }
+  }
+  
+  onActionEntityAdd(action) {
+    let {entity} = action.data;
+    
+    let menuItem = new MenuItem(entity.name, entity);
+    this.entitiesMenu.append(menuItem);
+
+    // Select the added entity
+    this.selectEntity(entity.name);
   }
   
   onActionEntityRemove(action) {
