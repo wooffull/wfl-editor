@@ -101,21 +101,40 @@ class EntityView extends SubwindowView {
   }
   
   removeEntityEntry() {
-    let selected = this.getSelectedEntity();
-    
-    if (selected) {
-      this.entitiesMenu.remove(selected);
-      
-      // After removing the previously selected element, get the currently
-      // selected one and perform an ENTITY_SELECT
-      selected = this.getSelectedEntity();
-      
-      if (selected) {
-        this.selectEntity(selected.element.html());
-      } else {
-        this.selectEntity(null);
+    dialog.showMessageBox({
+      type:    'question',
+      title:   'Remove entity?',
+      buttons: ['Yes', 'No'],
+      message: 'Remove this entity permanently from the game? History will be cleared. (No undo)'
+    }, (res) => {
+      switch (res) {
+        // Yes: Remove the entity from the game
+        case 0:
+          let selected = this.getSelectedEntity();
+
+          if (selected) {
+            // Remove the selected entity
+            let entityData = {
+              entityId: selected.element.html()
+            };
+            ActionPerformer.do(
+              Action.Type.ENTITY_REMOVE,
+              entityData,
+              false
+            );
+            
+            // Clear history
+            let clearData = {
+              msg: "Entity (" + entityData.entityId + ") removed"
+            };
+            ActionPerformer.do(
+              Action.Type.HISTORY_CLEAR,
+              clearData
+            );
+          }
+          break;
       }
-    }
+    });
   }
   
   addEntity(entity) {
@@ -126,12 +145,29 @@ class EntityView extends SubwindowView {
   
   
   onActionEntitySelect(action) {
-    let {entity} = action.data;
+    let {entity, entityId} = action.data;
     
     if (entity) {
-      let entityName = entity.name;
-      let menuItem   = this.entitiesMenu.find(entityName);
+      let menuItem = this.entitiesMenu.find(entityId);
       this.entitiesMenu.select(menuItem);
+    }
+  }
+  
+  onActionEntityRemove(action) {
+    let {entityId} = action.data;
+    let menuItem   = this.entitiesMenu.find(entityId);
+    this.entitiesMenu.remove(menuItem);
+
+    // After removing the element, get the currently selected one and
+    // perform an ENTITY_SELECT
+    let selected = this.getSelectedEntity();
+
+    if (selected) {
+      this.selectEntity(selected.element.html());
+    } else {
+      // Still perform an ENTITY_SELECT on null so that other tools can
+      // handle when no more entities are remaining in the project
+      this.selectEntity(null);
     }
   }
 }

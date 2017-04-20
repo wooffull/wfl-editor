@@ -249,6 +249,7 @@ class WorldEditorScene extends EditorScene {
   scheduleAddGameObject(obj, layerId) {
     let data = {
       gameObject: obj,
+      entity:     this.curEntity,
       layerId:    layerId
     };
     
@@ -258,15 +259,16 @@ class WorldEditorScene extends EditorScene {
     );
   }
   
-  scheduleRemoveGameObject(obj, layerId) {
+  scheduleRemoveGameObject(obj, layerId, reversable = true) {
     let data = {
       gameObject: obj,
       layerId:    layerId
     };
-
+    
     ActionPerformer.do(
       Action.Type.WORLD_ENTITY_REMOVE,
-      data
+      data,
+      reversable
     );
   }
   

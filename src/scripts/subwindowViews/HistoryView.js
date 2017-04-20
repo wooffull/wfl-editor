@@ -79,7 +79,7 @@ class HistoryView extends SubwindowView {
         let addedLayerId    = action.data.layerId;
         let addedEntity     = addedGameObject.customData.entity;
         let addedId         = addedGameObject.customData.id;
-        label = 'Place Entity: ' + addedEntity.name + '@' + addedId +
+        label = 'Place Entity: ' + addedEntity.name + '#' + addedId +
                 ' [' + addedLayerId + ']';
         break;
         
@@ -88,7 +88,7 @@ class HistoryView extends SubwindowView {
         let removedLayerId    = action.data.layerId;
         let removedEntity     = removedGameObject.customData.entity;
         let removedId         = removedGameObject.customData.id;
-        label = 'Remove Entity: ' + removedEntity.name + '@' + removedId +
+        label = 'Remove Entity: ' + removedEntity.name + '#' + removedId +
                 ' [' + removedLayerId + ']';
         break;
       
@@ -101,11 +101,15 @@ class HistoryView extends SubwindowView {
           let movedLayerId    = movedGameObject.layer;
           let movedEntity     = movedGameObject.customData.entity;
           let movedId         = movedGameObject.customData.id;
-          label = 'Moved Entity: ' + movedEntity.name + '@' + movedId +
+          label = 'Moved Entity: ' + movedEntity.name + '#' + movedId +
                 ' [' + movedLayerId + ']';
         } else {
           label = 'Moved ' + length + ' Entities';
         }
+        break;
+        
+      case Action.Type.HISTORY_CLEAR:
+        label = action.data.msg;
         break;
       
       default:

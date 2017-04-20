@@ -30,13 +30,13 @@ Object.defineProperties(Action, {
   Type: {
     value: {
       //  data: {}
-      DEFAULT:              'default',
+      DEFAULT: 'default',
       
       
       // FileExplorerTool
       //
       //  data: {}
-      FILE_INIT:            'file-init',
+      FILE_INIT: 'file-init',
       
       
       // ToolBarTool
@@ -48,7 +48,7 @@ Object.defineProperties(Action, {
       //      - materialIconLabel: <The string used by Google's Material Icons>
       //    icon: <The <i> tag in the DOM associated with the tool>
       //  }
-      MAIN_TOOL_SELECT:     'main-tool-select',
+      MAIN_TOOL_SELECT: 'main-tool-select',
       
       
       // EntityTool
@@ -59,22 +59,27 @@ Object.defineProperties(Action, {
       //      - name: <Same as entityId>
       //      - imageSource: <Path to the entity's image>
       //  }
-      ENTITY_SELECT:        'entity-select',
-      
+      ENTITY_SELECT: 'entity-select',
+      //
+      //  data: {
+      //    entityId: <The entity's name in the entity list>
+      //  }
+      ENTITY_REMOVE: 'entity-remove',
       
       // WorldTool
       //
       //  data: {
       //    gameObject: <The game object added>
+      //    entity: <The entity that the game object is instanced from>
       //    layerId: <The layer that the game object was added to>
       //  }
-      WORLD_ENTITY_ADD:     'world-entity-add',
+      WORLD_ENTITY_ADD: 'world-entity-add',
       //
       //  data: {
       //    gameObject: <The game object removed>
       //    layerId: <The layer that the game object was removed from>
       //  }
-      WORLD_ENTITY_REMOVE:  'world-entity-remove',
+      WORLD_ENTITY_REMOVE: 'world-entity-remove',
       //
       //  data: {
       //    dx: <Amount of pixels moved horizontally>
@@ -89,19 +94,22 @@ Object.defineProperties(Action, {
       //  data: {
       //    layerId: <The layer's name>
       //  }
-      LAYER_SELECT:         'layer-select',
+      LAYER_SELECT: 'layer-select',
       //
       //  data: {
       //    layerId: <The layer's name>
       //  }
-      LAYER_ADD:            'layer-add',
+      LAYER_ADD: 'layer-add',
       //
       //  data: {
       //    layerId: <The layer's name>,
       //    @layerIndex: <The layer's position in the layer menu before being removed>
       //    @entities: <An array of all the entities in the layer before being removed>
       //  }
-      LAYER_REMOVE:         'layer-remove'
+      LAYER_REMOVE: 'layer-remove',
+      
+      
+      HISTORY_CLEAR: 'history-clear'
     }
   },
   

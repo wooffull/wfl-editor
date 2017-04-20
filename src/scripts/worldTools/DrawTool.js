@@ -74,7 +74,7 @@ class DrawTool extends WorldTool {
         let selectedObjects = selector.selectedObjects;
 
         for (let i = selectedObjects.length - 1; i >= 0; i--) {
-          this.editor.removeGameObject(selectedObjects[i]);
+          this.editor.scheduleRemoveGameObject(selectedObjects[i]);
         }
       }
     }
@@ -102,7 +102,7 @@ class DrawTool extends WorldTool {
     } else {
       // Clicked an object, so remove it
       if (clickObj) {
-        this.editor.removeGameObject(clickObj, clickObj.layer);
+        this.editor.scheduleRemoveGameObject(clickObj, clickObj.layer);
       }
     }
   }

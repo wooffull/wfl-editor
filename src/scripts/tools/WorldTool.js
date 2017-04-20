@@ -40,6 +40,10 @@ class WorldTool extends Tool {
       Action.Type.WORLD_SELECTION_MOVE,
       (action) => this.subwindowView.onActionWorldSelectionMove(action)
     );
+    this.register(
+      Action.Type.ENTITY_REMOVE,
+      (action) => this.subwindowView.onActionEntityRemove(action)
+    );
   }
 }
 

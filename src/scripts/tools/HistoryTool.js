@@ -1,6 +1,7 @@
 "use strict";
 
 const Tool           = require('./Tool');
+const {Action}       = require('../action'); 
 const subwindowViews = require('../subwindowViews');
 
 class HistoryTool extends Tool {
@@ -12,6 +13,10 @@ class HistoryTool extends Tool {
   }
   
   addAction(action) {
+    if (action.type === Action.Type.HISTORY_CLEAR) {
+      this.subwindowView.reset();
+    }
+    
     this.subwindowView.addAction(action);
   }
 }

@@ -98,6 +98,8 @@ class WorldView extends SubwindowView {
     let {layerId, gameObject} = action.data;
     let scene                 = this.worldEditorScene;
     
+    gameObject.customData.entity = action.data.entity;
+    
     scene.addGameObject(gameObject, layerId);
   }
   
@@ -121,6 +123,19 @@ class WorldView extends SubwindowView {
       }
       
       scene.selector.update();
+    }
+  }
+  
+  onActionEntityRemove(action) {
+    // Removes all instances of the entity being removed
+    let {entityId}  = action.data;
+    let scene       = this.worldEditorScene;
+    let gameObjects = scene.getGameObjects();
+    
+    for (let obj of gameObjects) {
+      if (obj.customData.entity.name === entityId) {
+        scene.scheduleRemoveGameObject(obj, obj.layer, false);
+      }
     }
   }
 }
