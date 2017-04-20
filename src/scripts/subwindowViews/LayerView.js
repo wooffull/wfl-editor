@@ -28,6 +28,8 @@ class LayerView extends SubwindowView {
     });
     this.layersMenu.addButton(this.removeLayerBtn);
     
+    $(this.layersMenu).on("change", (e, data) => this.onMenuChange(e, data));
+    
     this._layerCount = 0;
     this.reset();
   }
@@ -43,6 +45,12 @@ class LayerView extends SubwindowView {
     
     // Add layer0 immediately
     this.addLayer();
+  }
+
+  onMenuChange(e, data) {
+    console.log(data);
+    var layerId = data.element[0].innerHTML;
+    this.selectLayer(layerId);
   }
   
   selectLayer(layerId) {
@@ -76,9 +84,6 @@ class LayerView extends SubwindowView {
       layerData,
       !isFirstLayer
     );
-
-    // Select the new layer when adding one
-    this.selectLayer(layerId);
   }
   
   removeLayer(layerId) {
@@ -117,6 +122,7 @@ class LayerView extends SubwindowView {
     } else {
       this.layersMenu.prepend(menuItem);
     }
+    this.selectLayer(layerId);
   }
   
   onActionLayerRemove(action) {
@@ -131,6 +137,7 @@ class LayerView extends SubwindowView {
     }
     
     this.layersMenu.remove(menuItem);
+    this.selectLayer(this.getSelectedLayer().element.html());
   }
 }
 

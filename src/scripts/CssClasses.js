@@ -4,17 +4,17 @@ module.exports = {
   MATERIAL_ICON: 'material-icons',
   TOOL: 'tool',
   
-  SUBWINDOW: 'subwindow',
+  SUBWINDOW: 'flex-column-box subwindow',
   SUBWINDOW_TOOLBAR: 'subwindow-toolbar',
-  SUBWINDOW_VIEW: 'subwindow-view',
+  SUBWINDOW_VIEW: 'flex-column-box subwindow-view',
   
   WORLD_CANVAS: 'world-canvas',
   TOOL_BAR_TOOL_ICON: 'tool-bar-tool-icon',
   
   /* Classes for Menu */
-  MENU: 'menu',
+  MENU: 'flex-column-box menu',
   MENU_LABEL: 'menu-label',
-  MENU_MAIN_INTERIOR: 'menu-main-interior',
+  MENU_MAIN_INTERIOR: 'flex-column-box menu-main-interior',
   
   MENU_ITEM: 'menu-item',
   MENU_BUTTON: 'menu-button',

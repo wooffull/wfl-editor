@@ -28,12 +28,16 @@ class Menu extends HtmlElement {
     this.element.append(this._previewWindow.element);
     this.element.append(this.mainInterior);
     
+    this.buttonContainer = $('<span>');
+    this.label.append(this.buttonContainer);
+    
     this.label.addClass(CssClass.MENU_LABEL);
     this.mainInterior.addClass(CssClass.MENU_MAIN_INTERIOR);
     this.element.addClass(CssClass.MENU);
     
     this.element.on('mousemove', (e) => this._onMouseMove(e));
     this.element.on('mouseout',  (e) => this._onMouseOut(e));
+    this.element.on('mousedown', (e) => this._onMouseDown(e));
   }
   
   find(label) {
@@ -145,7 +149,7 @@ class Menu extends HtmlElement {
   }
   
   addButton(button) {
-    this.element.prepend(button.element);
+    this.buttonContainer.prepend(button.element);
   }
   
   getLastSelected() {
@@ -153,6 +157,7 @@ class Menu extends HtmlElement {
   }
   
   _addElement(htmlElement, position) {
+    // Instead of push, splice the element into the given position
     this.list.splice(position, 0, htmlElement);
     
     htmlElement.element.on('click',     () => this.select(htmlElement));
@@ -176,6 +181,17 @@ class Menu extends HtmlElement {
     
     this._previewWindow.hide();
     this._previewWindow.setImage(undefined);
+  }
+  
+  _onMouseDown(e) {
+    var target = e.target;
+    var found = this.find(target.innerHTML);
+    
+    if (found && found.element[0] === target) {
+      if (!this._lastSelected || this._lastSelected !== found) {
+        $(this).trigger("change", [found]);
+      }
+    }
   }
   
   _onItemHover(htmlElement) {
