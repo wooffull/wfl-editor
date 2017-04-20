@@ -49,8 +49,12 @@ class DrawTool extends WorldTool {
       let tileWorldPos = mouseTilePos.multiply(tileSize);
       let x            = tileWorldPos.x + tileSize * 0.5;
       let y            = tileWorldPos.y + tileSize * 0.5;
+      let addedObj     = this.editor.addCurrentGameObject(x, y);
       
-      this.editor.addCurrentGameObject(x, y);
+      if (addedObj) {
+        selector.clear();
+        selector.add(addedObj);
+      }
     }
   }
 

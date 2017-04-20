@@ -99,12 +99,26 @@ ipcMain.on('project-new', () => {
   file.Project.reset(win);
 });
 
-ipcMain.on('project-save', () => {
-  file.Project.save();
+ipcMain.on('project-save', (e, data) => {
+  if (data) {
+    let project = file.Project.getProject();
+    project.level = data;
+    
+    file.Project.save();
+  } else {
+    win.webContents.send('request-project-data', 'project-save');
+  }
 });
 
 ipcMain.on('project-save-as', () => {
-  file.Project.saveAs();
+  if (data) {
+    let project = file.Project.getProject();
+    project.level = data;
+    
+    file.Project.saveAs();
+  } else {
+    win.webContents.send('request-project-data', 'project-save-as');
+  }
 });
 
 ipcMain.on('project-load', () => {

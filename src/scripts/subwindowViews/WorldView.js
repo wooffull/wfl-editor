@@ -98,8 +98,6 @@ class WorldView extends SubwindowView {
     let {layerId, gameObject} = action.data;
     let scene                 = this.worldEditorScene;
     
-    gameObject.customData.entity = action.data.entity;
-    
     scene.addGameObject(gameObject, layerId);
   }
   

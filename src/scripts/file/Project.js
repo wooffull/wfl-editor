@@ -20,6 +20,8 @@ function updateHistory(time) {
   win.webContents.send('project-altered', project, hasChanges());
 }
 
+
+
 function confirmSavedChanges(forcedNext) {
   // If changes were made, ask the user if they want to save the project before
   // closing this one
@@ -53,6 +55,8 @@ function confirmSavedChanges(forcedNext) {
   }
 }
 
+
+
 /**
  * Resets the current project back to a new project's state
  */
@@ -70,8 +74,10 @@ function newProject(winRef, _preventConfirmation = false) {
     dirname:     undefined,
     lastChanged: undefined
   };
-  win.webContents.send('project-new', project);
+  win.webContents.send('project-new-finalize', project);
 }
+
+
 
 /**
  * Allows user to select the project's directory with the file explore to save a new project
@@ -99,6 +105,8 @@ function saveAsProject(next) {
     saveProject(next);
   });
 }
+
+
 
 /**
  * Saves changes to the current project
@@ -128,12 +136,14 @@ function saveProject(next) {
       if (err) {
         throw err;
       }
-      win.webContents.send('project-save', project);
+      win.webContents.send('project-save-finalize', project);
       
       if (next) next();
     });
   })
 }
+
+
 
 /**
  * Allows user to explore files to load a .wfl project
@@ -166,7 +176,7 @@ function loadProject(projectTitle = 'test', _preventConfirmation = false) {
       }
 
       project = JSON.parse(data);
-      win.webContents.send('project-load', project);
+      win.webContents.send('project-load-finalize', project);
       
       lastChanged = project.lastChanged;
       win.webContents.send('project-altered', project, hasChanges());

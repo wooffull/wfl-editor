@@ -246,16 +246,17 @@ class WorldEditorScene extends EditorScene {
     super.removeGameObject(obj, layerId);
   }
   
-  scheduleAddGameObject(obj, layerId) {
+  scheduleAddGameObject(obj, layerId, reversable = true) {
     let data = {
       gameObject: obj,
-      entity:     this.curEntity,
+      entity:     obj.customData.entity,
       layerId:    layerId
     };
     
     ActionPerformer.do(
       Action.Type.WORLD_ENTITY_ADD,
-      data
+      data,
+      reversable
     );
   }
   
@@ -291,34 +292,41 @@ class WorldEditorScene extends EditorScene {
   
   addCurrentGameObject(x, y) {
     if (this.curEntity) {
-      let entity     = this.curEntity;
-      let gameObject = new wfl.core.entities.PhysicsObject();
-      let image      = new Image();
-
-      image.src = entity.imageSource;
-      image.onload = function () {
-        gameObject.graphic           = image;
-        gameObject.position.x        = x;
-        gameObject.position.y        = y;
-        gameObject.customData.entity = entity;
-        gameObject.customData.id     = this._entityCounter;
-        
-        // If the mouse is up, then the entity has been placed.
-        // If the mouse is still down, the entity is being dragged and we'll 
-        // add it later (onBeforeMouseUp)
-        let leftMouseState = this.mouse.getState(1);
-        if (!leftMouseState.isDown) {
-          this.scheduleAddGameObject(gameObject, this.layerId);
-        } else {
-          this._addEntityActionData.gameObject = gameObject;
-          this._addEntityActionData.layerId    = this.layerId;
-        }
-        
-        this.selector.clear();
-        this.selector.add(gameObject);
-        this._entityCounter++;
-      }.bind(this);
+      let gameObject = this.addEntity(this.curEntity);
+      gameObject.position.x = x;
+      gameObject.position.y = y;
+      return gameObject;
     }
+    
+    return null;
+  }
+  
+  addEntity(entity, layerId = this.layerId, reversable = true) {
+    let gameObject = new wfl.core.entities.PhysicsObject();
+    let image      = new Image();
+
+    image.src = entity.imageSource;
+    image.onload = function () {
+      gameObject.graphic           = image;
+      gameObject.customData.entity = entity;
+      gameObject.customData.id     = this._entityCounter;
+
+      // If the mouse is up, then the entity has been placed.
+      // If the mouse is still down, the entity is being dragged and we'll 
+      // add it later (onBeforeMouseUp)
+      let leftMouseState = this.mouse.getState(1);
+      if (!leftMouseState.isDown) {
+        this.scheduleAddGameObject(gameObject, layerId, reversable);
+      } else {
+        this._addEntityActionData.gameObject = gameObject;
+        this._addEntityActionData.layerId    = layerId;
+      }
+      
+      this.selector.update();
+      this._entityCounter++;
+    }.bind(this);
+    
+    return gameObject;
   }
 
   handleInput() {

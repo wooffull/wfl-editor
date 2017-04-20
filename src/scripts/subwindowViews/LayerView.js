@@ -2,7 +2,7 @@
 
 const $                 = wfl.jquery;
 const SubwindowView     = require('./SubwindowView');
-const {ExpandableMenu,
+const {Menu,
        MenuItem,
        MenuButton}      = require('../ui');
 const {Entity}          = require('../world');
@@ -13,7 +13,7 @@ class LayerView extends SubwindowView {
   constructor() {
     super();
     
-    this.layersMenu = new ExpandableMenu('Layers');
+    this.layersMenu = new Menu('Layers');
     this.add(this.layersMenu);
     
     this.addLayerBtn = new MenuButton('add_box');

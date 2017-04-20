@@ -2,7 +2,7 @@
 
 const $                 = wfl.jquery;
 const SubwindowView     = require('./SubwindowView');
-const {ExpandableMenu,
+const {Menu,
        MenuItem,
        MenuButton}      = require('../ui');
 const {Entity}          = require('../world');
@@ -17,7 +17,7 @@ class EntityView extends SubwindowView {
   constructor() {
     super();
     
-    this.entitiesMenu = new ExpandableMenu('Entities');
+    this.entitiesMenu = new Menu('Entities');
     this.add(this.entitiesMenu);
     
     this.addEntityEntryBtn = new MenuButton('add_box');
@@ -87,14 +87,16 @@ class EntityView extends SubwindowView {
           }
           
           let entityName = path.parse(filePath).name;
-          let entity     = new Entity({
-            name: entityName,
-            imageSource: filePath
-          });
-          this.addEntity(entity);
-          
-          // Select the last added entity
-          this.selectEntity(entityName);
+          if (!this.entitiesMenu.find(entityName)) {
+            let entity     = new Entity({
+              name: entityName,
+              imageSource: filePath
+            });
+            this.addEntity(entity);
+
+            // Select the last added entity
+            this.selectEntity(entityName);
+          }
         })
       }
     });

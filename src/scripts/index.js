@@ -34,17 +34,17 @@ $('.maximize').on('click', () => ipcRenderer.send('window-maximize'));
 
 
 // Listener for when project updates are received
-ipcRenderer.on('project-new', (e, project) => {
+ipcRenderer.on('project-new-finalize', (e, project) => {
   $('#project-title').html('untitled');
   editor.reset(project);
 });
 
-ipcRenderer.on('project-save', (e, project) => {
+ipcRenderer.on('project-save-finalize', (e, project) => {
   $('#project-title').html(project.title);
   editor.projectUpdate(project);
 });
 
-ipcRenderer.on('project-load', (e, project) => {
+ipcRenderer.on('project-load-finalize', (e, project) => {
   $('#project-title').html(project.title);
   editor.reset(project);
   editor.projectUpdate(project);
@@ -56,6 +56,15 @@ ipcRenderer.on('project-altered', (e, project, altered) => {
   $('#project-title').html(prefix + project.title);
 });
 
+// Listener for when project data is requested externally from the main process
+// (i.e. when saving)
+ipcRenderer.on('request-project-data', (e, nextEvent) => {
+  let projectData = editor.getData();
+  
+  if (nextEvent) {
+    ipcRenderer.send(nextEvent, projectData);
+  }
+});
 
 // Create context menus
 const fileMenuTemplate = [

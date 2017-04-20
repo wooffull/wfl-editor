@@ -45,6 +45,47 @@ class WorldTool extends Tool {
       (action) => this.subwindowView.onActionEntityRemove(action)
     );
   }
+  
+  projectUpdate(project) {
+    // If no level data, exit early
+    if (!project.level) return;
+      
+    let {gameObjects} = project.level;
+    let scene         = this.subwindowView.worldEditorScene;
+
+    // If no game object data, exit early
+    if (!gameObjects) return;
+    
+    for (const obj of gameObjects) {
+      let {entity, x, y, rotation, layerId} = obj;
+      let addedObj = scene.addEntity(entity, layerId, false);
+      addedObj.position.x = x;
+      addedObj.position.y = y;
+      addedObj.setRotation(rotation);
+    }
+  }
+  
+  getData() {
+    let scene        = this.subwindowView.worldEditorScene;
+    let gameObjects  = scene.getGameObjects();
+    let data         = {
+      gameObjects: []
+    };
+    
+    for (const obj of gameObjects) {
+      let objData = {
+        layer:    obj.layer,
+        entity:   obj.customData.entity,
+        x:        obj.position.x,
+        y:        obj.position.y,
+        rotation: obj.getRotation()
+      };
+      
+      data.gameObjects.push(objData);
+    }
+    
+    return data;
+  }
 }
 
 module.exports = WorldTool;

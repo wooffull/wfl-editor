@@ -104,9 +104,26 @@ class WflEditor {
   }
   
   projectUpdate(project) {
+    // First, reset all tools so that updates don't also reset data
+    for (const tool of this.tools) {
+      tool.reset();
+    }
+    
+    // Then update the tools
     for (const tool of this.tools) {
       tool.projectUpdate(project);
     }
+  }
+  
+  getData() {
+    let project = {};
+    
+    for (const tool of this.tools) {
+      let toolData = tool.getData();
+      Object.assign(project, toolData);
+    }
+    
+    return project;
   }
 }
 

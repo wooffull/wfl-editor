@@ -61,6 +61,10 @@ class Tool extends HtmlElement {
     }
   }
   
+  getData() {
+    return {};
+  }
+  
   register(actionType, callback) {
     this.actionMap[actionType] = callback;
   }
