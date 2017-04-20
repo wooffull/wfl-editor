@@ -41,7 +41,7 @@ class Tool extends HtmlElement {
    * This update is called when something significant changes in the project,
    * like loading a new project
    */
-  projectUpdate(project) {}
+  onProjectUpdate(project) {}
   
   /**
    * This is how tools communicate with each other. They dispatch actions (events)

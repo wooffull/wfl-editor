@@ -103,15 +103,15 @@ class WflEditor {
     }
   }
   
-  projectUpdate(project) {
-    // First, reset all tools so that updates don't also reset data
+  onProjectUpdateSaved(project) {
+    // Only update the file explorer tool
+    this.fileExplorerTool.onProjectUpdate(project);
+  }
+  
+  onProjectUpdateLoaded(project) {
+    // Update all tools
     for (const tool of this.tools) {
-      tool.reset();
-    }
-    
-    // Then update the tools
-    for (const tool of this.tools) {
-      tool.projectUpdate(project);
+      tool.onProjectUpdate(project);
     }
   }
   

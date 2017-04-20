@@ -11,7 +11,7 @@ class FileExplorerTool extends Tool {
   subwindowInit() {
   }
   
-  projectUpdate(project) {
+  onProjectUpdate(project) {
     if (typeof project.dirname === 'undefined') {
       this.reset();
       return;

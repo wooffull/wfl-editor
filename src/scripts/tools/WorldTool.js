@@ -46,7 +46,7 @@ class WorldTool extends Tool {
     );
   }
   
-  projectUpdate(project) {
+  onProjectUpdate(project) {
     // If no level data, exit early
     if (!project.level) return;
       

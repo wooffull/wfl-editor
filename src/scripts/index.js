@@ -41,13 +41,17 @@ ipcRenderer.on('project-new-finalize', (e, project) => {
 
 ipcRenderer.on('project-save-finalize', (e, project) => {
   $('#project-title').html(project.title);
-  editor.projectUpdate(project);
+  editor.onProjectUpdateSaved(project);
 });
 
 ipcRenderer.on('project-load-finalize', (e, project) => {
   $('#project-title').html(project.title);
+  
+  // First, reset all tools so that updates don't also need to reset data
   editor.reset(project);
-  editor.projectUpdate(project);
+  
+  // Then update the tools
+  editor.onProjectUpdateLoaded(project);
 });
 
 ipcRenderer.on('project-altered', (e, project, altered) => {

@@ -62,14 +62,15 @@ class EntityView extends SubwindowView {
     );
   }
   
-  addEntity(entity) {
+  addEntity(entity, reversable = true) {
     let entityData = {
       entityId: entity.name,
       entity:   entity
     };
     ActionPerformer.do(
       Action.Type.ENTITY_ADD,
-      entityData
+      entityData,
+      reversable
     );
   }
   

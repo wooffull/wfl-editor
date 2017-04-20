@@ -27,7 +27,7 @@ class EntityTool extends Tool {
     $(this.subwindowView.entitiesMenu.element).click();
   }
   
-  projectUpdate(project) {
+  onProjectUpdate(project) {
     // If no level data, exit early
     if (!project.level) return;
       
@@ -43,7 +43,7 @@ class EntityTool extends Tool {
         imageSource: entityData.imageSource
       });
 
-      this.subwindowView.addEntity(entity);
+      this.subwindowView.addEntity(entity, false);
       lastEntity = entity;
     }
 
