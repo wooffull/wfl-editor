@@ -50,6 +50,14 @@ class Menu extends HtmlElement {
     return null;
   }
   
+  getAt(index) {
+    if (index < 0  || index > this.list.length - 1) {
+      return null;
+    }
+    
+    return this.list[index];
+  }
+  
   indexOf(menuItem) {
     for (var i = 0; i < this.list.length; i++) {
       if (this.list[i] === menuItem) {

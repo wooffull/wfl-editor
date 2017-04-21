@@ -17,6 +17,14 @@ class HistoryMenu extends Menu {
     super.clear();
   }
   
+  getCurrentItem() {
+    if (this.lastActiveIndex < 0) {
+      return null;
+    }
+    
+    return this.getAt(this.lastActiveIndex);
+  }
+  
   prepend(htmlElement, position) {
     throw 'History Error: Cannot prepend history.';
   }
