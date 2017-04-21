@@ -44,15 +44,7 @@ class AlignTool extends WorldTool {
     
     // Clicked on an empty spot on the canvas, so align the selected objects
     } else {
-      for (const obj of selectedObjects) {
-        let tilePos  = this.editor.convertWorldPosToTilePos(obj.position);
-        let worldPos = this.editor.convertTilePosToWorldPos(tilePos);
-
-        obj.position.x = worldPos.x;
-        obj.position.y = worldPos.y;
-      }
-
-      selector.update();
+      this.editor.scheduleSelectionAlign();
     }
   }
   

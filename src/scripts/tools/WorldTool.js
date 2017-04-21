@@ -62,6 +62,14 @@ class WorldTool extends Tool {
       (action) => this.subwindowView.onActionWorldSelectionMove(action)
     );
     this.register(
+      Action.Type.WORLD_SELECTION_ALIGN,
+      (action) => this.subwindowView.onActionWorldSelectionAlign(action)
+    );
+    this.register(
+      Action.Type.WORLD_SELECTION_ROTATE,
+      (action) => this.subwindowView.onActionWorldSelectionRotate(action)
+    );
+    this.register(
       Action.Type.ENTITY_REMOVE,
       (action) => this.subwindowView.onActionEntityRemove(action)
     );

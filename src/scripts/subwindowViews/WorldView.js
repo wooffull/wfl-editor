@@ -142,6 +142,35 @@ class WorldView extends SubwindowView {
     }
   }
   
+  onActionWorldSelectionAlign(action) {
+    let {dxList, dyList, gameObjects} = action.data;
+    let scene                         = this.worldEditorScene;
+
+    // dx and dy are negated if necessary by the ActionPerformer, so
+    // use addition
+    for (let i = 0; i < gameObjects.length; i++) {
+      gameObjects[i].position.x += dxList[i];
+      gameObjects[i].position.y += dyList[i];
+    }
+
+    scene.selector.update();
+  }
+  
+  onActionWorldSelectionRotate(action) {
+    if (action.direction !== Action.Direction.DEFAULT) {
+      let {dThetaList, gameObjects} = action.data;
+      let scene                     = this.worldEditorScene;
+
+      // dThetas are negated if necessary by the ActionPerformer, so
+      // use addition
+      for (let i = 0; i < gameObjects.length; i++) {
+        gameObjects[i].rotate(dThetaList[i]);
+      }
+
+      scene.selector.update();
+    }
+  }
+  
   onActionEntityRemove(action) {
     // Removes all instances of the entity being removed
     let {entityId}  = action.data;

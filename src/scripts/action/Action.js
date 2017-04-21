@@ -92,22 +92,35 @@ Object.defineProperties(Action, {
       //
       //  data: {
       //    gameObjects: <The game objects added>
-      //    layers: <layers[i] contains gameObjects[i]>
+      //    layers: <layers[i] is the layer that contains gameObjects[i]>
       //  }
       WORLD_ENTITY_ADD_BATCH: 'world-entity-add-batch',
       //
       //  data: {
       //    gameObjects: <The game objects removed>
-      //    layers: <layers[i] contains gameObjects[i]>
+      //    layers: <layers[i] is the layer that contains gameObjects[i]>
       //  }
       WORLD_ENTITY_REMOVE_BATCH: 'world-entity-remove-batch',
       //
       //  data: {
+      //    gameObjects: <The game objects that were moved with the action>
       //    dx: <Amount of pixels moved horizontally>
       //    dy: <Amount of pixels moved vertically>
-      //    gameObjects: <The game objects that were moved with the action>
       //  }
       WORLD_SELECTION_MOVE: 'world-selection-move',
+      //
+      //  data: {
+      //    gameObjects: <The game objects that were moved with the action>
+      //    dxList: <dxList[i] is dx for gameObjects[i]>
+      //    dyList: <dyList[i] is dy for gameObjects[i]>
+      //  }
+      WORLD_SELECTION_ALIGN: 'world-selection-align',
+      //
+      //  data: {
+      //    gameObjects: <The game objects that were moved with the action>
+      //    dThetaList: <dThetaList[i] is dTheta for gameObjects[i]>
+      //  }
+      WORLD_SELECTION_ROTATE: 'world-selection-rotate',
       
       
       // LayerTool

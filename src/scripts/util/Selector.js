@@ -123,6 +123,15 @@ class Selector {
     this.selectionBox.x += dx;
     this.selectionBox.y += dy;
   }
+  
+  rotate(dTheta) {
+    for (var i = 0; i < this.selectedObjects.length; i++) {
+      var cur = this.selectedObjects[i];
+      cur.rotate(dTheta);
+    }
+    
+    this.update();
+  }
 }
 
 module.exports = Selector;

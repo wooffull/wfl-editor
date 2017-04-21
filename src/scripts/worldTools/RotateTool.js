@@ -27,11 +27,11 @@ class RotateTool extends WorldTool {
   }
 
   leftDown() {
-    let keyboard        = this.editor.keyboard;
-    let mouse           = this.editor.mouse;
-    let mouseWorldPos   = this.editor.convertPagePosToWorldPos(mouse.position);
-    let clickObj        = this.editor.find(mouseWorldPos.x, mouseWorldPos.y);
-    let selector        = this.editor.selector;
+    let keyboard      = this.editor.keyboard;
+    let mouse         = this.editor.mouse;
+    let mouseWorldPos = this.editor.convertPagePosToWorldPos(mouse.position);
+    let clickObj      = this.editor.find(mouseWorldPos.x, mouseWorldPos.y);
+    let selector      = this.editor.selector;
     
     // Clicked an object, so it should be selected
     // Shift key also functions as a shortcut for selecting objects
@@ -52,15 +52,7 @@ class RotateTool extends WorldTool {
     if (keyboard.isPressed(keyboard.SHIFT)) {
       this.selectTool.rightDown();
     } else {
-      let selectedObjects = selector.selectedObjects;
-      
-      // Snap rotations to the nearest Math.PI/4
-      for (const obj of selectedObjects) {
-        let curRotation = obj.getRotation();
-        let newRotation = Math.round(8 * curRotation / (2 * Math.PI)) *
-                          (2 * Math.PI) / 8;
-        obj.setRotation(newRotation);
-      }
+      this.editor.scheduleSelectionRotateSnap();
     }
   }
   
@@ -88,14 +80,14 @@ class RotateTool extends WorldTool {
       let leftMouseState = mouse.getState(1);
       
       if (leftMouseState.dragging) {
-        let dragY    = leftMouseState.dragEnd.y - leftMouseState.prevPos.y;
-        let dTheta   = dragY % (4 * PhysicsObject.TOTAL_DISPLAY_ANGLES);
-        let rotation =
+        let dragY  = leftMouseState.dragEnd.y - leftMouseState.prevPos.y;
+        let dTheta = dragY % (4 * PhysicsObject.TOTAL_DISPLAY_ANGLES);
+        
+        // Snap dTheta to nearest display angle
+        let dThetaSnapped =
             2 * Math.PI * (dTheta / (4 * PhysicsObject.TOTAL_DISPLAY_ANGLES));
         
-        for (const obj of selectedObjects) {
-          obj.rotate(rotation);
-        }
+        this.editor.rotateSelection(dThetaSnapped);
         
         selector.update();
       }

@@ -79,46 +79,78 @@ class HistoryView extends SubwindowView {
         break;
       
       case Action.Type.WORLD_ENTITY_ADD:
-        let addedGameObject = action.data.gameObject;
-        let addedLayerId    = action.data.layerId;
-        let addedEntity     = addedGameObject.customData.entity;
-        let addedId         = addedGameObject.customData.id;
+        var addedGameObject = action.data.gameObject;
+        var addedLayerId    = action.data.layerId;
+        var addedEntity     = addedGameObject.customData.entity;
+        var addedId         = addedGameObject.customData.id;
         label = 'Place Entity: ' + addedEntity.name + '#' + addedId +
                 ' [' + addedLayerId + ']';
         break;
         
       case Action.Type.WORLD_ENTITY_REMOVE:
-        let removedGameObject = action.data.gameObject;
-        let removedLayerId    = action.data.layerId;
-        let removedEntity     = removedGameObject.customData.entity;
-        let removedId         = removedGameObject.customData.id;
+        var removedGameObject = action.data.gameObject;
+        var removedLayerId    = action.data.layerId;
+        var removedEntity     = removedGameObject.customData.entity;
+        var removedId         = removedGameObject.customData.id;
         label = 'Remove Entity: ' + removedEntity.name + '#' + removedId +
                 ' [' + removedLayerId + ']';
         break;
         
       case Action.Type.WORLD_ENTITY_ADD_BATCH:
-        let addedGameObjects = action.data.gameObjects;
+        var addedGameObjects = action.data.gameObjects;
         label = `Place ${addedGameObjects.length} Entities`;
         break;
         
       case Action.Type.WORLD_ENTITY_REMOVE_BATCH:
-        let removedGameObjects = action.data.gameObjects;
+        var removedGameObjects = action.data.gameObjects;
         label = `Remove ${removedGameObjects.length} Entities`;
         break;
       
       case Action.Type.WORLD_SELECTION_MOVE:
-        let selection = action.data.gameObjects;
-        let length    = selection.length;
+        var selection = action.data.gameObjects;
+        var length    = selection.length;
         
         if (length === 1) {
-          let movedGameObject = selection[0];
-          let movedLayerId    = movedGameObject.layer;
-          let movedEntity     = movedGameObject.customData.entity;
-          let movedId         = movedGameObject.customData.id;
+          var movedGameObject = selection[0];
+          var movedLayerId    = movedGameObject.layer;
+          var movedEntity     = movedGameObject.customData.entity;
+          var movedId         = movedGameObject.customData.id;
           label = 'Moved Entity: ' + movedEntity.name + '#' + movedId +
                 ' [' + movedLayerId + ']';
         } else {
           label = 'Moved ' + length + ' Entities';
+        }
+        break;
+      
+      case Action.Type.WORLD_SELECTION_ALIGN:
+        var selection = action.data.gameObjects;
+        var length    = selection.length;
+        
+        if (length === 1) {
+          var movedGameObject = selection[0];
+          var movedLayerId    = movedGameObject.layer;
+          var movedEntity     = movedGameObject.customData.entity;
+          var movedId         = movedGameObject.customData.id;
+          label = 'Aligned Entity: ' + movedEntity.name + '#' + movedId +
+                ' [' + movedLayerId + ']';
+        } else {
+          label = 'Aligned ' + length + ' Entities';
+        }
+        break;
+      
+      case Action.Type.WORLD_SELECTION_ROTATE:
+        var selection = action.data.gameObjects;
+        var length    = selection.length;
+        
+        if (length === 1) {
+          var movedGameObject = selection[0];
+          var movedLayerId    = movedGameObject.layer;
+          var movedEntity     = movedGameObject.customData.entity;
+          var movedId         = movedGameObject.customData.id;
+          label = 'Rotated Entity: ' + movedEntity.name + '#' + movedId +
+                ' [' + movedLayerId + ']';
+        } else {
+          label = 'Rotated ' + length + ' Entities';
         }
         break;
         

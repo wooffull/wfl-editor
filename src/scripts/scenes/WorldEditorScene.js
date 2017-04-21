@@ -34,6 +34,10 @@ class WorldEditorScene extends EditorScene {
     // action is ready (mouse up)
     this._panActionData = {dx: 0, dy: 0};
     
+    // Used to send out action data for rotating entites only when the
+    // action is ready (mouse up)
+    this._rotateActionData = {dTheta: 0};
+    
     // Used to send out action data for adding entities only when the
     // action is ready (mouse up)
     this._addEntityActionData = {gameObject: undefined, layerId: undefined};
@@ -319,13 +323,99 @@ class WorldEditorScene extends EditorScene {
     
     if (selectedGameObjects.length > 0) {
       let data = {
+        gameObjects: selectedGameObjects.slice(0),
         dx:          dx,
-        dy:          dy,
-        gameObjects: selectedGameObjects.slice(0)
+        dy:          dy
       };
 
       ActionPerformer.do(
         Action.Type.WORLD_SELECTION_MOVE,
+        data
+      );
+    }
+  }
+  
+  scheduleSelectionAlign(reversable = true) {
+    let selectedGameObjects = this.selector.selectedObjects;
+    
+    if (selectedGameObjects.length > 0) {
+      let dxList = [];
+      let dyList = [];
+      let hasChanges = false;
+
+      for (const obj of selectedGameObjects) {
+        let tilePos  = this.convertWorldPosToTilePos(obj.position);
+        let worldPos = this.convertTilePosToWorldPos(tilePos);
+        let dx       = worldPos.x - obj.position.x;
+        let dy       = worldPos.y - obj.position.y;
+        
+        if (dx !== 0 && dy !== 0) {
+          hasChanges |= true;
+        }
+
+        dxList.push(dx);
+        dyList.push(dy);
+      }
+      
+      if (!hasChanges) {
+        return;
+      }
+
+      let data = {
+        gameObjects: selectedGameObjects.slice(0),
+        dxList:      dxList,
+        dyList:      dyList
+      };
+
+      ActionPerformer.do(
+        Action.Type.WORLD_SELECTION_ALIGN,
+        data
+      );
+    }
+  }
+  
+  scheduleSelectionRotate(dTheta = 0, reversable = true) {
+    let selectedGameObjects = this.selector.selectedObjects;
+    
+    if (selectedGameObjects.length > 0 && dTheta !== 0) {
+      let dThetaList = [];
+
+      for (const obj of selectedGameObjects) {
+        dThetaList.push(dTheta);
+      }
+
+      let data = {
+        gameObjects: selectedGameObjects.slice(0),
+        dThetaList:  dThetaList
+      };
+
+      ActionPerformer.do(
+        Action.Type.WORLD_SELECTION_ROTATE,
+        data
+      );
+    }
+  }
+  
+  scheduleSelectionRotateSnap(reversable = true) {
+    let selectedGameObjects = this.selector.selectedObjects;
+    
+    if (selectedGameObjects.length > 0) {
+      let dThetaList = [];
+
+      for (const obj of selectedGameObjects) {
+        let curRotation = obj.getRotation();
+        let newRotation = Math.round(8 * curRotation / (2 * Math.PI)) *
+                          (2 * Math.PI) / 8;
+        dThetaList.push(newRotation - curRotation);
+      }
+
+      let data = {
+        gameObjects: selectedGameObjects.slice(0),
+        dThetaList:  dThetaList
+      };
+
+      ActionPerformer.do(
+        Action.Type.WORLD_SELECTION_ROTATE,
         data
       );
     }
@@ -443,6 +533,11 @@ class WorldEditorScene extends EditorScene {
     this._panActionData.dx += dx;
     this._panActionData.dy += dy;
   }
+  
+  rotateSelection(dTheta) {
+    this.selector.rotate(dTheta);
+    this._rotateActionData.dTheta += dTheta;
+  }
 
   find(x, y, width = undefined, height = undefined) {
     if (!isNaN(width) && !isNaN(height)) {
@@ -554,6 +649,12 @@ class WorldEditorScene extends EditorScene {
       
       this._panActionData.dx = 0;
       this._panActionData.dy = 0;
+    
+    // If no entities were dragged, send out action data if entities were
+    // just being rotated
+    } else if (this._rotateActionData.dTheta !== 0) {
+      this.scheduleSelectionRotate(this._rotateActionData.dTheta);
+      this._rotateActionData.dTheta = 0;
     }
   }
 

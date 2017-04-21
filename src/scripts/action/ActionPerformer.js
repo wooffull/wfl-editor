@@ -89,9 +89,30 @@ const ActionPerformer = {
         revAction = new Action(
           Action.Type.WORLD_SELECTION_MOVE,
           {
+            gameObjects: data.gameObjects,
             dx: -data.dx,
-            dy: -data.dy,
-            gameObjects: data.gameObjects
+            dy: -data.dy
+          }
+        );
+        break;
+      
+      case Action.Type.WORLD_SELECTION_ALIGN:
+        revAction = new Action(
+          Action.Type.WORLD_SELECTION_ALIGN,
+          {
+            gameObjects: data.gameObjects,
+            dxList: data.dxList.map((dx) => -dx),
+            dyList: data.dyList.map((dy) => -dy)
+          }
+        );
+        break;
+      
+      case Action.Type.WORLD_SELECTION_ROTATE:
+        revAction = new Action(
+          Action.Type.WORLD_SELECTION_ROTATE,
+          {
+            gameObjects: data.gameObjects,
+            dThetaList: data.dThetaList.map((dTheta) => -dTheta)
           }
         );
         break;
