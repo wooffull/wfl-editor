@@ -212,6 +212,21 @@ class WorldEditorScene extends EditorScene {
     return tilePos;
   }
   
+  convertTilePosToWorldPos(point) {
+    // Clone the reference point before applying operations on it
+    let worldPos = point.clone();
+    
+    // Multiply by tile size
+    worldPos.x *= this.tileSize;
+    worldPos.y *= this.tileSize;
+    
+    // Add half the tile size to center the point in the middle of a tile
+    worldPos.x += this.tileSize * 0.5;
+    worldPos.y += this.tileSize * 0.5;
+    
+    return worldPos;
+  }
+  
   addLayer(layerId) {
     if (!(layerId in this._gameObjectLayers)) {
       this._gameObjectLayers[layerId] = [];
