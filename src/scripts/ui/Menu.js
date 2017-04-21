@@ -76,6 +76,18 @@ class Menu extends HtmlElement {
     return this.insert(htmlElement, this.list.length);
   }
   
+  /**
+   * Scrolls the top of the menu to the top of the htmlElement if it's
+   * out of the menu's view
+   */
+  scrollTo(htmlElement) {
+    this.mainInterior.scrollTop(
+      htmlElement.element.offset().top -
+      this.mainInterior.offset().top +
+      this.mainInterior.scrollTop()
+    );
+  }
+  
   insert(htmlElement, position = this.list.length) {
     // Force position to be between 0 and the list's length
     position = Math.max(0, Math.min(position, this.list.length));
@@ -94,6 +106,9 @@ class Menu extends HtmlElement {
     } else {
       this.mainInterior.prepend(htmlElement.element);      
     }
+    
+    // Scroll to the newly added element
+    this.scrollTo(htmlElement);
     
     return htmlElement;
   }
@@ -144,6 +159,9 @@ class Menu extends HtmlElement {
     
     htmlElement.element.addClass('selected');
     this._lastSelected = htmlElement;
+    
+    // Scroll to the selected element
+    this.scrollTo(htmlElement);
   }
   
   clear() {
