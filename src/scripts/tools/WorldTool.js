@@ -102,8 +102,8 @@ class WorldTool extends Tool {
     if (!gameObjects) return;
     
     for (const obj of gameObjects) {
-      let {entity, x, y, rotation, layerId} = obj;
-      let addedObj = scene.addEntity(entity, layerId, false);
+      let {entity, x, y, rotation, layer} = obj;
+      let addedObj = scene.addEntity(entity, layer, false);
       addedObj.position.x = x;
       addedObj.position.y = y;
       addedObj.setRotation(rotation);

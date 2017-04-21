@@ -65,9 +65,11 @@ class LayerView extends SubwindowView {
     );
   }
   
-  addLayer(layerId) {
+  addLayer(layerId, reversable = true) {
     // If it's the first layer, the action cannot be undone
-    let isFirstLayer = this._layerCount === 0;
+    if (this._layerCount === 0) {
+      reversable = false;
+    }
     
     if (typeof layerId === 'undefined') {
       layerId = 'layer' + this._layerCount;
@@ -81,11 +83,11 @@ class LayerView extends SubwindowView {
     ActionPerformer.do(
       Action.Type.LAYER_ADD,
       layerData,
-      !isFirstLayer
+      reversable
     );
   }
   
-  removeLayer(layerId) {
+  removeLayer(layerId, reversable = true) {
     // Use the selected element's label if no layerId is provided
     if (typeof layerId === 'undefined') {
       layerId = this.getSelectedLayer().element.html();
@@ -97,7 +99,8 @@ class LayerView extends SubwindowView {
     
     ActionPerformer.do(
       Action.Type.LAYER_REMOVE,
-      layerData
+      layerData,
+      reversable
     );
   }
   
@@ -106,7 +109,10 @@ class LayerView extends SubwindowView {
   onActionLayerSelect(action) {
     let {layerId} = action.data;
     let menuItem  = this.layersMenu.find(layerId);
-    this.layersMenu.select(menuItem);
+    
+    if (menuItem) {
+      this.layersMenu.select(menuItem);
+    }
   }
   
   onActionLayerAdd(action) {
@@ -136,7 +142,18 @@ class LayerView extends SubwindowView {
     }
     
     this.layersMenu.remove(menuItem);
-    this.selectLayer(this.getSelectedLayer().element.html());
+    
+    // After removing the layer, get the currently selected one and
+    // perform a LAYER_SELECT
+    let selected = this.getSelectedLayer();
+
+    if (selected) {
+      this.selectLayer(selected.element.html());
+    } else {
+      // Still perform a LAYER_SELECT on null so that other tools can
+      // handle when no more layers are remaining in the project
+      this.selectLayer(null);
+    }
   }
 }
 

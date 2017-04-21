@@ -21,6 +21,36 @@ class LayerTool extends Tool {
       (action) => this.subwindowView.onActionLayerRemove(action)
      );
   }
+  
+  onProjectUpdate(project) {
+    // If no level data, exit early
+    if (!project.level) return;
+      
+    let {layers} = project.level;
+
+    // If no game object data, exit early
+    if (!layers) return;
+    
+    // If there are layers in the project, remove layer0 (since it's added by
+    // default)
+    this.subwindowView.removeLayer(undefined, false);
+    
+    for (const layer of layers) {
+      this.subwindowView.addLayer(layer, false);
+    }
+  }
+  
+  getData() {
+    let layesrMenu   = this.subwindowView.layersMenu;
+    
+    // Layers are seen top-to-bottom, but added bottom-to-top, so reverse them
+    let layerLabels  = layesrMenu.getLabels().reverse();
+    let data         = {
+      layers: layerLabels
+    };
+    
+    return data;
+  }
 }
 
 module.exports = LayerTool;

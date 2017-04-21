@@ -40,6 +40,16 @@ class Menu extends HtmlElement {
     this.element.on('mousedown', (e) => this._onMouseDown(e));
   }
   
+  getLabels() {
+    let labels = [];
+    
+    for (let menuItem of this.list) {
+      labels.push(menuItem.element.html());
+    }
+    
+    return labels;
+  }
+  
   find(label) {
     for (let menuItem of this.list) {
       if (menuItem.element.html() === label) {
