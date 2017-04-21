@@ -378,15 +378,10 @@ class WorldEditorScene extends EditorScene {
     let selectedGameObjects = this.selector.selectedObjects;
     
     if (selectedGameObjects.length > 0 && dTheta !== 0) {
-      let dThetaList = [];
-
-      for (const obj of selectedGameObjects) {
-        dThetaList.push(dTheta);
-      }
-
       let data = {
         gameObjects: selectedGameObjects.slice(0),
-        dThetaList:  dThetaList
+        dThetaList:  [dTheta],
+        unique:      false
       };
 
       ActionPerformer.do(
@@ -411,7 +406,8 @@ class WorldEditorScene extends EditorScene {
 
       let data = {
         gameObjects: selectedGameObjects.slice(0),
-        dThetaList:  dThetaList
+        dThetaList:  dThetaList,
+        unique:      true
       };
 
       ActionPerformer.do(

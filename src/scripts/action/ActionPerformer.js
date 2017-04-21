@@ -112,7 +112,8 @@ const ActionPerformer = {
           Action.Type.WORLD_SELECTION_ROTATE,
           {
             gameObjects: data.gameObjects,
-            dThetaList: data.dThetaList.map((dTheta) => -dTheta)
+            dThetaList: data.dThetaList.map((dTheta) => -dTheta),
+            unique: data.unique
           }
         );
         break;

@@ -118,7 +118,9 @@ Object.defineProperties(Action, {
       //
       //  data: {
       //    gameObjects: <The game objects that were moved with the action>
-      //    dThetaList: <dThetaList[i] is dTheta for gameObjects[i]>
+      //    dThetaList: <dThetaList[i] is dTheta for gameObjects[i]>,
+      //    unique: <If dThetaList has unique values (for snap), or just 
+      //             contains one value dThetaList[0]>
       //  }
       WORLD_SELECTION_ROTATE: 'world-selection-rotate',
       

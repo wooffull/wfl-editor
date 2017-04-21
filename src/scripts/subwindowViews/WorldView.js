@@ -157,7 +157,7 @@ class WorldView extends SubwindowView {
   }
   
   onActionWorldSelectionRotate(action) {
-    if (action.direction !== Action.Direction.DEFAULT) {
+    if (action.data.unique) {
       let {dThetaList, gameObjects} = action.data;
       let scene                     = this.worldEditorScene;
 
@@ -165,6 +165,21 @@ class WorldView extends SubwindowView {
       // use addition
       for (let i = 0; i < gameObjects.length; i++) {
         gameObjects[i].rotate(dThetaList[i]);
+      }
+
+      scene.selector.update();
+      
+    } else if (action.direction !== Action.Direction.DEFAULT) {
+      // If not unique, then there's only one value at dThetaList[0] for all
+      // object rotations
+      let {dThetaList, gameObjects} = action.data;
+      let dTheta                    = dThetaList[0];
+      let scene                     = this.worldEditorScene;
+
+      // dThetas are negated if necessary by the ActionPerformer, so
+      // use addition
+      for (let i = 0; i < gameObjects.length; i++) {
+        gameObjects[i].rotate(dTheta);
       }
 
       scene.selector.update();
