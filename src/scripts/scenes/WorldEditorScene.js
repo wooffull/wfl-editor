@@ -273,6 +273,30 @@ class WorldEditorScene extends EditorScene {
     );
   }
   
+  scheduleAddGameObjectBatch(objs, reversable = true) {
+    let data = {
+      gameObjects: objs.slice(0)
+    };
+    
+    ActionPerformer.do(
+      Action.Type.WORLD_ENTITY_ADD_BATCH,
+      data,
+      reversable
+    );
+  }
+  
+  scheduleRemoveGameObjectBatch(objs, reversable = true) {
+    let data = {
+      gameObjects: objs.slice(0)
+    };
+    
+    ActionPerformer.do(
+      Action.Type.WORLD_ENTITY_REMOVE_BATCH,
+      data,
+      reversable
+    );
+  }
+  
   scheduleSelectionMove(dx, dy) {
     let selectedGameObjects = this.selector.selectedObjects;
     

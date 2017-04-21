@@ -71,6 +71,20 @@ const ActionPerformer = {
         );
         break;
       
+      case Action.Type.WORLD_ENTITY_ADD_BATCH:
+        revAction = new Action(
+          Action.Type.WORLD_ENTITY_REMOVE_BATCH,
+          data
+        );
+        break;
+      
+      case Action.Type.WORLD_ENTITY_REMOVE_BATCH:
+        revAction = new Action(
+          Action.Type.WORLD_ENTITY_ADD_BATCH,
+          data
+        );
+        break;
+      
       case Action.Type.WORLD_SELECTION_MOVE:
         revAction = new Action(
           Action.Type.WORLD_SELECTION_MOVE,

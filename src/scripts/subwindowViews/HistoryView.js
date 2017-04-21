@@ -95,6 +95,16 @@ class HistoryView extends SubwindowView {
         label = 'Remove Entity: ' + removedEntity.name + '#' + removedId +
                 ' [' + removedLayerId + ']';
         break;
+        
+      case Action.Type.WORLD_ENTITY_ADD_BATCH:
+        let addedGameObjects = action.data.gameObjects;
+        label = `Place ${addedGameObjects.length} Entities`;
+        break;
+        
+      case Action.Type.WORLD_ENTITY_REMOVE_BATCH:
+        let removedGameObjects = action.data.gameObjects;
+        label = `Remove ${removedGameObjects.length} Entities`;
+        break;
       
       case Action.Type.WORLD_SELECTION_MOVE:
         let selection = action.data.gameObjects;

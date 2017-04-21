@@ -1,7 +1,7 @@
 "use strict";
 
 const Tool             = require('./Tool');
-const {Action}         = require('../action'); 
+const {Action}         = require('../action');
 const {remote}         = require('electron');
 const {globalShortcut} = remote;
 const subwindowViews   = require('../subwindowViews');

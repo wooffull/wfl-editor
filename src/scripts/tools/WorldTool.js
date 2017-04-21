@@ -1,12 +1,19 @@
 "use strict";
 
-const Tool           = require('./Tool');
-const {Action}       = require('../action'); 
-const subwindowViews = require('../subwindowViews');
+const Tool             = require('./Tool');
+const {Action}         = require('../action'); 
+const {remote}         = require('electron');
+const {globalShortcut} = remote;
+const subwindowViews   = require('../subwindowViews');
 
 class WorldTool extends Tool {
   constructor() {
     super('terrain', new subwindowViews.WorldView());
+    
+    // (Shortcut) Delete: Removes all currently selected game objects
+    globalShortcut.register("Delete", () => {
+      this.removeSelection();
+    });
     
     this.register(
       Action.Type.MAIN_TOOL_SELECT,
@@ -37,6 +44,14 @@ class WorldTool extends Tool {
       (action) => this.subwindowView.onActionWorldEntityRemove(action)
     );
     this.register(
+      Action.Type.WORLD_ENTITY_ADD_BATCH,
+      (action) => this.subwindowView.onActionWorldEntityAddBatch(action)
+    );
+    this.register(
+      Action.Type.WORLD_ENTITY_REMOVE_BATCH,
+      (action) => this.subwindowView.onActionWorldEntityRemoveBatch(action)
+    );
+    this.register(
       Action.Type.WORLD_SELECTION_MOVE,
       (action) => this.subwindowView.onActionWorldSelectionMove(action)
     );
@@ -44,6 +59,20 @@ class WorldTool extends Tool {
       Action.Type.ENTITY_REMOVE,
       (action) => this.subwindowView.onActionEntityRemove(action)
     );
+  }
+  
+  removeSelection() {
+    let scene        = this.subwindowView.worldEditorScene;
+    let selector     = scene.selector;
+    let gameObjects  = selector.selectedObjects;
+    
+    if (gameObjects.length > 1) {
+      scene.scheduleRemoveGameObjectBatch(gameObjects);
+    } else if (gameObjects.length === 1) {
+      scene.scheduleRemoveGameObject(gameObjects[0], gameObjects[0].layer);
+    }
+    
+    selector.clear();
   }
   
   onProjectUpdate(project) {
