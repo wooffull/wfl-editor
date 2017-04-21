@@ -109,20 +109,20 @@ class WorldView extends SubwindowView {
   }
   
   onActionWorldEntityAddBatch(action) {
-    let {gameObjects} = action.data;
-    let scene         = this.worldEditorScene;
+    let {gameObjects, layers} = action.data;
+    let scene                 = this.worldEditorScene;
     
-    for (const obj of gameObjects) {
-      scene.addGameObject(obj, obj.layer);
+    for (let i = 0; i < gameObjects.length; i++) {
+      scene.addGameObject(gameObjects[i], layers[i]);
     }
   }
   
   onActionWorldEntityRemoveBatch(action) {
-    let {gameObjects} = action.data;
-    let scene         = this.worldEditorScene;
+    let {gameObjects, layers} = action.data;
+    let scene                 = this.worldEditorScene;
     
-    for (const obj of gameObjects) {
-      scene.removeGameObject(obj, obj.layer);
+    for (let i = 0; i < gameObjects.length; i++) {
+      scene.removeGameObject(gameObjects[i], layers[i]);
     }
   }
   

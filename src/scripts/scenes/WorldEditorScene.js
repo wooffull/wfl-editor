@@ -275,7 +275,8 @@ class WorldEditorScene extends EditorScene {
   
   scheduleAddGameObjectBatch(objs, reversable = true) {
     let data = {
-      gameObjects: objs.slice(0)
+      gameObjects: objs.slice(0),
+      layers:      objs.map((obj) => obj.layer)
     };
     
     ActionPerformer.do(
@@ -287,7 +288,8 @@ class WorldEditorScene extends EditorScene {
   
   scheduleRemoveGameObjectBatch(objs, reversable = true) {
     let data = {
-      gameObjects: objs.slice(0)
+      gameObjects: objs.slice(0),
+      layers:      objs.map((obj) => obj.layer)
     };
     
     ActionPerformer.do(

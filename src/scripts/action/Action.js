@@ -85,18 +85,20 @@ Object.defineProperties(Action, {
       WORLD_ENTITY_ADD: 'world-entity-add',
       //
       //  data: {
-      //    gameObjects: <The game objects added>
-      //  }
-      WORLD_ENTITY_ADD_BATCH: 'world-entity-add-batch',
-      //
-      //  data: {
       //    gameObject: <The game object removed>
       //    layerId: <The layer that the game object was removed from>
       //  }
       WORLD_ENTITY_REMOVE: 'world-entity-remove',
       //
       //  data: {
+      //    gameObjects: <The game objects added>
+      //    layers: <layers[i] contains gameObjects[i]>
+      //  }
+      WORLD_ENTITY_ADD_BATCH: 'world-entity-add-batch',
+      //
+      //  data: {
       //    gameObjects: <The game objects removed>
+      //    layers: <layers[i] contains gameObjects[i]>
       //  }
       WORLD_ENTITY_REMOVE_BATCH: 'world-entity-remove-batch',
       //
