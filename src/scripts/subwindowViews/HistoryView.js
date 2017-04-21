@@ -67,11 +67,11 @@ class HistoryView extends SubwindowView {
         break;
         
       case Action.Type.LAYER_ADD:
-        label = 'Add Layer: ' + action.data;
+        label = 'Add Layer: ' + action.data.layerId;
         break;
       
       case Action.Type.LAYER_REMOVE:
-        label = 'Remove Layer: ' + action.data;
+        label = 'Remove Layer: ' + action.data.layerId;
         break;
       
       case Action.Type.ENTITY_ADD:
