@@ -4,6 +4,7 @@ const WorldTool  = require('./WorldTool');
 const DrawTool   = require('./DrawTool');
 const SelectTool = require('./SelectTool');
 const AlignTool  = require('./AlignTool');
+const RotateTool  = require('./RotateTool');
 
 function createToolData(type) {
   return {
@@ -16,19 +17,22 @@ function createToolData(type) {
 const classMap = {
   DRAW:   DrawTool,
   SELECT: SelectTool,
-  ALIGN:  AlignTool
+  ALIGN:  AlignTool,
+  ROTATE: RotateTool,
 };
 
 const materialIconLabels = {
   DRAW:   'create',
   SELECT: 'crop_free',
-  ALIGN:  'apps'
+  ALIGN:  'apps',
+  ROTATE: 'rotate_left',
 };
 
 const toolData = {
   DRAW:   createToolData('DRAW'),
   SELECT: createToolData('SELECT'),
   ALIGN:  createToolData('ALIGN'),
+  ROTATE: createToolData('ROTATE'),
 };
 
 module.exports = {
@@ -36,6 +40,7 @@ module.exports = {
   DrawTool:   DrawTool,
   SelectTool: SelectTool,
   AlignTool:  AlignTool,
+  RotateTool: RotateTool,
   
   toolData:   toolData
 };
