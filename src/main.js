@@ -110,7 +110,7 @@ ipcMain.on('project-save', (e, data) => {
   }
 });
 
-ipcMain.on('project-save-as', () => {
+ipcMain.on('project-save-as', (e, data) => {
   if (data) {
     let project = file.Project.getProject();
     project.level = data;
