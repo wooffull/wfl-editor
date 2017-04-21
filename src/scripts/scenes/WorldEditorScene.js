@@ -409,6 +409,17 @@ class WorldEditorScene extends EditorScene {
     this.camera.position.y += dy;
 
     if (this.tool) this.tool.pan(dx, dy);
+    
+    // (HACK) Shift + Control -- Reset all keystates
+    //
+    // The globalShortcut module is used to register Ctrl+Shift+S for Save As,
+    // and Shift's keyup event gets triggered while focused on a different
+    // window, which causes Shift to appear "stuck" in the keydown state.
+    //
+    // TODO: Handle keyups appropriately when focus is off this window.
+    if (key.isPressed(key.CONTROL) && key.isPressed(key.SHIFT)) {
+      key.clear();
+    }
   }
   
   panSelection(dx, dy) {

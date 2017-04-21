@@ -5,7 +5,9 @@ const {ipcRenderer} = require('electron');
 const $                = wfl.jquery;
 const WflEditor        = require('./scripts/WflEditor');
 const {remote}         = require('electron');
-const {Menu, MenuItem} = remote;
+const {Menu,
+       MenuItem,
+       globalShortcut} = remote;
 
 // Create a new WFL Editor when the window loads
 let editor;
@@ -69,6 +71,22 @@ ipcRenderer.on('request-project-data', (e, nextEvent) => {
     ipcRenderer.send(nextEvent, projectData);
   }
 });
+
+
+// Set up keyboard shortcuts
+globalShortcut.register("CommandOrControl+S", () => {
+  ipcRenderer.send('project-save');
+});
+globalShortcut.register("CommandOrControl+Shift+S", () => {
+  ipcRenderer.send('project-save-as');
+});
+globalShortcut.register("CommandOrControl+N", () => {
+  ipcRenderer.send('project-new');
+});
+globalShortcut.register("CommandOrControl+Q", () => {
+  ipcRenderer.send('window-close')
+});
+
 
 // Create context menus
 const fileMenuTemplate = [
