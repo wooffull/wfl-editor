@@ -10,6 +10,12 @@ class WorldTool extends Tool {
   constructor() {
     super('terrain', new subwindowViews.WorldView());
     
+    // (Shortcut) Ctrl+A: Select all entities
+    // TODO: Select only entities for layers that are not locked
+    globalShortcut.register("CommandOrControl+A", () => {
+      this.selectAllEntities();
+    });
+    
     // (Shortcut) Delete: Removes all currently selected game objects
     globalShortcut.register("Delete", () => {
       this.removeSelection();
@@ -73,6 +79,16 @@ class WorldTool extends Tool {
     }
     
     selector.clear();
+  }
+  
+  selectAllEntities() {
+    let scene        = this.subwindowView.worldEditorScene;
+    let selector     = scene.selector;
+    let gameObjects  = scene.getGameObjects();
+    
+    for (const obj of gameObjects) {
+      selector.add(obj);
+    }
   }
   
   onProjectUpdate(project) {
