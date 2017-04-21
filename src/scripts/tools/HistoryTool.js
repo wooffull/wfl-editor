@@ -11,32 +11,36 @@ class HistoryTool extends Tool {
     super('history', new subwindowViews.HistoryView());
 
     // (Shortcut) Undo: Ctrl+Z
-    globalShortcut.register('CommandOrControl+Z', () => {
-      let menu        = this.subwindowView.historyMenu;
-      let currentItem = menu.getCurrentItem();
-      let index       = menu.indexOf(currentItem);
-      
-      // Don't allow 0-th index because one element always needs to be in the
-      // list
-      if (index > 0) {
-        let previousItem = menu.getAt(index - 1);
-        menu.select(previousItem);
-      }
-    });
+    globalShortcut.register('CommandOrControl+Z', () => this.undo());
     
     // (Shortcut) Redo: Ctrl+Y
-    globalShortcut.register('CommandOrControl+Y', () => {
-      let menu        = this.subwindowView.historyMenu;
-      let currentItem = menu.getCurrentItem();
-      let index       = menu.indexOf(currentItem);
-      
-      // Don't allow the last index because we can't redo if the menu is
-      // already on that item
-      if (index >= 0 && index < menu.list.length - 1) {
-        let nextItem = menu.getAt(index + 1);
-        menu.select(nextItem);
-      }
-    });
+    globalShortcut.register('CommandOrControl+Y', () => this.redo());
+  }
+  
+  undo() {
+    let menu        = this.subwindowView.historyMenu;
+    let currentItem = menu.getCurrentItem();
+    let index       = menu.indexOf(currentItem);
+
+    // Don't allow 0-th index because one element always needs to be in the
+    // list
+    if (index > 0) {
+      let previousItem = menu.getAt(index - 1);
+      menu.select(previousItem);
+    }
+  }
+  
+  redo() {
+    let menu        = this.subwindowView.historyMenu;
+    let currentItem = menu.getCurrentItem();
+    let index       = menu.indexOf(currentItem);
+
+    // Don't allow the last index because we can't redo if the menu is
+    // already on that item
+    if (index >= 0 && index < menu.list.length - 1) {
+      let nextItem = menu.getAt(index + 1);
+      menu.select(nextItem);
+    }
   }
   
   subwindowInit() {

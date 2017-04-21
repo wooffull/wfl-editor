@@ -117,13 +117,15 @@ const fileMenuTemplate = [
 const editMenuTemplate = [
   {
     label: 'Undo',
-    accelerator: 'Ctrl+Z',
-    role: 'undo'
+    accelerator: 'CommandOrControl+Z',
+    //role: 'undo',
+    click: () => editor.historyTool.undo()
   },
   {
     label: 'Redo',
-    accelerator: 'Ctrl+Y',
-    role: 'redo'
+    accelerator: 'CommandOrControl+Y',
+    //role: 'redo',
+    click: () => editor.historyTool.redo()
   },
   {
     type: 'separator'
