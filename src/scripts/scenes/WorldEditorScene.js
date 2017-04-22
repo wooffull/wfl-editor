@@ -349,7 +349,7 @@ class WorldEditorScene extends EditorScene {
         let dx       = worldPos.x - obj.position.x;
         let dy       = worldPos.y - obj.position.y;
         
-        if (dx !== 0 && dy !== 0) {
+        if (dx !== 0 || dy !== 0) {
           hasChanges |= true;
         }
 
