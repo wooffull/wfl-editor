@@ -677,7 +677,7 @@ Object.defineProperties(WorldEditorScene, {
   },
 
   DEFAULT_TILE_SIZE: {
-    value: 32
+    value: 128
   },
 
   PAN: {
@@ -696,7 +696,7 @@ Object.defineProperties(WorldEditorScene, {
 
   GRID: {
     value: {
-      MIN_SCALE: 0.5
+      MIN_SCALE: 0.35
     }
   }
 });
