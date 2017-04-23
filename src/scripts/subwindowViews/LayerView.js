@@ -29,7 +29,7 @@ class LayerView extends SubwindowView {
     });
     this.layersMenu.addButton(this.removeLayerBtn);
     
-    $(this.layersMenu).on("change", (e, data) => this.onMenuChange(e, data));
+    $(this.layersMenu).on("change", (e, ele) => this.onMenuChange(e, ele));
     
     this._layerCount = 0;
     this.reset();
@@ -48,8 +48,8 @@ class LayerView extends SubwindowView {
     this.addLayer();
   }
 
-  onMenuChange(e, data) {
-    var layerId = data.element[0].innerHTML;
+  onMenuChange(e, element) {
+    var layerId = element.label;
     this.selectLayer(layerId);
   }
   

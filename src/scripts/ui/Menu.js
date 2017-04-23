@@ -221,9 +221,18 @@ class Menu extends HtmlElement {
   
   _onMouseDown(e) {
     var target = e.target;
-    var found = this.find(target.innerHTML);
+    var found = null;
     
-    if (found && found.element[0] === target) {
+    for (var i = 0; i < this.list.length; i++) {
+      var item = this.list[i];
+      
+      if (item.element[0] === target || $.contains(item.element[0], target)) {
+        found = item;
+        break;
+      }
+    }
+    
+    if (found) {
       if (!this._lastSelected || this._lastSelected !== found) {
         $(this).trigger("change", [found]);
       }
