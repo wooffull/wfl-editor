@@ -424,6 +424,11 @@ class WorldEditorScene extends EditorScene {
   }
   
   addCurrentGameObject(x, y) {
+    // Prevent adding objects to locked layers
+    if (this.lockedLayers.indexOf(this.layerId) >= 0) {
+      return;
+    }
+    
     if (this.curEntity) {
       let gameObject = this.addEntity(this.curEntity);
       gameObject.position.x = x;
