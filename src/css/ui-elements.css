@@ -153,6 +153,11 @@
   width: 40%;
 }
 
+/* Lock button */
+.unlock-button > i, .lock-button > i {
+  color: #000;
+}
+
 /**
  * History Menu
  */

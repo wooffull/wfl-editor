@@ -36,6 +36,10 @@ module.exports = {
   /* Classes for InputText */
   INPUT_TEXT: 'input-text',
   
+  /* Lock button */
+  LOCK_BUTTON: 'lock-button',
+  UNLOCK_BUTTON: 'unlock-button',
+  
   /* Classes for HistoryMenu */
   HISTORY_MENU_UNDO: 'undone',
   

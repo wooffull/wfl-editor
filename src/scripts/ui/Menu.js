@@ -44,7 +44,7 @@ class Menu extends HtmlElement {
     let labels = [];
     
     for (let menuItem of this.list) {
-      labels.push(menuItem.element.html());
+      labels.push(menuItem.label);
     }
     
     return labels;
@@ -52,7 +52,7 @@ class Menu extends HtmlElement {
   
   find(label) {
     for (let menuItem of this.list) {
-      if (menuItem.element.html() === label) {
+      if (menuItem.label === label) {
         return menuItem;
       }
     }

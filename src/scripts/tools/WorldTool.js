@@ -42,6 +42,14 @@ class WorldTool extends Tool {
       (action) => this.subwindowView.onActionLayerRemove(action)
     );
     this.register(
+      Action.Type.LAYER_LOCK,
+      (action) => this.subwindowView.onActionLayerLock(action)
+    );
+    this.register(
+      Action.Type.LAYER_UNLOCK,
+      (action) => this.subwindowView.onActionLayerUnlock(action)
+    );
+    this.register(
       Action.Type.WORLD_ENTITY_ADD,
       (action) => this.subwindowView.onActionWorldEntityAdd(action)
     );

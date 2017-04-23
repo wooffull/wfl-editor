@@ -49,6 +49,8 @@ class WorldEditorScene extends EditorScene {
     $(this.mouse).on(Mouse.Event.LEAVE,     ($e, e) => this.onMouseLeave(e));
     $(this.mouse).on(Mouse.Event.ENTER,     ($e, e) => this.onMouseEnter(e));
     $(this.canvas).on("contextmenu",        ($e, e) => this.onContextMenu(e));
+    
+    this.lockedLayers = [];
   }
 
   reset() {
@@ -66,6 +68,7 @@ class WorldEditorScene extends EditorScene {
     this._entityCounter    = 0;
     this.curEntity         = undefined;
     this.layerId           = 0;
+    this.lockedLayers      = [];
   }
 
   update(dt) {
@@ -574,11 +577,17 @@ class WorldEditorScene extends EditorScene {
    */
   _findGameObjectAt(x, y) {
     let gameObjects = this.getGameObjects();
+    
+    console.log(this.lockedLayers);
 
     for (let i = 0; i < gameObjects.length; i++) {
       let cur    = gameObjects[i];
       let width  = cur.getWidth();
       let height = cur.getHeight();
+      
+      if (this.lockedLayers.indexOf(cur.layer) >= 0) {
+        continue;
+      }
 
       if (x >= cur.position.x - width * 0.5 &&
         x <= cur.position.x + width * 0.5 &&

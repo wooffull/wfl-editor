@@ -74,6 +74,14 @@ class HistoryView extends SubwindowView {
         label = 'Remove Layer: ' + action.data.layerId;
         break;
       
+      case Action.Type.LAYER_LOCK:
+        label = 'Locked Layer: ' + action.data.layerId;
+        break;
+      
+      case Action.Type.LAYER_UNLOCK:
+        label = 'Unlocked Layer: ' + action.data.layerId;
+        break;
+      
       case Action.Type.ENTITY_ADD:
         label = 'Add entity: ' + action.data.entityId;
         break;

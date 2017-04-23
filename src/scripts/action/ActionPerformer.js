@@ -50,6 +50,20 @@ const ActionPerformer = {
         );
         break;
       
+      case Action.Type.LAYER_LOCK:
+        revAction = new Action(
+          Action.Type.LAYER_UNLOCK,
+          data
+        );
+        break;
+      
+      case Action.Type.LAYER_UNLOCK:
+        revAction = new Action(
+          Action.Type.LAYER_LOCK,
+          data
+        );
+        break;
+      
       case Action.Type.ENTITY_ADD:
         revAction = new Action(
           Action.Type.ENTITY_REMOVE,

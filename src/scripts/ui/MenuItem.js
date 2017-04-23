@@ -9,6 +9,7 @@ class MenuItem extends HtmlElement {
     super();
     
     this.data = data;
+    this.label = label;
     
     this.element = $('<div>');
     this.element.html(label);

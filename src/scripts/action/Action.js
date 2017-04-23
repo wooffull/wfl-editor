@@ -148,6 +148,16 @@ Object.defineProperties(Action, {
       LAYER_ADD: 'layer-add',
       //
       //  data: {
+      //    layerId: <The layer's name>
+      //  }
+      LAYER_LOCK: 'layer-lock',
+      //
+      //  data: {
+      //    layerId: <The layer's name>
+      //  }
+      LAYER_UNLOCK: 'layer-unlock',
+      //
+      //  data: {
       //    layerId: <The layer's name>,
       //    @layerIndex: <The layer's position in the layer menu before being removed>
       //    @entities: <An array of all the entities in the layer before being removed>
