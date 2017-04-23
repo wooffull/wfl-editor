@@ -10,7 +10,6 @@ class InputText extends HtmlElement {
     
     this.element = $('<div>');
     
-    console.log(label, data);
     this.label = $("<input type=\"text\">").val(label);
     this.data = $("<input type=\"text\">").val(data);
     

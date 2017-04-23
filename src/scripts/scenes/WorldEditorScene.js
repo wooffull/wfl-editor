@@ -558,6 +558,10 @@ class WorldEditorScene extends EditorScene {
 
     for (let i = 0; i < gameObjects.length; i++) {
       let cur = gameObjects[i];
+      
+      if (this.lockedLayers.indexOf(cur.layer) >= 0) {
+        continue;
+      }
 
       if (x <= cur.position.x &&
         x + width >= cur.position.x &&
@@ -577,8 +581,6 @@ class WorldEditorScene extends EditorScene {
    */
   _findGameObjectAt(x, y) {
     let gameObjects = this.getGameObjects();
-    
-    console.log(this.lockedLayers);
 
     for (let i = 0; i < gameObjects.length; i++) {
       let cur    = gameObjects[i];
