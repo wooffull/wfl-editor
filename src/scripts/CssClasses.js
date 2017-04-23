@@ -33,6 +33,9 @@ module.exports = {
   EXPANDABLE_MENU_MAIN_INTERIOR: 'expandable-menu-main-interior',
   EXPANDABLE_MENU_COLLAPSE_BUTTON: 'expandable-menu-collapse-button',
   
+  /* Classes for InputText */
+  INPUT_TEXT: 'input-text',
+  
   /* Classes for HistoryMenu */
   HISTORY_MENU_UNDO: 'undone',
   

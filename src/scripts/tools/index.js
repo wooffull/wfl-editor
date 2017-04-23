@@ -6,6 +6,7 @@ const HistoryTool      = require('./HistoryTool');
 const WorldTool        = require('./WorldTool');
 const ToolBarTool      = require('./ToolBarTool');
 const LayerTool        = require('./LayerTool');
+const PropertiesTool   = require('./PropertiesTool');
 const FileExplorerTool = require('./FileExplorerTool');
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
   WorldTool:        WorldTool,
   ToolBarTool:      ToolBarTool,
   LayerTool:        LayerTool,
+  PropertiesTool:   PropertiesTool,
   FileExplorerTool: FileExplorerTool
 };

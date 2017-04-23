@@ -147,6 +147,13 @@
 }
 
 /**
+ * Input Text
+ */
+.input-text {
+  width: 40%;
+}
+
+/**
  * History Menu
  */
 .menu-item.undone {

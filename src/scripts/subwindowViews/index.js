@@ -6,6 +6,7 @@ const HistoryView      = require('./HistoryView');
 const WorldView        = require('./WorldView');
 const ToolBarView      = require('./ToolBarView');
 const LayerView        = require('./LayerView');
+const PropertiesView   = require('./PropertiesView');
 const FileExplorerView = require('./FileExplorerView');
 
 module.exports = {
@@ -15,5 +16,6 @@ module.exports = {
   WorldView:        WorldView,
   ToolBarView:      ToolBarView,
   LayerView:        LayerView,
+  PropertiesView:   PropertiesView,
   FileExplorerView: FileExplorerView
 };

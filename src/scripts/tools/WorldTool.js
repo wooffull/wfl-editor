@@ -110,11 +110,12 @@ class WorldTool extends Tool {
     if (!gameObjects) return;
     
     for (const obj of gameObjects) {
-      let {entity, x, y, rotation, layer} = obj;
+      let {entity, x, y, rotation, layer, props} = obj;
       let addedObj = scene.addEntity(entity, layer, false);
       addedObj.position.x = x;
       addedObj.position.y = y;
       addedObj.setRotation(rotation);
+      addedObj.customData.props = props
     }
   }
   
@@ -131,7 +132,8 @@ class WorldTool extends Tool {
         entity:   obj.customData.entity,
         x:        obj.position.x,
         y:        obj.position.y,
-        rotation: obj.getRotation()
+        rotation: obj.getRotation(),
+        props:    obj.customData.props
       };
       
       data.gameObjects.push(objData);

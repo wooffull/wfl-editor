@@ -94,8 +94,8 @@ class WorldEditorScene extends EditorScene {
   drawGrid(ctx) {
     let cameraPos       = this.camera.position;
     let offset          = this.getCenterOffset();
-    let totalHorizontal = Math.round((this.canvas.width  / this.camera.zoom) / this.tileSize + 2);
-    let totalVertical   = Math.round((this.canvas.height / this.camera.zoom) / this.tileSize + 2);
+    let totalHorizontal = Math.round((this.canvas.width  / this.camera.zoom) / this.tileSize.x + 2);
+    let totalVertical   = Math.round((this.canvas.height / this.camera.zoom) / this.tileSize.y + 2);
 
     ctx.save();
 
@@ -108,11 +108,11 @@ class WorldEditorScene extends EditorScene {
 
     for (let i = -Math.round(totalHorizontal * 0.5); i < Math.round(totalHorizontal * 0.5); i++) {
       for (let j = -Math.round(totalVertical * 0.5); j < Math.round(totalVertical * 0.5); j++) {
-        let x = i * this.tileSize - cameraPos.x % this.tileSize;
-        let y = j * this.tileSize - cameraPos.y % this.tileSize;
+        let x = i * this.tileSize.x - cameraPos.x % this.tileSize.x;
+        let y = j * this.tileSize.y - cameraPos.y % this.tileSize.y;
 
         ctx.beginPath();
-        ctx.rect(Math.round(x), Math.round(y), this.tileSize, this.tileSize);
+        ctx.rect(Math.round(x), Math.round(y), this.tileSize.x, this.tileSize.y);
         ctx.stroke();
       }
     }
@@ -134,12 +134,14 @@ class WorldEditorScene extends EditorScene {
 
     // Get the mouse's tile position
     let mouseTilePos = this.getMouseTilePosition();
-    let tileWorldPos = mouseTilePos.multiply(this.tileSize);
+    let tileWorldPos = mouseTilePos;
+    tileWorldPos.x *= this.tileSize.x;
+    tileWorldPos.y *= this.tileSize.y;
 
     ctx.translate(-cameraPos.x, -cameraPos.y);
 
     ctx.beginPath();
-    ctx.rect(tileWorldPos.x, tileWorldPos.y, this.tileSize, this.tileSize);
+    ctx.rect(tileWorldPos.x, tileWorldPos.y, this.tileSize.x, this.tileSize.y);
     ctx.fill();
 
     ctx.restore();
@@ -209,7 +211,8 @@ class WorldEditorScene extends EditorScene {
     let tilePos = point.clone();
 
     // Divide by tile size then round to the nearest tile coordinate
-    tilePos.divide(this.tileSize);
+    tilePos.x /= this.tileSize.x;
+    tilePos.y /= this.tileSize.y;
     tilePos.x = Math.round(tilePos.x - 0.5);
     tilePos.y = Math.round(tilePos.y - 0.5);
 
@@ -221,12 +224,12 @@ class WorldEditorScene extends EditorScene {
     let worldPos = point.clone();
     
     // Multiply by tile size
-    worldPos.x *= this.tileSize;
-    worldPos.y *= this.tileSize;
+    worldPos.x *= this.tileSize.x;
+    worldPos.y *= this.tileSize.y;
     
     // Add half the tile size to center the point in the middle of a tile
-    worldPos.x += this.tileSize * 0.5;
-    worldPos.y += this.tileSize * 0.5;
+    worldPos.x += this.tileSize.x * 0.5;
+    worldPos.y += this.tileSize.y * 0.5;
     
     return worldPos;
   }
@@ -677,7 +680,10 @@ Object.defineProperties(WorldEditorScene, {
   },
 
   DEFAULT_TILE_SIZE: {
-    value: 128
+    value: {
+      x: 168 * 0.25,
+      y: 144 * 0.25
+    }
   },
 
   PAN: {

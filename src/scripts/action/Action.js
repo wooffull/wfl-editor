@@ -78,6 +78,16 @@ Object.defineProperties(Action, {
       // WorldTool
       //
       //  data: {
+      //    gameObject: <The game object selected>
+      //    entity: <The entity that the game object is instanced from>
+      //    layerId: <The layer that the game object was added to>
+      //  }
+      WORLD_ENTITY_SELECT: 'world-entity-select',
+      //
+      //  data: {}
+      WORLD_ENTITY_DESELECT: 'world-entity-deselect',
+      //
+      //  data: {
       //    gameObject: <The game object added>
       //    entity: <The entity that the game object is instanced from>
       //    layerId: <The layer that the game object was added to>

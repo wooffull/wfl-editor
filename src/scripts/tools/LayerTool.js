@@ -35,9 +35,15 @@ class LayerTool extends Tool {
     // default)
     this.subwindowView.removeLayer(undefined, false);
     
+    let layerCounter = 0;
+    
     for (const layer of layers) {
       this.subwindowView.addLayer(layer, false);
+      layerCounter++;
     }
+    
+    // TODO: Update layer count properly
+    this.subwindowView._layerCount = layerCounter;
   }
   
   getData() {

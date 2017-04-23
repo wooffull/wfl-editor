@@ -1,5 +1,8 @@
 "use strict";
 
+const {Action,
+       ActionPerformer} = require('../action');
+
 class Selector {
   constructor() {
     this.selectedObjects = undefined;
@@ -51,6 +54,31 @@ class Selector {
     this.selectionBox.y    = min.y;
     this.selectionBox.width  = max.x - min.x;
     this.selectionBox.height = max.y - min.y;
+    
+    // Send out select event
+    if (this.selectedObjects.length === 1) {
+      let gameObject = this.selectedObjects.slice(0)[0];
+      
+      let data = {
+        gameObject: gameObject,
+        entity: gameObject.customData.entity,
+        layerId: gameObject.layer
+      };
+
+      ActionPerformer.do(
+        Action.Type.WORLD_ENTITY_SELECT,
+        data,
+        false
+      );
+
+    // Send out deselect event
+    } else {
+      ActionPerformer.do(
+        Action.Type.WORLD_ENTITY_DESELECT,
+        {},
+        false
+      );
+    }
   }
 
   draw(ctx) {

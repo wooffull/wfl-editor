@@ -15,6 +15,7 @@ class WflEditor {
     this.historyTool      = new tools.HistoryTool();
     this.worldTool        = new tools.WorldTool();
     this.layerTool        = new tools.LayerTool();
+    this.propertiesTool   = new tools.PropertiesTool();
     
     // Ordered in terms of which should be reset first
     this.tools = [];
@@ -24,6 +25,7 @@ class WflEditor {
     this.tools.push(this.entityTool);
     this.tools.push(this.worldTool);
     this.tools.push(this.layerTool);
+    this.tools.push(this.propertiesTool);
     
     // Set up listeners for Actions
     $(ActionPerformer).on(Action.Event.DEFAULT, (e, action) => {
@@ -62,6 +64,7 @@ class WflEditor {
     this.componentSubwindow.element[0].id = 'component-subwindow';
     this.componentSubwindow.addTool(this.fileExplorerTool);
     this.componentSubwindow.addTool(this.entityTool);
+    this.componentSubwindow.addTool(this.propertiesTool);
     this.componentSubwindow.addTool(this.historyTool);
     
     this.primarySubwindow = new Subwindow();
