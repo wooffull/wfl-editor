@@ -54,6 +54,11 @@ Object.defineProperties(Action, {
       // EntityTool
       //
       //  data: {
+      //    project: <The data for the project loaded>
+      //  }
+      ENTITY_PROJECT_LOAD_COMPLETE: 'entity-project-load-complete',
+      //
+      //  data: {
       //    entityId: <The entity's name in the entity list>
       //    entity: <TODO: Finish Entity -- An Entity instance>
       //      - name: <Same as entityId>

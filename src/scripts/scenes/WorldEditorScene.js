@@ -446,11 +446,11 @@ class WorldEditorScene extends EditorScene {
   
   addEntity(entity, layerId = this.layerId, reversable = true) {
     let gameObject = new GameObject();
-    let image      = new Image();
-    let graphic = wfl.PIXI.Sprite.fromImage(entity.imageSource);
+    //let image      = new Image();
+    let graphic    = wfl.PIXI.loader.resources[entity.name];
 
-    image.src = entity.imageSource;
-    image.onload = function () {
+    //image.src = entity.imageSource;
+    //image.onload = function () {
       var state = GameObject.createState();
       var frame = GameObject.createFrame(graphic.texture);
       state.addFrame(frame);
@@ -472,7 +472,7 @@ class WorldEditorScene extends EditorScene {
       
       this.selector.update();
       this._entityCounter++;
-    }.bind(this);
+    //}.bind(this);
     
     return gameObject;
   }

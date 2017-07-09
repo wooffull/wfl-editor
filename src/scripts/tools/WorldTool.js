@@ -26,6 +26,10 @@ class WorldTool extends Tool {
       (action) => this.subwindowView.onActionMainToolSelect(action)
     );
     this.register(
+      Action.Type.ENTITY_PROJECT_LOAD_COMPLETE,
+      (action) => this.onActionEntityProjectLoadComplete(action)
+    );
+    this.register(
       Action.Type.ENTITY_SELECT,
       (action) => this.subwindowView.onActionEntitySelect(action)
     );
@@ -107,7 +111,9 @@ class WorldTool extends Tool {
     }
   }
   
-  onProjectUpdate(project) {
+  onActionEntityProjectLoadComplete(action) {
+    let {project} = action.data;
+    
     // If no level data, exit early
     if (!project.level) return;
       

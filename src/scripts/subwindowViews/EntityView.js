@@ -1,6 +1,7 @@
 "use strict";
 
 const $                 = wfl.jquery;
+const PIXI              = wfl.PIXI;
 const SubwindowView     = require('./SubwindowView');
 const {Menu,
        MenuItem,
@@ -32,6 +33,8 @@ class EntityView extends SubwindowView {
       let elem = data.element;
       this.selectEntity(elem[0].innerHTML);
     });
+    
+    this.loader = PIXI.loader;
   }
   
   getSelectedEntity() {
@@ -40,6 +43,7 @@ class EntityView extends SubwindowView {
   
   reset() {
     this.entitiesMenu.clear();
+    this.loader.reset();
   }
   
   selectEntity(entityId) {
@@ -91,24 +95,45 @@ class EntityView extends SubwindowView {
         return;
       }
       
-      for (let filePath of filePaths) {
-        fs.readFile(filePath, 'utf-8', (err, data) => {
-          if (err) {
-            alert("An error occurred while reading the file: " + err.message);
-            return;
-          }
-          
-          let entityName = path.parse(filePath).name;
-          if (!this.entitiesMenu.find(entityName)) {
-            let entity     = new Entity({
-              name: entityName,
-              imageSource: filePath
-            });
-            this.addEntity(entity);
-          }
-        })
-      }
+      this.loadFromData(filePaths.map(x => ({imageSource: x})));
     });
+  }
+  
+  loadFromData(data, callback = null) {
+    let entities = [];
+
+    for (var i = 0; i < data.length; i++) {
+      let filePath   = data[i].imageSource;
+      let entityName = data[i].name || path.parse(filePath).name;
+
+      // Only proceed with loading an entity if it's not yet added
+      if (!this.loader.resources[entityName] && 
+          !this.entitiesMenu.find(entityName)) {
+        
+        let entity = new Entity({
+          name: entityName,
+          imageSource: filePath
+        });
+
+        // Queue the entities to load
+        this.loader.add(entityName, filePath);
+        entities.push(entity);
+      }
+    }
+
+    if (entities.length > 0) {
+      // Officially add the entities to the editor once they have finished
+      // loading
+      this.loader.load((loader, resources) => {
+        for (let entity of entities) {
+          this.addEntity(entity);
+        }
+        
+        if (callback) {
+          callback();
+        }
+      });
+    }
   }
   
   removeEntityEntry() {

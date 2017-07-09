@@ -1,9 +1,10 @@
 "use strict";
 
-const Tool           = require('./Tool');
-const {Action}       = require('../action');
-const {Entity}       = require('../world');
-const subwindowViews = require('../subwindowViews');
+const Tool              = require('./Tool');
+const {Action,
+       ActionPerformer} = require('../action');
+const {Entity}          = require('../world');
+const subwindowViews    = require('../subwindowViews');
 
 class EntityTool extends Tool {
   constructor() {
@@ -32,24 +33,26 @@ class EntityTool extends Tool {
     if (!project.level) return;
       
     let {entities} = project.level;
-    let lastEntity = null;
 
     // If no entity data, exit early
     if (!entities) return;
-
-    for (const entityData of entities) {
-      let entity = new Entity({
-        name: entityData.name,
-        imageSource: entityData.imageSource
-      });
-
-      this.subwindowView.addEntity(entity, false);
-      lastEntity = entity;
-    }
-
-    if (lastEntity) {
-      this.subwindowView.selectEntity(lastEntity.name)
-    }
+    
+    // Load the entities then select the first one
+    this.subwindowView.loadFromData(entities, () => {
+      if (entities.length > 0) {
+        this.subwindowView.selectEntity(entities[0].name)
+      }
+      
+      // Notify the project that entities have loaded
+      let projectData = {
+        project: project
+      };
+      ActionPerformer.do(
+        Action.Type.ENTITY_PROJECT_LOAD_COMPLETE,
+        projectData,
+        false
+      );
+    });
   }
   
   getData() {
