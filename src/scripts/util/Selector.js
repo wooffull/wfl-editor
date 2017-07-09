@@ -39,8 +39,8 @@ class Selector {
 
     // Find the selection box to draw around the selected game objects
     for (var i = 0; i < this.selectedObjects.length; i++) {
-      var cur    = this.selectedObjects[i];
-      var curPos   = cur.position;
+      var cur        = this.selectedObjects[i];
+      var curPos     = cur.position;
       var halfWidth  = cur.width  * 0.5;
       var halfHeight = cur.height * 0.5;
 

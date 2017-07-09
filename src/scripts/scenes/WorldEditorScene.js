@@ -85,6 +85,11 @@ class WorldEditorScene extends EditorScene {
   update(dt) {
     this.handleInput();
     super.update(dt);
+    
+    // Update the entity to-be-added if it exists
+    if (this._addEntityActionData.gameObject) {
+      this._addEntityActionData.gameObject.update(dt);
+    }
   }
       
   _handleCollisions(gameObjects) {}
@@ -446,33 +451,28 @@ class WorldEditorScene extends EditorScene {
   
   addEntity(entity, layerId = this.layerId, reversable = true) {
     let gameObject = new GameObject();
-    //let image      = new Image();
     let graphic    = wfl.PIXI.loader.resources[entity.name];
+    let state      = GameObject.createState();
+    let frame      = GameObject.createFrame(graphic.texture);
+    
+    state.addFrame(frame);
+    gameObject.addState(GameObject.STATE.DEFAULT, state);
+    gameObject.customData.entity = entity;
+    gameObject.customData.id     = this._entityCounter;
 
-    //image.src = entity.imageSource;
-    //image.onload = function () {
-      var state = GameObject.createState();
-      var frame = GameObject.createFrame(graphic.texture);
-      state.addFrame(frame);
-      gameObject.addState(GameObject.STATE.DEFAULT, state);
-      
-      gameObject.customData.entity = entity;
-      gameObject.customData.id     = this._entityCounter;
+    // If the mouse is up, then the entity has been placed.
+    // If the mouse is still down, the entity is being dragged and we'll 
+    // add it later (onBeforeMouseUp)
+    let leftMouseState = this.mouse.getState(1);
+    if (!leftMouseState.isDown) {
+      this.scheduleAddGameObject(gameObject, layerId, reversable);
+    } else {
+      this._addEntityActionData.gameObject = gameObject;
+      this._addEntityActionData.layerId    = layerId;
+    }
 
-      // If the mouse is up, then the entity has been placed.
-      // If the mouse is still down, the entity is being dragged and we'll 
-      // add it later (onBeforeMouseUp)
-      let leftMouseState = this.mouse.getState(1);
-      if (!leftMouseState.isDown) {
-        this.scheduleAddGameObject(gameObject, layerId, reversable);
-      } else {
-        this._addEntityActionData.gameObject = gameObject;
-        this._addEntityActionData.layerId    = layerId;
-      }
-      
-      this.selector.update();
-      this._entityCounter++;
-    //}.bind(this);
+    this.selector.update();
+    this._entityCounter++;
     
     return gameObject;
   }
