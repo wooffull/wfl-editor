@@ -7,7 +7,7 @@ class WorldTool {
   }
 
   reset()     { this.clickedSelection = false; }
-  draw(ctx)   { }
+  draw(renderer)   { }
   leftDown()  { }
   leftUp()    { }
   rightDown() { }

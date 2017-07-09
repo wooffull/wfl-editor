@@ -15,13 +15,13 @@ class DrawTool extends WorldTool {
     this.selectTool.reset();
   }
 
-  draw(ctx) {
+  draw(renderer) {
     let keyboard = this.editor.keyboard;
 
     // Holding Shift with the draw tool is a shortcut for the
     // Select tool, ONLY if the selection isn't being dragged
     if (!this.clickedSelection && keyboard.isPressed(keyboard.SHIFT)) {
-      this.selectTool.draw(ctx);
+      this.selectTool.draw(renderer);
     }
   }
 

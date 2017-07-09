@@ -1,6 +1,7 @@
 "use strict";
 
 const $                 = wfl.jquery;
+const debug             = wfl.debug;
 const {Action,
        ActionPerformer} = require('../action');
 const SubwindowView     = require('./SubwindowView');
@@ -15,6 +16,9 @@ class WorldView extends SubwindowView {
     this.canvas.id = CssClasses.WORLD_CANVAS;
     this.wflGame   = wfl.create(this.canvas);
     
+    // Enable debug drawing for custom-drawn lines
+    this.wflGame.debug = {vectors: true, vertices: false};
+    
     this.worldEditorScene = new scenes.WorldEditorScene(
       this.canvas,
       this.wflGame.mouse,
@@ -27,11 +31,6 @@ class WorldView extends SubwindowView {
   
   reset() {
     this.worldEditorScene.reset();
-    this.worldEditorScene.camera.zoom = 1;
-    this.worldEditorScene.camera.position.x = 0;
-    this.worldEditorScene.camera.position.y = 0;
-    this.worldEditorScene.curEntity = null;
-    this.worldEditorScene.curEntity = null;
   }
   
   resize(e) {
@@ -42,9 +41,16 @@ class WorldView extends SubwindowView {
     let width   = parseInt(style.getPropertyValue("width"));
     let height  = parseInt(style.getPropertyValue("height"));
     let padding = parseInt(style.getPropertyValue("padding"));
+    
+    let w = width  - padding * 2;
+    let h = height - padding * 2 - toolbar.outerHeight();
 
-    this.canvas.width  = width  - padding * 2;
-    this.canvas.height = height - padding * 2 - toolbar.outerHeight();
+    this.canvas.width  = w;
+    this.canvas.height = h;
+    this.wflGame.renderer.view.style.width  = w + 'px';
+    this.wflGame.renderer.view.style.height = h + 'px';
+    this.wflGame.renderer.resize(w, h);
+    this.worldEditorScene._onResize(e);
   }
   
   

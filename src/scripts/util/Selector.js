@@ -1,5 +1,6 @@
 "use strict";
 
+const debug             = wfl.debug;
 const {Action,
        ActionPerformer} = require('../action');
 
@@ -40,8 +41,8 @@ class Selector {
     for (var i = 0; i < this.selectedObjects.length; i++) {
       var cur    = this.selectedObjects[i];
       var curPos   = cur.position;
-      var halfWidth  = cur.getWidth()  * 0.5;
-      var halfHeight = cur.getHeight() * 0.5;
+      var halfWidth  = cur.width  * 0.5;
+      var halfHeight = cur.height * 0.5;
 
       // Update bounds when an object is outside of them
       if (curPos.x - halfWidth  < min.x) min.x = curPos.x - halfWidth;
@@ -81,32 +82,19 @@ class Selector {
     }
   }
 
-  draw(ctx) {
-    var box = this.selectionBox;
-
-    ctx.save();
-
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.75)";
-    ctx.fillStyle   = "rgba(255, 255, 255, 0.5)";
-    ctx.lineWidth   = 2;
-
-    // Draw the selection box around all selected elements
-    ctx.beginPath();
-    ctx.rect(box.x, box.y, box.width, box.height);
-    ctx.stroke();
-    ctx.fill();
-
-    // Draw all selected game objects over the selection box
-    for (var i = 0; i < this.selectedObjects.length; i++) {
-      var cur = this.selectedObjects[i];
-
-      ctx.save();
-      ctx.translate(cur.position.x, cur.position.y);
-      cur.draw(ctx);
-      ctx.restore();
-    }
-
-    ctx.restore();
+  draw(scene) {
+    let box            = this.selectionBox;
+    let lineSize       = Math.max(1, 1 / scene.camera.zoom);
+    let debugContainer = debug.getContainer();
+    debugContainer.lineStyle(lineSize, 0xFFFFFF, 0.75);
+    debugContainer.beginFill(0xFFFFFF, 0.3);
+    debugContainer.drawRect(
+      box.x,
+      box.y,
+      box.width,
+      box.height
+    );
+    debugContainer.endFill();
   }
 
   add(obj) {

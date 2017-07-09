@@ -1,5 +1,6 @@
 "use strict";
 
+const Vec2      = wfl.geom.Vec2;
 const WorldTool = require('./WorldTool');
 
 class SelectTool extends WorldTool {
@@ -7,7 +8,7 @@ class SelectTool extends WorldTool {
     super(editor);
   }
 
-  draw(ctx) {
+  draw(renderer) {
     let mouse          = this.editor.mouse;
     let leftMouseState = mouse.getState(1);
 
@@ -22,34 +23,35 @@ class SelectTool extends WorldTool {
       cameraPos.multiply(zoom);
 
       // Create drag start point (in world)
-      let dragStart = leftMouseState.dragStart.clone().add(offset);
+      let dragStart = new Vec2(
+        leftMouseState.dragStart.x,
+        leftMouseState.dragStart.y
+      );
       dragStart = this.editor.convertPagePosToWorldPos(dragStart);
-      dragStart.multiply(zoom);
-      dragStart.subtract(cameraPos);
 
       // Create drag end point (in world)
-      let dragEnd = leftMouseState.dragEnd.clone().add(offset);
+      let dragEnd = new Vec2(
+        leftMouseState.dragEnd.x,
+        leftMouseState.dragEnd.y
+      );
       dragEnd = this.editor.convertPagePosToWorldPos(dragEnd);
-      dragEnd.multiply(zoom);
-      dragEnd.subtract(cameraPos);
 
       let minX = Math.min(dragStart.x, dragEnd.x);
       let minY = Math.min(dragStart.y, dragEnd.y);
       let maxX = Math.max(dragStart.x, dragEnd.x);
       let maxY = Math.max(dragStart.y, dragEnd.y);
 
-      ctx.save();
-
-      ctx.strokeStyle = "rgba(200, 230, 150, 0.75)";
-      ctx.fillStyle   = "rgba(200, 230, 150, 0.5)";
-      ctx.lineWidth   = 2;
-
-      ctx.beginPath();
-      ctx.rect(minX, minY, maxX - minX, maxY - minY);
-      ctx.stroke();
-      ctx.fill();
-
-      ctx.restore();
+      let lineSize       = Math.max(1, 1 / this.editor.camera.zoom);
+      let debugContainer = wfl.debug.getContainer();
+      debugContainer.lineStyle(lineSize, 0xC8E696, 0.75);
+      debugContainer.beginFill(0xC8E696, 0.5);
+      debugContainer.drawRect(
+        minX,
+        minY,
+        maxX - minX,
+        maxY - minY
+      );
+      debugContainer.endFill();
     }
   }
 

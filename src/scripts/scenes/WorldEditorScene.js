@@ -1,6 +1,9 @@
 "use strict";
 
 const $                 = wfl.jquery;
+const {GameObject,
+       PhysicsObject}   = wfl.core.entities;
+const debug             = wfl.debug;
 const geom              = wfl.geom;
 const input             = wfl.input;
 const Mouse             = input.Mouse;
@@ -54,7 +57,15 @@ class WorldEditorScene extends EditorScene {
   }
 
   reset() {
-    super.reset();
+    if (this._bucketConfig) {
+      // Keep track of the size of all buckets and set that size after
+      // resetting
+      let bucketSize = this._bucketConfig.size;
+      super.reset();
+      this._bucketConfig.size = bucketSize;
+    } else {
+      super.reset();
+    }
 
     // Check if the selector exists because constructor's call to super()
     // will call reset() before selector is defined
@@ -73,103 +84,101 @@ class WorldEditorScene extends EditorScene {
 
   update(dt) {
     this.handleInput();
+    super.update(dt);
   }
+      
+  _handleCollisions(gameObjects) {}
+  _handleOverlaps(gameObjects) {}
 
-  draw(ctx) {
-    // Draw the background and all game objects in the world
-    super.draw(ctx);
-
-    this.drawMouseHoverTile(ctx);
+  draw(renderer) {
+    // Draw all game objects in the world
+    super.draw(renderer);
+    
+    this.drawMouseHoverTile();
 
     // Only draw the grid if not zoomed too far out.
     // It makes everything look less cluttered with that small of a scale.
     if (this.camera.zoom >= WorldEditorScene.GRID.MIN_SCALE) {
-      this.drawGrid(ctx);
+      this.drawGrid();
     }
 
-    this.drawSelection(ctx);
+    this.drawSelection();
 
     if (this.tool) {
-      this.tool.draw(ctx);
+      this.tool.draw(renderer);
     }
   }
 
-  drawGrid(ctx) {
-    let cameraPos       = this.camera.position;
-    let offset          = this.getCenterOffset();
-    let totalHorizontal = Math.round((this.canvas.width  / this.camera.zoom) / this.tileSize.x + 2);
-    let totalVertical   = Math.round((this.canvas.height / this.camera.zoom) / this.tileSize.y + 2);
+  drawGrid() {
+    let cameraPos       =  this.camera.position;
+    let offset          =  this.getCenterOffset();
+    let zoom            =  this.camera.zoom;
+    let tileSize        =  this.tileSize;
+    let canvas          =  this.canvas;
+    let totalHorizontal =  Math.round((canvas.width  / zoom) / tileSize.x + 2);
+    let totalVertical   =  Math.round((canvas.height / zoom) / tileSize.y + 2);
+    let minHorizontal   = -Math.round(totalHorizontal * 0.5);
+    let maxHorizontal   =  Math.round(totalHorizontal * 0.5);
+    let minVertical     = -Math.round(totalVertical   * 0.5);
+    let maxVertical     =  Math.round(totalVertical   * 0.5);
+    let x               =  0;
+    let y               =  0;
+    
+    debug.lineSize  = Math.max(1, 1 / zoom);
+    debug.lineColor = 0xFFFFFF;
+    debug.lineAlpha = 0.2;
 
-    ctx.save();
-
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
-    ctx.lineWidth   = 0.5;
-
-    // Offset the drawing from the center of the screen
-    ctx.translate(offset.x, offset.y);
-    ctx.scale(this.camera.zoom, this.camera.zoom);
-
-    for (let i = -Math.round(totalHorizontal * 0.5); i < Math.round(totalHorizontal * 0.5); i++) {
-      for (let j = -Math.round(totalVertical * 0.5); j < Math.round(totalVertical * 0.5); j++) {
-        let x = i * this.tileSize.x - cameraPos.x % this.tileSize.x;
-        let y = j * this.tileSize.y - cameraPos.y % this.tileSize.y;
-
-        ctx.beginPath();
-        ctx.rect(Math.round(x), Math.round(y), this.tileSize.x, this.tileSize.y);
-        ctx.stroke();
-      }
+    for (let i = minHorizontal; i < maxHorizontal; i++) {
+      x = Math.round(i * tileSize.x - cameraPos.x % tileSize.x + cameraPos.x);
+      debug.drawSegment(
+        {x: x, y: cameraPos.y - offset.y / zoom},
+        {x: x, y: cameraPos.y + offset.y / zoom}
+      );
     }
-
-    ctx.restore();
+    
+    for (let j = minVertical; j < maxVertical; j++) {
+      y = Math.round(j * tileSize.y - cameraPos.y % tileSize.y + cameraPos.y);
+      debug.drawSegment(
+        {x: cameraPos.x - offset.x / zoom, y: y},
+        {x: cameraPos.x + offset.x / zoom, y: y}
+      );
+    }
   }
 
-  drawMouseHoverTile(ctx) {
-    let cameraPos = this.camera.position;
-    let offset    = this.getCenterOffset();
-
-    ctx.save();
-
-    ctx.fillStyle = "rgba(255, 255, 200, 0.2)";
-
-    // Offset the drawing from the center of the screen
-    ctx.translate(offset.x, offset.y);
-    ctx.scale(this.camera.zoom, this.camera.zoom);
-
+  drawMouseHoverTile() {
     // Get the mouse's tile position
-    let mouseTilePos = this.getMouseTilePosition();
-    let tileWorldPos = mouseTilePos;
-    tileWorldPos.x *= this.tileSize.x;
-    tileWorldPos.y *= this.tileSize.y;
-
-    ctx.translate(-cameraPos.x, -cameraPos.y);
-
-    ctx.beginPath();
-    ctx.rect(tileWorldPos.x, tileWorldPos.y, this.tileSize.x, this.tileSize.y);
-    ctx.fill();
-
-    ctx.restore();
+    let tileSize       = this.tileSize;
+    let zoom           = this.camera.zoom;
+    let mouseTilePos   = this.getMouseTilePosition();
+    let lineSize       = Math.max(1, 1 / zoom);
+    let debugContainer = debug.getContainer();
+    let tileWorldPos   = mouseTilePos;
+    
+    // Adjust from tile-position to world-position
+    tileWorldPos.x *= tileSize.x;
+    tileWorldPos.y *= tileSize.y;
+    
+    // Draw a filled rectangle denoting the mouse's position
+    debugContainer.lineStyle(lineSize, 0xFFFFC8, 1);
+    debugContainer.beginFill(0xFFFFC8, 0.2);
+    debugContainer.drawRect(
+      tileWorldPos.x,
+      tileWorldPos.y,
+      tileSize.x,
+      tileSize.y
+    );
+    debugContainer.endFill();
   }
 
-  drawSelection(ctx) {
+  drawSelection() {
     let selectedObjects = this.selector.selectedObjects;
-    let cameraPos       = this.camera.position;
-    let offset          = this.getCenterOffset();
 
     // Only draw when there are selected objects
     if (selectedObjects.length > 0) {
-      ctx.save();
-
-      // Offset the drawing from the center of the screen
-      ctx.translate(offset.x, offset.y);
-
-      // Scale appropriately and translate with the (scaled) camera position
-      ctx.scale(this.camera.zoom, this.camera.zoom);
-      ctx.translate(-cameraPos.x, -cameraPos.y);
-
-      // Draw the selection
-      this.selector.draw(ctx);
-
-      ctx.restore();
+      this._stage.removeChild.apply(this._stage, selectedObjects);
+      this._stage.addChild.apply(this._stage, selectedObjects);
+      
+      this.selector.draw(this);
     }
   }
 
@@ -197,15 +206,11 @@ class WorldEditorScene extends EditorScene {
   }
 
   convertPagePosToWorldPos(point) {
-    let offset   = this.getCenterOffset();
-    let worldPos = geom.Vec2.add(
-      point.clone().divide(this.camera.zoom),
-      this.camera.position
-    );
-    worldPos.subtract(
-      offset.divide(this.camera.zoom)
-    );
-
+    let zoom      = this.camera.zoom;
+    let offset    = this.getCenterOffset();
+    let cameraPos = this.camera.position;
+    let worldPos  = new geom.Vec2(cameraPos.x + point.x / zoom, cameraPos.y +  point.y / zoom);
+    worldPos.subtract(offset.divide(zoom));
     return worldPos;
   }
 
@@ -440,12 +445,17 @@ class WorldEditorScene extends EditorScene {
   }
   
   addEntity(entity, layerId = this.layerId, reversable = true) {
-    let gameObject = new wfl.core.entities.PhysicsObject();
+    let gameObject = new GameObject();
     let image      = new Image();
+    let graphic = wfl.PIXI.Sprite.fromImage(entity.imageSource);
 
     image.src = entity.imageSource;
     image.onload = function () {
-      gameObject.graphic           = image;
+      var state = GameObject.createState();
+      var frame = GameObject.createFrame(graphic.texture);
+      state.addFrame(frame);
+      gameObject.addState(GameObject.STATE.DEFAULT, state);
+      
       gameObject.customData.entity = entity;
       gameObject.customData.id     = this._entityCounter;
 
@@ -589,8 +599,8 @@ class WorldEditorScene extends EditorScene {
 
     for (let i = 0; i < gameObjects.length; i++) {
       let cur    = gameObjects[i];
-      let width  = cur.getWidth();
-      let height = cur.getHeight();
+      let width  = cur.width;
+      let height = cur.height;
       
       if (this.lockedLayers.indexOf(cur.layer) >= 0) {
         continue;
@@ -686,6 +696,12 @@ class WorldEditorScene extends EditorScene {
     }
     
     return false;
+  }
+  
+  _onResize(e) {
+    super._onResize(e);
+    this._bucketConfig.size *= this.camera.zoom / WorldEditorScene.SCALE.MIN;
+    this._bucketConfig.size = Math.ceil(this._bucketConfig.size);
   }
 }
 
