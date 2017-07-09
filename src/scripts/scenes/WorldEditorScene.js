@@ -414,7 +414,7 @@ class WorldEditorScene extends EditorScene {
       let dThetaList = [];
 
       for (const obj of selectedGameObjects) {
-        let curRotation = obj.getRotation();
+        let curRotation = obj.rotation;
         let newRotation = Math.round(8 * curRotation / (2 * Math.PI)) *
                           (2 * Math.PI) / 8;
         dThetaList.push(newRotation - curRotation);
