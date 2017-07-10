@@ -125,8 +125,6 @@ class WorldTool extends Tool {
     
     for (const obj of gameObjects) {
       let {entity, x, y, rotation, layer, props} = obj;
-      layer = parseInt(layer.match(/\d+/)[0]);
-      
       let addedObj = scene.addEntity(entity, layer, false);
       addedObj.position.x = x;
       addedObj.position.y = y;

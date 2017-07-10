@@ -68,27 +68,27 @@ class WorldView extends SubwindowView {
   }
   
   onActionLayerSelect(action) {
-    let {layerId} = action.data;
-    let scene     = this.worldEditorScene;
-    scene.layerId = layerId;
+    let {layerIndex} = action.data;
+    let scene        = this.worldEditorScene;
+    scene.layerIndex = layerIndex;
   }
   
   onActionLayerAdd(action) {
-    let {layerId} = action.data;
-    let scene     = this.worldEditorScene;
-    scene.addLayer(layerId);
+    let {layerIndex} = action.data;
+    let scene        = this.worldEditorScene;
+    scene.addLayer(layerIndex);
     
     if (typeof action.data.entities !== 'undefined') {
       for (let entity of action.data.entities) {
-        scene.addGameObject(entity, layerId, false);
+        scene.addGameObject(entity, layerIndex, false);
       }
     }
   }
   
   onActionLayerRemove(action) {
-    let {layerId}        = action.data;
+    let {layerIndex}     = action.data;
     let scene            = this.worldEditorScene;
-    let existingEntities = scene._gameObjectLayers[layerId].concat();
+    let existingEntities = scene._gameObjectLayers[layerIndex].concat();
     
     // When the layer is removed, the action holds onto the entities removed with it
     // (so that during undo, they can be added back)
@@ -97,38 +97,36 @@ class WorldView extends SubwindowView {
       action.data.entities = existingEntities;
     }
     
-    scene.removeLayer(layerId);
+    scene.removeLayer(layerIndex);
   }
   
   onActionLayerLock(action) {
-    let {layerId} = action.data;
-    let scene     = this.worldEditorScene;
+    let {layerIndex} = action.data;
+    let scene        = this.worldEditorScene;
     
-    if (scene.lockedLayers.indexOf(layerId) < 0) {
-      scene.lockedLayers.push(layerId);
+    if (scene.lockedLayers.indexOf(layerIndex) < 0) {
+      scene.lockedLayers.push(layerIndex);
     }
   }
   
   onActionLayerUnlock(action) {
-    let {layerId} = action.data;
-    let scene     = this.worldEditorScene;
+    let {layerIndex} = action.data;
+    let scene        = this.worldEditorScene;
     
-    if (scene.lockedLayers.indexOf(layerId) >= 0) {
-      scene.lockedLayers.splice(scene.lockedLayers.indexOf(layerId), 1);
+    if (scene.lockedLayers.indexOf(layerIndex) >= 0) {
+      scene.lockedLayers.splice(scene.lockedLayers.indexOf(layerIndex), 1);
     }
   }
   
   onActionWorldEntityAdd(action) {
     let {layerId, gameObject} = action.data;
     let scene                 = this.worldEditorScene;
-    
     scene.addGameObject(gameObject, layerId);
   }
   
   onActionWorldEntityRemove(action) {
     let {layerId, gameObject} = action.data;
     let scene                 = this.worldEditorScene;
-    
     scene.removeGameObject(gameObject, layerId);
   }
   

@@ -3,7 +3,7 @@
 const $                 = wfl.jquery;
 const SubwindowView     = require('./SubwindowView');
 const CssClass          = require('../CssClasses'); 
-const {Menu,
+const {LayerMenu,
        MenuItem,
        MenuButton}      = require('../ui');
 const {Entity}          = require('../world');
@@ -14,7 +14,7 @@ class LayerView extends SubwindowView {
   constructor() {
     super();
     
-    this.layersMenu = new Menu('Layers');
+    this.layersMenu = new LayerMenu('Layers');
     this.add(this.layersMenu);
     
     this.addLayerBtn = new MenuButton('add_box');
@@ -54,8 +54,16 @@ class LayerView extends SubwindowView {
   }
   
   selectLayer(layerId) {
+    let menuItem  = this.layersMenu.find(layerId);
+    let layerIndex = null;
+    
+    if (menuItem) {
+      layerIndex = menuItem.data.layerIndex;
+    }
+    
     let layerData = {
-      layerId: layerId
+      layerId: layerId,
+      layerIndex: layerIndex
     };
     
     // Select the newest layer
@@ -66,7 +74,7 @@ class LayerView extends SubwindowView {
     );
   }
   
-  addLayer(layerId, reversable = true) {
+  addLayer(layerId, reversable = true, uniqueId = -1) {
     // If it's the first layer, the action cannot be undone
     if (this._layerCount === 0) {
       reversable = false;
@@ -77,8 +85,19 @@ class LayerView extends SubwindowView {
       this._layerCount++;
     }
     
+    // If no unique ID is assigned to the layer, generate one
+    if (isNaN(uniqueId) || uniqueId < 0) {
+      uniqueId = this.layersMenu.generateUniqueId();
+    
+    // Otherwise, use the one provided and offset the next one to be generated
+    // so that it has to come after the currently provided ID
+    } else {
+      this.layersMenu.setUniqueIdOffset(uniqueId + 1);
+    }
+    
     let layerData = {
-      layerId: layerId
+      layerId: layerId,
+      layerIndex: uniqueId
     };
     
     ActionPerformer.do(
@@ -94,8 +113,10 @@ class LayerView extends SubwindowView {
       layerId = this.getSelectedLayer().label;
     }
     
+    let menuItem  = this.layersMenu.find(layerId);
     let layerData = {
-      layerId: layerId
+      layerId: layerId,
+      layerIndex: menuItem.data.layerIndex
     };
     
     ActionPerformer.do(
@@ -106,16 +127,28 @@ class LayerView extends SubwindowView {
   }
   
   lockLayer(layerId) {
+    let menuItem  = this.layersMenu.find(layerId);
+    let layerData = {
+      layerId: layerId,
+      layerIndex: menuItem.data.layerIndex
+    };
+    
     ActionPerformer.do(
       Action.Type.LAYER_LOCK,
-      {layerId: layerId}
+      layerData
     );
   }
   
   unlockLayer(layerId) {
+    let menuItem  = this.layersMenu.find(layerId);
+    let layerData = {
+      layerId: layerId,
+      layerIndex: menuItem.data.layerIndex
+    };
+    
     ActionPerformer.do(
       Action.Type.LAYER_UNLOCK,
-      {layerId: layerId}
+      layerData
     );
   }
   
@@ -129,9 +162,10 @@ class LayerView extends SubwindowView {
   }
   
   onActionLayerAdd(action) {
-    var {layerId} = action.data;
+    var {layerId, layerIndex} = action.data;
     let lockButton = new MenuButton('lock_open');
     let menuItem  = new MenuItem(layerId, lockButton);
+    menuItem.data.layerIndex = layerIndex;
     
     lockButton.element.addClass(CssClass.LOCK_BUTTON);
     menuItem.element.append(lockButton.element);
@@ -144,27 +178,13 @@ class LayerView extends SubwindowView {
       }
     });
     
-    // If the layer index is defined, add the layer to that position
-    if (typeof action.data.layerIndex !== 'undefined') {
-      this.layersMenu.insert(menuItem, action.data.layerIndex);
-      
-    // Otherwise, add it to the top of the list
-    } else {
-      this.layersMenu.prepend(menuItem);
-    }
+    this.layersMenu.insert(menuItem, action.data.layerIndex);
     this.selectLayer(layerId);
   }
   
   onActionLayerRemove(action) {
     let {layerId} = action.data;
     let menuItem  = this.layersMenu.find(layerId);
-    
-    // When the layer is removed, the action holds onto the layer's index
-    // (so that during undo, it can be added back to that spot)
-    if (typeof action.data.layerIndex === 'undefined') {
-      // DATA_APPEND
-      action.data.layerIndex = this.layersMenu.indexOf(menuItem);
-    }
     
     this.layersMenu.remove(menuItem);
     

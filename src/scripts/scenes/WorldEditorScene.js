@@ -18,12 +18,12 @@ class WorldEditorScene extends EditorScene {
   constructor(canvas, mouse, keyboard) {
     super(canvas);
 
-    this.canvas    = canvas;
-    this.mouse     = mouse;
-    this.keyboard  = keyboard;
-    this.tool      = undefined;
-    this.curEntity = undefined;
-    this.layerId   = 0;
+    this.canvas     = canvas;
+    this.mouse      = mouse;
+    this.keyboard   = keyboard;
+    this.tool       = undefined;
+    this.curEntity  = undefined;
+    this.layerIndex = 0;
 
     this.selector = new util.Selector();
     this.tileSize = WorldEditorScene.DEFAULT_TILE_SIZE;
@@ -78,7 +78,7 @@ class WorldEditorScene extends EditorScene {
     this.camera.zoom       = WorldEditorScene.DEFAULT_SCALE;
     this._entityCounter    = 0;
     this.curEntity         = undefined;
-    this.layerId           = 0;
+    this.layerIndex        = 0;
     this.lockedLayers      = [];
   }
 
@@ -435,7 +435,7 @@ class WorldEditorScene extends EditorScene {
   
   addCurrentGameObject(x, y) {
     // Prevent adding objects to locked layers
-    if (this.lockedLayers.indexOf(this.layerId) >= 0) {
+    if (this.lockedLayers.indexOf(this.layerIndex) >= 0) {
       return;
     }
     
@@ -449,7 +449,7 @@ class WorldEditorScene extends EditorScene {
     return null;
   }
   
-  addEntity(entity, layerId = this.layerId, reversable = true) {
+  addEntity(entity, layerId = this.layerIndex, reversable = true) {
     let gameObject = new GameObject();
     let graphic    = wfl.PIXI.loader.resources[entity.name];
     let state      = GameObject.createState();

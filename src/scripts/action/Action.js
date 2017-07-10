@@ -143,28 +143,32 @@ Object.defineProperties(Action, {
       // LayerTool
       //
       //  data: {
-      //    layerId: <The layer's name>
+      //    layerId: <The layer's name>,
+      //    layerIndex: <The layer's position in the layer menu>
       //  }
       LAYER_SELECT: 'layer-select',
       //
       //  data: {
-      //    layerId: <The layer's name>
+      //    layerId: <The layer's name>,
+      //    layerIndex: <The layer's position in the layer menu>
       //  }
       LAYER_ADD: 'layer-add',
       //
       //  data: {
-      //    layerId: <The layer's name>
+      //    layerId: <The layer's name>,
+      //    layerIndex: <The layer's position in the layer menu>
       //  }
       LAYER_LOCK: 'layer-lock',
       //
       //  data: {
-      //    layerId: <The layer's name>
+      //    layerId: <The layer's name>,
+      //    layerIndex: <The layer's position in the layer menu>
       //  }
       LAYER_UNLOCK: 'layer-unlock',
       //
       //  data: {
       //    layerId: <The layer's name>,
-      //    @layerIndex: <The layer's position in the layer menu before being removed>
+      //    layerIndex: <The layer's position in the layer menu before being removed>
       //    @entities: <An array of all the entities in the layer before being removed>
       //  }
       LAYER_REMOVE: 'layer-remove',
