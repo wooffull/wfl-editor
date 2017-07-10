@@ -99,7 +99,7 @@ class EntityView extends SubwindowView {
     });
   }
   
-  loadFromData(data, callback = null) {
+  loadFromData(data, reversable = true, callback = null) {
     let entities = [];
 
     for (var i = 0; i < data.length; i++) {
@@ -126,7 +126,7 @@ class EntityView extends SubwindowView {
       // loading
       this.loader.load((loader, resources) => {
         for (let entity of entities) {
-          this.addEntity(entity);
+          this.addEntity(entity, reversable);
         }
         
         if (callback) {
