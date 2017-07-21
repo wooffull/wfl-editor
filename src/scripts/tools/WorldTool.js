@@ -117,7 +117,7 @@ class WorldTool extends Tool {
     // If no level data, exit early
     if (!project.level) return;
       
-    let {gameObjects} = project.level;
+    let {gameObjects, tileSize} = project.level;
     let scene         = this.subwindowView.worldEditorScene;
 
     // If no game object data, exit early
@@ -131,12 +131,18 @@ class WorldTool extends Tool {
       addedObj.rotate(rotation);
       addedObj.customData.props = props;
     }
+    
+    if (tileSize) {
+      scene.tileSize.x = tileSize.x;
+      scene.tileSize.y = tileSize.y;
+    }
   }
   
   getData() {
     let scene        = this.subwindowView.worldEditorScene;
     let gameObjects  = scene.getGameObjects();
     let data         = {
+      tileSize:    scene.tileSize,
       gameObjects: []
     };
     

@@ -22,28 +22,8 @@ class WorldEditorScene extends EditorScene {
     this.mouse      = mouse;
     this.keyboard   = keyboard;
     this.tool       = undefined;
-    this.curEntity  = undefined;
-    this.layerIndex = 0;
 
     this.selector = new util.Selector();
-    this.tileSize = WorldEditorScene.DEFAULT_TILE_SIZE;
-    
-    this.camera.zoom = WorldEditorScene.DEFAULT_SCALE;
-    
-    // Increments every time an entity is added -- used for IDs
-    this._entityCounter = 0;
-    
-    // Used to send out action data for panning entites only when the
-    // action is ready (mouse up)
-    this._panActionData = {dx: 0, dy: 0};
-    
-    // Used to send out action data for rotating entites only when the
-    // action is ready (mouse up)
-    this._rotateActionData = {dTheta: 0};
-    
-    // Used to send out action data for adding entities only when the
-    // action is ready (mouse up)
-    this._addEntityActionData = {gameObject: undefined, layerId: undefined};
 
     // Set up listeners
     $(this.mouse).on(Mouse.Event.MOVE,      ($e, e) => this.onMouseMove(e));
@@ -52,8 +32,6 @@ class WorldEditorScene extends EditorScene {
     $(this.mouse).on(Mouse.Event.LEAVE,     ($e, e) => this.onMouseLeave(e));
     $(this.mouse).on(Mouse.Event.ENTER,     ($e, e) => this.onMouseEnter(e));
     $(this.canvas).on("contextmenu",        ($e, e) => this.onContextMenu(e));
-    
-    this.lockedLayers = [];
   }
 
   reset() {
@@ -76,10 +54,28 @@ class WorldEditorScene extends EditorScene {
     this.camera.position.x = 0;
     this.camera.position.y = 0;
     this.camera.zoom       = WorldEditorScene.DEFAULT_SCALE;
-    this._entityCounter    = 0;
+    this.tileSize          = {
+      x: WorldEditorScene.DEFAULT_TILE_SIZE.x,
+      y: WorldEditorScene.DEFAULT_TILE_SIZE.y
+    };
     this.curEntity         = undefined;
     this.layerIndex        = 0;
     this.lockedLayers      = [];
+    
+    // Increments every time an entity is added -- used for IDs
+    this._entityCounter = 0;
+    
+    // Used to send out action data for panning entites only when the
+    // action is ready (mouse up)
+    this._panActionData = {dx: 0, dy: 0};
+    
+    // Used to send out action data for rotating entites only when the
+    // action is ready (mouse up)
+    this._rotateActionData = {dTheta: 0};
+    
+    // Used to send out action data for adding entities only when the
+    // action is ready (mouse up)
+    this._addEntityActionData = {gameObject: undefined, layerId: undefined};
   }
 
   update(dt) {
