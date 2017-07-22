@@ -32,6 +32,7 @@ class WorldEditorScene extends EditorScene {
     $(this.mouse).on(Mouse.Event.LEAVE,     ($e, e) => this.onMouseLeave(e));
     $(this.mouse).on(Mouse.Event.ENTER,     ($e, e) => this.onMouseEnter(e));
     $(this.canvas).on("contextmenu",        ($e, e) => this.onContextMenu(e));
+    $(this.canvas).on("mousewheel",         ($e)    => this.onMouseWheel($e));
   }
 
   reset() {
@@ -54,6 +55,7 @@ class WorldEditorScene extends EditorScene {
     this.camera.position.x = 0;
     this.camera.position.y = 0;
     this.camera.zoom       = WorldEditorScene.DEFAULT_SCALE;
+    this.draggingScene     = false;
     this.tileSize          = {
       x: WorldEditorScene.DEFAULT_TILE_SIZE.x,
       y: WorldEditorScene.DEFAULT_TILE_SIZE.y
@@ -210,9 +212,26 @@ class WorldEditorScene extends EditorScene {
     let zoom      = this.camera.zoom;
     let offset    = this.getCenterOffset();
     let cameraPos = this.camera.position;
-    let worldPos  = new geom.Vec2(cameraPos.x + point.x / zoom, cameraPos.y +  point.y / zoom);
-    worldPos.subtract(offset.divide(zoom));
+    let worldPos  = new geom.Vec2(
+      point.x / zoom + cameraPos.x - offset.x / zoom,
+      point.y / zoom + cameraPos.y - offset.y / zoom 
+    );
+    worldPos.x = Math.round(worldPos.x);
+    worldPos.y = Math.round(worldPos.y);
     return worldPos;
+  }
+  
+  convertWorldPosToPagePos(point) {
+    let zoom      = this.camera.zoom;
+    let offset    = this.getCenterOffset();
+    let cameraPos = this.camera.position;
+    let pagePos   = new geom.Vec2(
+      point.x * zoom - cameraPos.x * zoom + offset.x,
+      point.y * zoom - cameraPos.y * zoom + offset.y
+    );
+    pagePos.x = Math.round(pagePos.x);
+    pagePos.y = Math.round(pagePos.y);
+    return pagePos;
   }
 
   convertWorldPosToTilePos(point) {
@@ -517,16 +536,8 @@ class WorldEditorScene extends EditorScene {
     }
 
     // Apply adjustments to scale
-    this.camera.zoom += dz;
-    this.camera.zoom = Math.max(WorldEditorScene.SCALE.MIN, Math.min(WorldEditorScene.SCALE.MAX, this.camera.zoom));
-
-    // Apply adjustments to pan based on current scale
-    dx /= this.camera.zoom;
-    dy /= this.camera.zoom;
-    this.camera.position.x += dx;
-    this.camera.position.y += dy;
-
-    if (this.tool) this.tool.pan(dx, dy);
+    this.zoom(dz);
+    this.pan(dx, dy);
     
     // (HACK) Shift + Control -- Reset all keystates
     //
@@ -538,6 +549,21 @@ class WorldEditorScene extends EditorScene {
     if (key.isPressed(key.CONTROL) && key.isPressed(key.SHIFT)) {
       key.clear();
     }
+  }
+  
+  zoom(dz) {
+    this.camera.zoom += dz;
+    this.camera.zoom = Math.max(WorldEditorScene.SCALE.MIN, Math.min(WorldEditorScene.SCALE.MAX, this.camera.zoom));
+  }
+  
+  pan(dx, dy) {
+    // Apply adjustments to pan based on current scale
+    dx /= this.camera.zoom;
+    dy /= this.camera.zoom;
+    this.camera.position.x += dx;
+    this.camera.position.y += dy;
+
+    if (this.tool) this.tool.pan(dx, dy);
   }
   
   panSelection(dx, dy) {
@@ -615,15 +641,24 @@ class WorldEditorScene extends EditorScene {
   }
 
   onMouseMove(e) {
-    if (this.tool) this.tool.mouseMove();
+    if (this.draggingScene) {
+      this.pan(-e.originalEvent.movementX, -e.originalEvent.movementY);
+    } else {
+      if (this.tool) this.tool.mouseMove();
+    }
   }
 
   onMouseDown(e) {
-    if (this.tool) {
-      if (e.which === 1) {
-        this.tool.leftDown();
-      } else if (e.which === 3) {
-        this.tool.rightDown();
+    // Middle-click and drag lets the user move the camera around and pan
+    if (e.which == 2) {
+      this.draggingScene = true;
+    } else {
+      if (this.tool) {
+        if (e.which === 1) {
+          this.tool.leftDown();
+        } else if (e.which === 3) {
+          this.tool.rightDown();
+        }
       }
     }
 
@@ -632,51 +667,56 @@ class WorldEditorScene extends EditorScene {
   }
 
   onBeforeMouseUp(e) {
-    if (this.tool) {
-      if (e.which === 1) {
-        this.tool.leftUp();
-      } else if (e.which === 3) {
-        this.tool.rightUp();
+    // Middle-click and drag lets the user move the camera around and pan
+    if (e.which == 2) {
+      this.draggingScene = false;
+    } else {
+      if (this.tool) {
+        if (e.which === 1) {
+          this.tool.leftUp();
+        } else if (e.which === 3) {
+          this.tool.rightUp();
+        }
+      }
+
+      // Just added a new entity (and possibly dragged it)
+      if (this._addEntityActionData.gameObject) {
+        this.scheduleAddGameObject(
+          this._addEntityActionData.gameObject,
+          this._addEntityActionData.layerId
+        );
+
+        // Clear our references for the next entity to be added
+        this._addEntityActionData.gameObject = undefined;
+        this._addEntityActionData.layerId    = undefined;
+
+        // Reset the panning since the added entity's position will already
+        // reflect the position it was moved to
+        this._panActionData.dx = 0;
+        this._panActionData.dy = 0;
+      }
+
+      // If no entity was added, send out action data if entities were just
+      // being dragged
+      else if (this._panActionData.dx !== 0 || this._panActionData.dy !== 0) {
+        this.scheduleSelectionMove(
+          this._panActionData.dx,
+          this._panActionData.dy
+        );
+
+        this._panActionData.dx = 0;
+        this._panActionData.dy = 0;
+
+      // If no entities were dragged, send out action data if entities were
+      // just being rotated
+      } else if (this._rotateActionData.dTheta !== 0) {
+        this.scheduleSelectionRotate(this._rotateActionData.dTheta);
+        this._rotateActionData.dTheta = 0;
       }
     }
 
     e.stopPropagation();
     e.preventDefault();
-    
-    // Just added a new entity (and possibly dragged it)
-    if (this._addEntityActionData.gameObject) {
-      this.scheduleAddGameObject(
-        this._addEntityActionData.gameObject,
-        this._addEntityActionData.layerId
-      );
-    
-      // Clear our references for the next entity to be added
-      this._addEntityActionData.gameObject = undefined;
-      this._addEntityActionData.layerId    = undefined;
-      
-      // Reset the panning since the added entity's position will already
-      // reflect the position it was moved to
-      this._panActionData.dx = 0;
-      this._panActionData.dy = 0;
-    }
-    
-    // If no entity was added, send out action data if entities were just
-    // being dragged
-    else if (this._panActionData.dx !== 0 || this._panActionData.dy !== 0) {
-      this.scheduleSelectionMove(
-        this._panActionData.dx,
-        this._panActionData.dy
-      );
-      
-      this._panActionData.dx = 0;
-      this._panActionData.dy = 0;
-    
-    // If no entities were dragged, send out action data if entities were
-    // just being rotated
-    } else if (this._rotateActionData.dTheta !== 0) {
-      this.scheduleSelectionRotate(this._rotateActionData.dTheta);
-      this._rotateActionData.dTheta = 0;
-    }
   }
 
   onMouseLeave(e) {
@@ -691,7 +731,45 @@ class WorldEditorScene extends EditorScene {
       this.selector.clear();
     }
     
+    this.draggingScene = false;
     return false;
+  }
+  
+  onMouseWheel(e) {
+    var mousePos              = this.mouse.position;
+    var preScaleOffset        = null;
+    var postScaleOffset       = null;
+    var mousePagePosPreScale  = null;
+    var mousePagePosPostScale = null;
+    var mouseAdjustment       = null;
+    var scaleFactor           = 
+      WorldEditorScene.SCALE.SPEED *
+      WorldEditorScene.SCALE.MOUSE_SCROLL_MULTIPLIER *
+      e.originalEvent.wheelDelta;
+    
+    // Get the world position of the mouse before zooming
+    preScaleOffset = this.convertPagePosToWorldPos(mousePos);
+    
+    // Zoom in...
+    this.zoom(scaleFactor);
+    
+    // Get the world position of the mouse after zooming
+    postScaleOffset = this.convertPagePosToWorldPos(mousePos);
+    
+    // Get the page position (in pixels) of the mouse before and after zooming
+    mousePagePosPreScale  = this.convertWorldPosToPagePos(preScaleOffset);
+    mousePagePosPostScale = this.convertWorldPosToPagePos(postScaleOffset);
+    
+    // Calculate the adjustment needed to pan the world after zooming so that
+    // the mouse stays at the same WORLD position
+    mouseAdjustment = geom.Vec2.subtract(
+      mousePagePosPreScale,
+      mousePagePosPostScale
+    );
+    
+    // Pan the world by that adjustment so it looks like the user zoomed into
+    // the mouse's position
+    this.pan(mouseAdjustment.x, mouseAdjustment.y);
   }
   
   _onResize(e) {
@@ -722,9 +800,10 @@ Object.defineProperties(WorldEditorScene, {
 
   SCALE: {
     value: {
-      MIN:   0.15,
-      MAX:   1.5,
-      SPEED: 0.01
+      MIN:                     0.15,
+      MAX:                     1.5,
+      SPEED:                   0.01,
+      MOUSE_SCROLL_MULTIPLIER: 0.05
     }
   },
 
