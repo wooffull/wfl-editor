@@ -551,19 +551,63 @@ class WorldEditorScene extends EditorScene {
     }
   }
   
-  zoom(dz) {
-    this.camera.zoom += dz;
-    this.camera.zoom = Math.max(WorldEditorScene.SCALE.MIN, Math.min(WorldEditorScene.SCALE.MAX, this.camera.zoom));
+  zoom(dz, _forceCenterZoom = false) {
+    if (this.mouse.touchingCanvas && !_forceCenterZoom) {
+      this._zoomIntoMouse(dz);
+    } else {
+      this._zoomIntoCanvasCenter(dz);
+    }
   }
   
-  pan(dx, dy) {
+  _zoomIntoMouse(dz) {
+    var mousePos              = this.mouse.position;
+    var preScaleOffset        = null;
+    var postScaleOffset       = null;
+    var mousePagePosPreScale  = null;
+    var mousePagePosPostScale = null;
+    var mouseAdjustment       = null;
+    
+    // Get the world position of the mouse before zooming
+    preScaleOffset = this.convertPagePosToWorldPos(mousePos);
+    
+    // Zoom in...
+    this._zoomIntoCanvasCenter(dz);
+    
+    // Get the world position of the mouse after zooming
+    postScaleOffset = this.convertPagePosToWorldPos(mousePos);
+    
+    // Get the page position (in pixels) of the mouse before and after zooming
+    mousePagePosPreScale  = this.convertWorldPosToPagePos(preScaleOffset);
+    mousePagePosPostScale = this.convertWorldPosToPagePos(postScaleOffset);
+    
+    // Calculate the adjustment needed to pan the world after zooming so that
+    // the mouse stays at the same WORLD position
+    mouseAdjustment = geom.Vec2.subtract(
+      mousePagePosPreScale,
+      mousePagePosPostScale
+    );
+    
+    // Pan the world by that adjustment so it looks like the user zoomed into
+    // the mouse's position
+    this.pan(mouseAdjustment.x, mouseAdjustment.y, true);
+  }
+  
+  _zoomIntoCanvasCenter(dz) {
+    this.camera.zoom += dz;
+    this.camera.zoom = Math.max(
+      WorldEditorScene.SCALE.MIN,
+      Math.min(WorldEditorScene.SCALE.MAX, this.camera.zoom)
+    );
+  }
+  
+  pan(dx, dy, _ignoreToolPan = false) {
     // Apply adjustments to pan based on current scale
     dx /= this.camera.zoom;
     dy /= this.camera.zoom;
     this.camera.position.x += dx;
     this.camera.position.y += dy;
 
-    if (this.tool) this.tool.pan(dx, dy);
+    if (this.tool && !_ignoreToolPan) this.tool.pan(dx, dy);
   }
   
   panSelection(dx, dy) {
@@ -736,40 +780,12 @@ class WorldEditorScene extends EditorScene {
   }
   
   onMouseWheel(e) {
-    var mousePos              = this.mouse.position;
-    var preScaleOffset        = null;
-    var postScaleOffset       = null;
-    var mousePagePosPreScale  = null;
-    var mousePagePosPostScale = null;
-    var mouseAdjustment       = null;
-    var scaleFactor           = 
+    var zoomSpeed = 
       WorldEditorScene.SCALE.SPEED *
       WorldEditorScene.SCALE.MOUSE_SCROLL_MULTIPLIER *
       e.originalEvent.wheelDelta;
     
-    // Get the world position of the mouse before zooming
-    preScaleOffset = this.convertPagePosToWorldPos(mousePos);
-    
-    // Zoom in...
-    this.zoom(scaleFactor);
-    
-    // Get the world position of the mouse after zooming
-    postScaleOffset = this.convertPagePosToWorldPos(mousePos);
-    
-    // Get the page position (in pixels) of the mouse before and after zooming
-    mousePagePosPreScale  = this.convertWorldPosToPagePos(preScaleOffset);
-    mousePagePosPostScale = this.convertWorldPosToPagePos(postScaleOffset);
-    
-    // Calculate the adjustment needed to pan the world after zooming so that
-    // the mouse stays at the same WORLD position
-    mouseAdjustment = geom.Vec2.subtract(
-      mousePagePosPreScale,
-      mousePagePosPostScale
-    );
-    
-    // Pan the world by that adjustment so it looks like the user zoomed into
-    // the mouse's position
-    this.pan(mouseAdjustment.x, mouseAdjustment.y);
+    this.zoom(zoomSpeed);
   }
   
   _onResize(e) {

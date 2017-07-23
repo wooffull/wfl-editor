@@ -83,6 +83,10 @@ class SelectTool extends WorldTool {
         selector.clear();
         selector.add(clickObj);
       }
+      
+      // The selector contains the object clicked, therefore the selector
+      // has been clicked as well
+      selectorClicked = true;
 
     // Clicked the selection box
     } else if (selectorClicked) {
