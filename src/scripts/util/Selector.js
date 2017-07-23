@@ -125,7 +125,7 @@ class Selector {
     var box = this.selectionBox;
 
     return (point.x >= box.x && point.x <= box.x + box.width &&
-        point.y >= box.y && point.y <= box.y + box.height);
+            point.y >= box.y && point.y <= box.y + box.height);
   }
 
   pan(dx, dy) {
