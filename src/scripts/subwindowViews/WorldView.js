@@ -2,6 +2,7 @@
 
 const $                 = wfl.jquery;
 const debug             = wfl.debug;
+const {MenuButton}      = require('../ui');
 const {Action,
        ActionPerformer} = require('../action');
 const SubwindowView     = require('./SubwindowView');
@@ -24,9 +25,74 @@ class WorldView extends SubwindowView {
       this.wflGame.mouse,
       this.wflGame.keyboard
     );
+    this.playGameScene = new scenes.PlayGameScene(
+      this.canvas,
+      this.wflGame.mouse,
+      this.wflGame.keyboard
+    );
     this.wflGame.setScene(this.worldEditorScene);
     
-    this.element = $(this.canvas);
+    this.editBtn = new MenuButton('mode_edit');
+    this.editBtn.element.removeClass(CssClasses.FLOAT_RIGHT);
+    this.editBtn.element.addClass(CssClasses.FLOAT_LEFT);
+    
+    this.playBtn = new MenuButton('play_arrow');
+    this.playBtn.element.removeClass(CssClasses.FLOAT_RIGHT);
+    this.playBtn.element.addClass(CssClasses.FLOAT_LEFT);
+    
+    this.buttonContainer = $('<div>');
+    this.buttonContainer.append(this.editBtn.element);
+    this.buttonContainer.append(this.playBtn.element);
+    
+    this.canvasContainer = $('<div>');
+    this.canvasContainer.append($(this.canvas));
+    this.canvasContainer.addClass(CssClasses.SUBWINDOW_FLEX_COLUMN);
+    
+    this.viewContainer = $('<div>');
+    this.viewContainer.append(this.buttonContainer);
+    this.viewContainer.append(this.canvasContainer);
+    this.viewContainer.addClass(CssClasses.SUBWINDOW_FLEX_COLUMN);
+    
+    this.element = this.viewContainer;
+    
+    // Set up listeners
+    $(this.editBtn.element).on('click', (e) => this.onGameEdit(e));
+    $(this.playBtn.element).on('click', (e) => this.onGamePlay(e));
+  }
+  
+  onGameEdit(e) {
+    if (this.wflGame.getScene() !== this.worldEditorScene) {
+      this.wflGame.setScene(this.worldEditorScene);
+      this.worldEditorScene.enableMouseEvents();
+      this.playGameScene.disableMouseEvents();
+    }
+  }
+  
+  onGamePlay(e) {
+    if (this.wflGame.getScene() !== this.playGameScene) {
+      // Reset the game scene
+      this.playGameScene.reset();
+      
+      // Add all game objects to the game world
+      let gameObjects = this.worldEditorScene.getGameObjects();
+      let clone       = null;
+      for (let gameObject of gameObjects) {
+        clone = this.playGameScene.cloneGameObject(gameObject);
+        this.playGameScene.addGameObject(clone, gameObject.layer);
+      }
+      
+      // TODO: Remove this. This is only to test having a playing in the test
+      // game scene.
+      let newGameObjects = this.playGameScene.getGameObjects();
+      if (newGameObjects.length > 0) {
+        this.playGameScene.player = newGameObjects[newGameObjects.length - 1];
+        this.playGameScene.camera.follow(this.playGameScene.player);
+      }
+      
+      this.wflGame.setScene(this.playGameScene);
+      this.playGameScene.enableMouseEvents();
+      this.worldEditorScene.disableMouseEvents();
+    }
   }
   
   reset() {
@@ -34,7 +100,7 @@ class WorldView extends SubwindowView {
   }
   
   resize(e) {
-    let parent  = this.element.parent().parent();
+    let parent  = this.canvasContainer;
     let toolbar = parent.find('.' + CssClasses.SUBWINDOW_TOOLBAR);
     
     let style   = window.getComputedStyle(parent[0], null);

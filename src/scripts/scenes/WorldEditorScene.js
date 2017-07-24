@@ -25,7 +25,10 @@ class WorldEditorScene extends EditorScene {
 
     this.selector = new util.Selector();
 
-    // Set up listeners
+    this.enableMouseEvents();
+  }
+  
+  enableMouseEvents() {
     $(this.mouse).on(Mouse.Event.MOVE,      ($e, e) => this.onMouseMove(e));
     $(this.mouse).on(Mouse.Event.DOWN,      ($e, e) => this.onMouseDown(e));
     $(this.mouse).on(Mouse.Event.BEFORE_UP, ($e, e) => this.onBeforeMouseUp(e));
@@ -33,6 +36,16 @@ class WorldEditorScene extends EditorScene {
     $(this.mouse).on(Mouse.Event.ENTER,     ($e, e) => this.onMouseEnter(e));
     $(this.canvas).on("contextmenu",        ($e, e) => this.onContextMenu(e));
     $(this.canvas).on("mousewheel",         ($e)    => this.onMouseWheel($e));
+  }
+  
+  disableMouseEvents() {
+    $(this.mouse).off(Mouse.Event.MOVE);
+    $(this.mouse).off(Mouse.Event.DOWN);
+    $(this.mouse).off(Mouse.Event.BEFORE_UP);
+    $(this.mouse).off(Mouse.Event.LEAVE);
+    $(this.mouse).off(Mouse.Event.ENTER);
+    $(this.canvas).off("contextmenu");
+    $(this.canvas).off("mousewheel");
   }
 
   reset() {

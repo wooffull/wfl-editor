@@ -7,6 +7,7 @@ module.exports = {
   SUBWINDOW: 'flex-column-box subwindow',
   SUBWINDOW_TOOLBAR: 'subwindow-toolbar',
   SUBWINDOW_VIEW: 'flex-column-box subwindow-view',
+  SUBWINDOW_FLEX_COLUMN: 'flex-column-box',
   
   WORLD_CANVAS: 'world-canvas',
   TOOL_BAR_TOOL_ICON: 'tool-bar-tool-icon',
