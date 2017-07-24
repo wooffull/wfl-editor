@@ -56,8 +56,16 @@ class WorldView extends SubwindowView {
     this.element = this.viewContainer;
     
     // Set up listeners
-    $(this.editBtn.element).on('click', (e) => this.onGameEdit(e));
-    $(this.playBtn.element).on('click', (e) => this.onGamePlay(e));
+    $(this.editBtn.element).on('click', (e) => {
+      if (typeof e.which === "undefined" || e.which === 1) {
+        this.onGameEdit(e);
+      }
+    });
+    $(this.playBtn.element).on('click', (e) => {
+      if (typeof e.which === "undefined" || e.which === 1) {
+        this.onGamePlay(e);
+      }
+    });
   }
   
   onGameEdit(e) {

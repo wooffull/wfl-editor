@@ -18,13 +18,19 @@ class LayerView extends SubwindowView {
     this.add(this.layersMenu);
     
     this.addLayerBtn = new MenuButton('add_box');
-    this.addLayerBtn.element.on('click', () => this.addLayer());
+    this.addLayerBtn.element.on('click', (e) => {
+      if (typeof e.which === "undefined" || e.which === 1) {
+        this.addLayer();
+      }
+    });
     this.layersMenu.addButton(this.addLayerBtn);
     
     this.removeLayerBtn = new MenuButton('indeterminate_check_box');
-    this.removeLayerBtn.element.on('click', () => {
-      if (this.layersMenu.list.length > 1) {
-        this.removeLayer();
+    this.removeLayerBtn.element.on('click', (e) => {
+      if (typeof e.which === "undefined" || e.which === 1) {
+        if (this.layersMenu.list.length > 1) {
+          this.removeLayer();
+        }
       }
     });
     this.layersMenu.addButton(this.removeLayerBtn);
@@ -170,11 +176,13 @@ class LayerView extends SubwindowView {
     lockButton.element.addClass(CssClass.LOCK_BUTTON);
     menuItem.element.append(lockButton.element);
     
-    lockButton.element.click(() => {
-      if (lockButton.element.hasClass(CssClass.LOCK_BUTTON)) {
-        this.lockLayer(layerId);
-      } else {
-        this.unlockLayer(layerId);
+    lockButton.element.click((e) => {
+      if (typeof e.which === "undefined" || e.which === 1) {
+        if (lockButton.element.hasClass(CssClass.LOCK_BUTTON)) {
+          this.lockLayer(layerId);
+        } else {
+          this.unlockLayer(layerId);
+        }
       }
     });
     

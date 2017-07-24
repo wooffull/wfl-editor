@@ -30,9 +30,21 @@ $('.app-icon').on('click', (e) => {
   
 });
 
-$('.close').on('click',    () => ipcRenderer.send('window-close'));
-$('.minimize').on('click', () => ipcRenderer.send('window-minimize'));
-$('.maximize').on('click', () => ipcRenderer.send('window-maximize'));
+$('.close').on('click',    (e) => {
+  if (typeof e.which === "undefined" || e.which === 1) {
+    ipcRenderer.send('window-close');
+  }
+});
+$('.minimize').on('click', (e) => {
+  if (typeof e.which === "undefined" || e.which === 1) {
+    ipcRenderer.send('window-minimize');
+  }
+});
+$('.maximize').on('click', (e) => {
+  if (typeof e.which === "undefined" || e.which === 1) {
+    ipcRenderer.send('window-maximize');
+  }
+});
 
 
 // Listener for when project updates are received
@@ -182,15 +194,24 @@ const helpMenu = Menu.buildFromTemplate(helpMenuTemplate);
 
 $('#menu-file').on('click', (e) => {
   e.preventDefault();
-  fileMenu.popup(remote.getCurrentWindow());
+  
+  if (typeof e.which === "undefined" || e.which === 1) {
+    fileMenu.popup(remote.getCurrentWindow());
+  }
 });
 
 $('#menu-edit').on('click', (e) => {
   e.preventDefault();
-  editMenu.popup(remote.getCurrentWindow());
+  
+  if (typeof e.which === "undefined" || e.which === 1) {
+    editMenu.popup(remote.getCurrentWindow());
+  }
 });
 
 $('#menu-help').on('click', (e) => {
   e.preventDefault();
-  helpMenu.popup(remote.getCurrentWindow());
+  
+  if (typeof e.which === "undefined" || e.which === 1) {
+    helpMenu.popup(remote.getCurrentWindow());
+  }
 });

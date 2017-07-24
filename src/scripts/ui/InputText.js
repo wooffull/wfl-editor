@@ -23,15 +23,17 @@ class InputText extends HtmlElement {
   }
   
   onClick(e) {
-    if (e.target === this.label[0]) {
-      this.label.focus();
-      this.data.blur();
-    } else if (e.target === this.data[0]) {
-      this.label.blur();
-      this.data.focus();
-    } else {
-      this.label.blur();
-      this.data.blur();
+    if (typeof e.which === "undefined" || e.which === 1) {
+      if (e.target === this.label[0]) {
+        this.label.focus();
+        this.data.blur();
+      } else if (e.target === this.data[0]) {
+        this.label.blur();
+        this.data.focus();
+      } else {
+        this.label.blur();
+        this.data.blur();
+      }
     }
   }
 }

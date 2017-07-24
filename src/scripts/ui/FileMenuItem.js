@@ -26,9 +26,11 @@ class FileMenuItem extends HtmlElement {
     this.labelWrapper.addClass(CssClass.FILE_MENU_ITEM_LABEL_WRAPPER);
     this.labelWrapper.append(this.labelSpacing);
     this.labelWrapper.append(this.label);
-    $(this.labelWrapper).on('click', () => {
-      this._toggleExpand();
-      $(this.rootFile).trigger('click', this);
+    $(this.labelWrapper).on('click', (e) => {
+      if (typeof e.which === "undefined" || e.which === 1) {
+        this._toggleExpand();
+        $(this.rootFile).trigger('click', this);
+      }
     });
     
     this.element = $('<li>');

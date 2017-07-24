@@ -25,7 +25,11 @@ class ToolBarView extends SubwindowView {
         icon: toolIcon
       };
       this._tools.push(toolInstance);
-      $(toolIcon).on('click', () => this.selectTool(toolInstance));
+      $(toolIcon).on('click', (e) => {
+        if (typeof e.which === "undefined" ||  e.which === 1) {
+          this.selectTool(toolInstance);
+        }
+      });
     }
   }
   

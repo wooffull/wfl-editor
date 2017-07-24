@@ -22,11 +22,19 @@ class EntityView extends SubwindowView {
     this.add(this.entitiesMenu);
     
     this.addEntityEntryBtn = new MenuButton('add_box');
-    this.addEntityEntryBtn.element.on('click', () => this.addEntityEntry());
+    this.addEntityEntryBtn.element.on('click', (e) => {
+      if (typeof e.which === "undefined" || e.which === 1) {
+        this.addEntityEntry();
+      }
+    });
     this.entitiesMenu.addButton(this.addEntityEntryBtn);
     
     this.removeEntityEntryBtn = new MenuButton('indeterminate_check_box');
-    this.removeEntityEntryBtn.element.on('click', () => this.removeEntityEntry());
+    this.removeEntityEntryBtn.element.on('click', (e) => {
+      if (typeof e.which === "undefined" || e.which === 1) {
+        this.removeEntityEntry();
+      }
+    });
     this.entitiesMenu.addButton(this.removeEntityEntryBtn);
     
     $(this.entitiesMenu).on('change', (e, data) => {

@@ -50,7 +50,11 @@ class FileMenu extends Menu {
   _addElement(htmlElement, position) {
     this.list.splice(position, 0, htmlElement);
     
-    $(htmlElement).on('click', (e, elem = htmlElement) => this.select(elem));
+    $(htmlElement).on('click', (e, elem = htmlElement) => {
+      if (typeof e.which === "undefined" || e.which === 1) {
+        this.select(elem);
+      }
+    });
     
     // Select the first item added
     if (this._lastSelected === undefined) {

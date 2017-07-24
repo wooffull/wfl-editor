@@ -196,9 +196,13 @@ class Menu extends HtmlElement {
     // Instead of push, splice the element into the given position
     this.list.splice(position, 0, htmlElement);
     
-    htmlElement.element.on('click',     () => this.select(htmlElement));
-    htmlElement.element.on('mouseover', () => this._onItemHover(htmlElement));
-    htmlElement.element.on('mouseout',  () => this._onItemLeave(htmlElement));
+    htmlElement.element.on('click',     (e) => {
+      if (typeof e.which === "undefined" || e.which === 1) {
+        this.select(htmlElement);
+      }
+    });
+    htmlElement.element.on('mouseover', (e) => this._onItemHover(htmlElement));
+    htmlElement.element.on('mouseout',  (e) => this._onItemLeave(htmlElement));
     
     // Select the first item added
     if (this._lastSelected === undefined) {
@@ -220,21 +224,25 @@ class Menu extends HtmlElement {
   }
   
   _onMouseDown(e) {
-    var target = e.target;
-    var found = null;
-    
-    for (var i = 0; i < this.list.length; i++) {
-      var item = this.list[i];
-      
-      if (item.element[0] === target || $.contains(item.element[0], target)) {
-        found = item;
-        break;
+    if (typeof e.which === "undefined" || e.which === 1) {
+      var target = e.target;
+      var found = null;
+
+      for (var i = 0; i < this.list.length; i++) {
+        var item = this.list[i];
+
+        if (item.element[0] === target ||
+            $.contains(item.element[0], target)) {
+          
+          found = item;
+          break;
+        }
       }
-    }
-    
-    if (found) {
-      if (!this._lastSelected || this._lastSelected !== found) {
-        $(this).trigger("change", [found]);
+
+      if (found) {
+        if (!this._lastSelected || this._lastSelected !== found) {
+          $(this).trigger("change", [found]);
+        }
       }
     }
   }

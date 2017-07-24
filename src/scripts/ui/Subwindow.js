@@ -27,7 +27,11 @@ class Subwindow extends HtmlElement {
     this._tools.push(tool);
     this._toolContainer.append(tool.element);
     
-    $(tool.element).on('click', () => this.selectTool(tool));
+    $(tool.element).on('click', (e) => {
+      if (typeof e.which === "undefined" ||  e.which === 1) {
+        this.selectTool(tool);
+      }
+    });
     
     // Select the tool being added if it's the first tool for the subwindow
     if (this._currentTool === null) {

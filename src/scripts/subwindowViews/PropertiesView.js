@@ -20,11 +20,19 @@ class PropertiesView extends SubwindowView {
     this.label.append(this.buttonContainer);
     
     this.addPropertyBtn = new MenuButton('add_box');
-    this.addPropertyBtn.element.on('click', () => this.addProperty());
+    this.addPropertyBtn.element.on('click', (e) => {
+      if (typeof e.which === "undefined" || e.which === 1) {
+        this.addProperty();
+      }
+    });
     this.buttonContainer.prepend(this.addPropertyBtn.element);
     
     this.saveBtn = new MenuButton('save');
-    this.saveBtn.element.on('click', () => this.saveProperties());
+    this.saveBtn.element.on('click', (e) => {
+      if (typeof e.which === "undefined" || e.which === 1) {
+        this.saveProperties();
+      }
+    });
     
     this.propertiesContainer = $("<div>");
     

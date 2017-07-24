@@ -15,7 +15,11 @@ class ExpandableMenu extends Menu {
     this.collapseBtn = $('<button>');
     this.collapseBtn.html($('<i class="material-icons">arrow_drop_up</i>'));
     this.collapseBtn.addClass(CssClass.EXPANDABLE_MENU_COLLAPSE_BUTTON);
-    this.collapseBtn.on('click', (e) => this._onToggleCollapse(e));
+    this.collapseBtn.on('click', (e) => {
+      if (typeof e.which === "undefined" || e.which === 1) {
+        this._onToggleCollapse(e);
+      }
+    });
     this.element.append(this.collapseBtn);
   }
   
