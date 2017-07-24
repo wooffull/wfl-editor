@@ -69,8 +69,6 @@ class SelectTool extends WorldTool {
     // be made
     if (!keyboard.isPressed(keyboard.SHIFT)) {
       selector.clear();
-    } else if (selectorClicked) {
-      this.clickedSelection = true;
     }
 
     // Clicked an object that isn't selected yet, so select it
@@ -86,6 +84,10 @@ class SelectTool extends WorldTool {
       }
       
       this._lastSelected = clickObj;
+    }
+    
+    if (selectorClicked || clickObj) {
+      this.clickedSelection = true;
     }
   }
 
