@@ -2,17 +2,28 @@
 
 const WorldTool  = require('./WorldTool');
 const SelectTool = require('./SelectTool');
+const geom       = wfl.geom;
 
 class DrawTool extends WorldTool {
   constructor(editor) {
     super(editor);
 
     this.selectTool = new SelectTool(editor);
+    
+    // The world position of the mouse when it leaves the canvas. This is used
+    // for snapping dragged objects back to the mouse when entering the
+    // canvas, especially after zooming while the mouse is off the canvas
+    this._mouseLeaveWorldPosition = null;
+    
+    this._selectToolDragStart     = null;
   }
 
   reset() {
     super.reset();
     this.selectTool.reset();
+    
+    this._mouseLeaveWorldPosition = null;
+    this._selectToolDragStart     = null;
   }
 
   draw(renderer) {
@@ -87,10 +98,23 @@ class DrawTool extends WorldTool {
         this.editor.clearSelectionPan();
         this.editor.scheduleRemoveGameObjectBatch(selectedObjects);
       }
+      
+      if (this._selectToolDragStart !== null) {
+        if (mouse.touchingCanvas) {
+          this._panSelectionToMouseAfterDrag(
+            this._selectToolDragStart,
+            mouse.position
+          );
+        }
+        
+        this._selectToolDragStart = null;
+      }
     }
 
-    this.clickedSelection = false;
+    this.clickedSelection            = false;
     this.selectTool.clickedSelection = false;
+    this._mouseLeaveWorldPosition    = null;
+    this._selectToolDragStart        = null;
   }
 
   rightDown() {
@@ -118,25 +142,90 @@ class DrawTool extends WorldTool {
   }
 
   mouseMove() {
-    let keyboard = this.editor.keyboard;
-    let mouse    = this.editor.mouse;
-    let zoom     = this.editor.camera.zoom;
-
+    let keyboard       = this.editor.keyboard;
+    let mouse          = this.editor.mouse;
+    let zoom           = this.editor.camera.zoom;
+    let leftMouseState = mouse.getState(1);
+    
     // Holding Shift with the draw tool is a shortcut for the
     // Select tool, ONLY if the selection isn't being dragged
     if (!keyboard.isPressed(keyboard.SHIFT)) {
-      let leftMouseState = mouse.getState(1);
-      if (leftMouseState.dragging) {
+      if (this._selectToolDragStart !== null) {
+        this._panSelectionToMouseAfterDrag(
+          this._selectToolDragStart,
+          mouse.position
+        );
+        this._selectToolDragStart = null;
+      } else if (leftMouseState.dragging) {
         let dx = (leftMouseState.dragEnd.x - leftMouseState.prevPos.x) / zoom;
         let dy = (leftMouseState.dragEnd.y - leftMouseState.prevPos.y) / zoom;
         this.editor.panSelection(dx, dy);
       }
+    } else {
+      if (leftMouseState.dragging && 
+          mouse.touchingCanvas &&
+          this._selectToolDragStart === null) {
+        
+        leftMouseState.dragStart.x = mouse.position.x;
+        leftMouseState.dragStart.y = mouse.position.y;
+        this._selectToolDragStart = 
+          this.editor.convertPagePosToWorldPos(mouse.position);
+      }
     }
+  }
+  
+  mouseLeave() {
+    let keyboard = this.editor.keyboard;
+    
+    if (!keyboard.isPressed(keyboard.SHIFT)) {
+      let mouse          = this.editor.mouse;
+      let leftMouseState = mouse.getState(1);
+
+      // If dragging the left-click, keep reference to the mouse's current
+      // world position
+      if (leftMouseState.dragging) {
+        this._selectToolDragStart = 
+          this.editor.convertPagePosToWorldPos(leftMouseState.prevPos);
+      }
+    }
+  }
+  
+  mouseEnter() {
+    let keyboard = this.editor.keyboard;
+    
+    if (!keyboard.isPressed(keyboard.SHIFT)) {
+      // If we saved the mouse's current world position before leaving the
+      // canvas, move all selected objects to the mouse's current position
+      if (this._mouseLeaveWorldPosition) {
+        let mouse = this.editor.mouse;
+        /*this._panSelectionToMouseAfterDrag(
+          this._mouseLeaveWorldPosition,
+          mouse.position
+        );*/
+      }
+    }
+    
+    this._mouseLeaveWorldPosition = null;
   }
 
   pan(dx, dy) {
     if (this.clickedSelection) {
       this.editor.panSelection(dx, dy);
+    }
+  }
+  
+  _panSelectionToMouseAfterDrag(startDragWorldPosition, endDragPagePosition) {
+    let mouse          = this.editor.mouse;
+    let leftMouseState = mouse.getState(1);
+
+    if (leftMouseState.dragging) {
+      var endDragWorldPosition =
+        this.editor.convertPagePosToWorldPos(endDragPagePosition);
+      var worldDisplacement = geom.Vec2.subtract(
+        endDragWorldPosition,
+        startDragWorldPosition
+      );
+      this.editor.panSelection(worldDisplacement.x, worldDisplacement.y);
     }
   }
 }

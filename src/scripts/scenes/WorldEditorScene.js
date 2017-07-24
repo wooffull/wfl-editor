@@ -77,11 +77,6 @@ class WorldEditorScene extends EditorScene {
     this.layerIndex        = 0;
     this.lockedLayers      = [];
     
-    // The world position of the mouse when it leaves the canvas. This is used
-    // for snapping dragged objects back to the mouse when entering the
-    // canvas, especially after zooming while the mouse is off the canvas
-    this._mouseLeaveWorldPosition = null;
-    
     // Increments every time an entity is added -- used for IDs
     this._entityCounter = 0;
     
@@ -797,34 +792,15 @@ class WorldEditorScene extends EditorScene {
   }
 
   onMouseLeave(e) {
-    let leftMouseState = this.mouse.getState(1);
-    
-    // If dragging the left-click, keep reference to the mouse's current world
-    // position
-    if (leftMouseState.dragging) {
-      this._mouseLeaveWorldPosition = 
-        this.convertPagePosToWorldPos(leftMouseState.prevPos);
+    if (this.tool) {
+      this.tool.mouseLeave();
     }
   }
 
   onMouseEnter(e) {
-    // If we saved the mouse's current world position before leaving the
-    // canvas, move all selected objects to the mouse's current position
-    if (this._mouseLeaveWorldPosition) {
-      let leftMouseState = this.mouse.getState(1);
-    
-      if (leftMouseState.dragging) {
-        var mouseEnterWorldPosition =
-          this.convertPagePosToWorldPos(this.mouse.position);
-        var worldDisplacement = geom.Vec2.subtract(
-          mouseEnterWorldPosition,
-          this._mouseLeaveWorldPosition
-        );
-        this.panSelection(worldDisplacement.x, worldDisplacement.y);
-      }
+    if (this.tool) {
+      this.tool.mouseEnter();
     }
-    
-    this._mouseLeaveWorldPosition = null;
   }
 
   onContextMenu(e) {

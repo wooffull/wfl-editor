@@ -9,6 +9,12 @@ class SelectTool extends WorldTool {
     
     this._lastSelected = null;
   }
+  
+  reset() {
+    super.reset();
+    
+    this._lastSelected = null;
+  }
 
   draw(renderer) {
     let mouse          = this.editor.mouse;

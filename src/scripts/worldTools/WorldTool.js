@@ -6,14 +6,16 @@ class WorldTool {
     this.clickedSelection = false;
   }
 
-  reset()     { this.clickedSelection = false; }
-  draw(renderer)   { }
-  leftDown()  { }
-  leftUp()    { }
-  rightDown() { }
-  rightUp()   { }
-  mouseMove() { }
-  pan(dx, dy) { }
+  reset()        { this.clickedSelection = false; }
+  draw(renderer) { }
+  leftDown()     { }
+  leftUp()       { }
+  rightDown()    { }
+  rightUp()      { }
+  mouseMove()    { }
+  mouseLeave()   { }
+  mouseEnter()   { }
+  pan(dx, dy)    { }
 }
 
 module.exports = WorldTool;
