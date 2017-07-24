@@ -20,27 +20,27 @@ class DrawTool extends WorldTool {
 
     // Holding Shift with the draw tool is a shortcut for the
     // Select tool, ONLY if the selection isn't being dragged
-    if (!this.clickedSelection && keyboard.isPressed(keyboard.SHIFT)) {
+    if (keyboard.isPressed(keyboard.SHIFT)) {
       this.selectTool.draw(renderer);
     }
   }
 
   leftDown() {
-    let keyboard      = this.editor.keyboard;
-    let mouse         = this.editor.mouse;
-    let selector      = this.editor.selector;
-    let mouseWorldPos = this.editor.convertPagePosToWorldPos(mouse.position);
-    let clickObj      = this.editor.find(mouseWorldPos.x, mouseWorldPos.y);
+    let keyboard        = this.editor.keyboard;
+    let mouse           = this.editor.mouse;
+    let selector        = this.editor.selector;
+    let mouseWorldPos   = this.editor.convertPagePosToWorldPos(mouse.position);
+    let selectorClicked = selector.hitTestPoint(mouseWorldPos);
 
     // Clicked an object, so it should be selected
     // Shift key also functions as a shortcut for selecting objects
-    if (clickObj ||
-      selector.hitTestPoint(mouseWorldPos) ||
-      keyboard.isPressed(keyboard.SHIFT)) {
-
+    if (keyboard.isPressed(keyboard.SHIFT)) {
       this.selectTool.leftDown();
       this.clickedSelection = this.selectTool.clickedSelection;
 
+    } else if (selectorClicked) {
+      this.clickedSelection = true;
+      
     // Clicked on an empty spot on the canvas, so add the new game
     // object there
     } else {
@@ -73,7 +73,8 @@ class DrawTool extends WorldTool {
       let mouse          = this.editor.mouse;
       let leftMouseState = mouse.getState(1);
       let selector       = this.editor.selector;
-      let mouseWorldPos  = this.editor.convertPagePosToWorldPos(mouse.position);
+      let mouseWorldPos  = 
+        this.editor.convertPagePosToWorldPos(mouse.position);
 
       // If a selection was being dragged, but the mouse was released off the
       // canvas, remove everything in the selection
@@ -119,9 +120,7 @@ class DrawTool extends WorldTool {
 
     // Holding Shift with the draw tool is a shortcut for the
     // Select tool, ONLY if the selection isn't being dragged
-    if (!keyboard.isPressed(keyboard.SHIFT) ||
-        (keyboard.isPressed(keyboard.SHIFT) && this.clickedSelection)) {
-
+    if (!keyboard.isPressed(keyboard.SHIFT)) {
       let leftMouseState = mouse.getState(1);
       if (leftMouseState.dragging) {
         let dx = (leftMouseState.dragEnd.x - leftMouseState.prevPos.x) / zoom;

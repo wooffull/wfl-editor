@@ -6,6 +6,8 @@ const WorldTool = require('./WorldTool');
 class SelectTool extends WorldTool {
   constructor(editor) {
     super(editor);
+    
+    this._lastSelected = null;
   }
 
   draw(renderer) {
@@ -66,10 +68,9 @@ class SelectTool extends WorldTool {
     // Not holding Shift key, so no additions to the selection will
     // be made
     if (!keyboard.isPressed(keyboard.SHIFT)) {
-      // Clicking off the selector's box will clear the selection
-      if (!selectorClicked) {
-        selector.clear();
-      }
+      selector.clear();
+    } else if (selectorClicked) {
+      this.clickedSelection = true;
     }
 
     // Clicked an object that isn't selected yet, so select it
@@ -84,20 +85,7 @@ class SelectTool extends WorldTool {
         selector.add(clickObj);
       }
       
-      // The selector contains the object clicked, therefore the selector
-      // has been clicked as well
-      selectorClicked = true;
-
-    // Clicked the selection box
-    } else if (selectorClicked) {
-      // Shift Key + Click -- Remove clicked object from selection
-      if (keyboard.isPressed(keyboard.SHIFT)) {
-        selector.remove(clickObj);
-      }
-    }
-
-    if (selectorClicked) {
-      this.clickedSelection = true;
+      this._lastSelected = clickObj;
     }
   }
 
@@ -107,9 +95,10 @@ class SelectTool extends WorldTool {
     let leftMouseState  = mouse.getState(1);
     let selector        = this.editor.selector;
     let mouseWorldPos   = this.editor.convertPagePosToWorldPos(mouse.position);
+    let clickObj        = this.editor.find(mouseWorldPos.x, mouseWorldPos.y);
 
     // Dragging the mouse to select new elements
-    if (leftMouseState.dragging && !this.clickedSelection) {
+    if (leftMouseState.dragging) {
       let dragStart = this.editor.convertPagePosToWorldPos(
         leftMouseState.dragStart
       );
@@ -137,9 +126,19 @@ class SelectTool extends WorldTool {
       for (let i = 0; i < selected.length; i++) {
         selector.add(selected[i]);
       }
+    } else {
+      // Remove the last clicked object from the selector if the mouse wasn't
+      // dragged (and if the last clicked object isn't the last selected one)
+      if (this.clickedSelection &&
+          clickObj &&
+          clickObj !== this._lastSelected) {
+        
+        selector.remove(clickObj);
+      }
     }
 
     this.clickedSelection = false;
+    this._lastSelected    = null;
   }
 
   rightDown() {
