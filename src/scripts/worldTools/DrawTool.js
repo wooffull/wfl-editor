@@ -19,7 +19,7 @@ class DrawTool extends WorldTool {
     let keyboard = this.editor.keyboard;
 
     // Holding Shift with the draw tool is a shortcut for the
-    // Select tool, ONLY if the selection isn't being dragged
+    // Select tool
     if (keyboard.isPressed(keyboard.SHIFT)) {
       this.selectTool.draw(renderer);
     }
@@ -31,13 +31,17 @@ class DrawTool extends WorldTool {
     let selector        = this.editor.selector;
     let mouseWorldPos   = this.editor.convertPagePosToWorldPos(mouse.position);
     let selectorClicked = selector.hitTestPoint(mouseWorldPos);
+    let clickObj        = this.editor.find(mouseWorldPos.x, mouseWorldPos.y);
 
-    // Clicked an object, so it should be selected
+    // Clicked an object that isn't yet selected, so it should be selected
     // Shift key also functions as a shortcut for selecting objects
-    if (keyboard.isPressed(keyboard.SHIFT)) {
+    if (keyboard.isPressed(keyboard.SHIFT) ||
+        (clickObj && !selector.isSelected(clickObj))) {
+      
       this.selectTool.leftDown();
       this.clickedSelection = this.selectTool.clickedSelection;
 
+    // If the selection was clicked, then prepare to drag the selection
     } else if (selectorClicked) {
       this.clickedSelection = true;
       
