@@ -115,7 +115,9 @@ class WorldEditorScene extends EditorScene {
     // Draw all game objects in the world
     super.draw(renderer);
     
-    this.drawMouseHoverTile();
+    if (this.mouse.touchingCanvas) {
+      this.drawMouseHoverTile();
+    }
 
     // Only draw the grid if not zoomed too far out.
     // It makes everything look less cluttered with that small of a scale.
@@ -633,6 +635,19 @@ class WorldEditorScene extends EditorScene {
     
     this._panActionData.dx += dx;
     this._panActionData.dy += dy;
+  }
+  
+  /**
+   * Moves the selection back to its original position before any dragging
+   * started
+   */
+  clearSelectionPan() {
+    let dx = -this._panActionData.dx;
+    let dy = -this._panActionData.dy;
+    this.selector.pan(dx, dy);
+    
+    this._panActionData.dx = 0;
+    this._panActionData.dy = 0;
   }
   
   rotateSelection(dTheta) {

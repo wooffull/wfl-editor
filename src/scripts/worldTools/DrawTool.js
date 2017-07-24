@@ -79,10 +79,8 @@ class DrawTool extends WorldTool {
       // canvas, remove everything in the selection
       if (this.clickedSelection && !mouse.touchingCanvas) {
         let selectedObjects = selector.selectedObjects;
-
-        for (let i = selectedObjects.length - 1; i >= 0; i--) {
-          this.editor.scheduleRemoveGameObject(selectedObjects[i]);
-        }
+        this.editor.clearSelectionPan();
+        this.editor.scheduleRemoveGameObjectBatch(selectedObjects);
       }
     }
 
@@ -122,7 +120,7 @@ class DrawTool extends WorldTool {
     // Holding Shift with the draw tool is a shortcut for the
     // Select tool, ONLY if the selection isn't being dragged
     if (!keyboard.isPressed(keyboard.SHIFT) ||
-      (keyboard.isPressed(keyboard.SHIFT) && this.clickedSelection)) {
+        (keyboard.isPressed(keyboard.SHIFT) && this.clickedSelection)) {
 
       let leftMouseState = mouse.getState(1);
       if (leftMouseState.dragging) {
