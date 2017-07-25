@@ -49,8 +49,16 @@ class RotateTool extends WorldTool {
   }
   
   rightDown() {
-    let keyboard = this.editor.keyboard;
-    let selector = this.editor.selector;
+    let keyboard       = this.editor.keyboard;
+    let selector       = this.editor.selector;
+    let mouse          = this.editor.mouse;
+    let leftMouseState = mouse.getState(1);
+    
+    if (leftMouseState.isDown) {
+      return;
+    } else {
+      this.editor.selector.clear();
+    }
     
     // Holding Shift with the rotate tool is a shortcut for the Select tool
     if (keyboard.isPressed(keyboard.SHIFT)) {

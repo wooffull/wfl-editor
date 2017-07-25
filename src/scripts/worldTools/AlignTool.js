@@ -70,6 +70,8 @@ class AlignTool extends WorldTool {
     
     if (leftMouseState.isDown) {
       return;
+    } else {
+      this.editor.selector.clear();
     }
     
     // Holding Shift with the align tool is a shortcut for the Select tool

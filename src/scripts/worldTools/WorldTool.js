@@ -16,6 +16,7 @@ class WorldTool {
   mouseLeave()   { }
   mouseEnter()   { }
   pan(dx, dy)    { }
+  handleInput()  { }
 }
 
 module.exports = WorldTool;

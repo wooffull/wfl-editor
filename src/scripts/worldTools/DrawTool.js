@@ -10,20 +10,19 @@ class DrawTool extends WorldTool {
 
     this.selectTool = new SelectTool(editor);
     
-    // The world position of the mouse when it leaves the canvas. This is used
-    // for snapping dragged objects back to the mouse when entering the
-    // canvas, especially after zooming while the mouse is off the canvas
+    this._dragStartWorldPosition  = null;
     this._mouseLeaveWorldPosition = null;
     
-    this._selectToolDragStart     = null;
+    this._dragX = 0;
+    this._dragY = 0;
   }
 
   reset() {
     super.reset();
     this.selectTool.reset();
     
+    this._dragStartWorldPosition = null;
     this._mouseLeaveWorldPosition = null;
-    this._selectToolDragStart     = null;
   }
 
   draw(renderer) {
@@ -74,6 +73,10 @@ class DrawTool extends WorldTool {
         selector.add(addedObj);
       }
     }
+    
+    this._dragStartWorldPosition = mouseWorldPos;
+    this._dragX = 0;
+    this._dragY = 0;
   }
 
   leftUp() {
@@ -99,22 +102,17 @@ class DrawTool extends WorldTool {
         this.editor.scheduleRemoveGameObjectBatch(selectedObjects);
       }
       
-      if (this._selectToolDragStart !== null) {
-        if (mouse.touchingCanvas) {
-          this._panSelectionToMouseAfterDrag(
-            this._selectToolDragStart,
-            mouse.position
-          );
-        }
-        
-        this._selectToolDragStart = null;
+      // Round the position of dragged game objects to the nearest integer
+      for (let gameObject of selector.selectedObjects) {
+        gameObject.position.x = Math.round(gameObject.position.x);
+        gameObject.position.y = Math.round(gameObject.position.y);
       }
     }
 
     this.clickedSelection            = false;
     this.selectTool.clickedSelection = false;
+    this._dragStartWorldPosition     = null;
     this._mouseLeaveWorldPosition    = null;
-    this._selectToolDragStart        = null;
   }
 
   rightDown() {
@@ -126,6 +124,8 @@ class DrawTool extends WorldTool {
     
     if (leftMouseState.isDown) {
       return;
+    } else {
+      this.editor.selector.clear();
     }
 
     // Holding Shift with the draw tool is a shortcut for the
@@ -150,62 +150,98 @@ class DrawTool extends WorldTool {
     // Holding Shift with the draw tool is a shortcut for the
     // Select tool, ONLY if the selection isn't being dragged
     if (!keyboard.isPressed(keyboard.SHIFT)) {
-      if (this._selectToolDragStart !== null) {
-        this._panSelectionToMouseAfterDrag(
-          this._selectToolDragStart,
-          mouse.position
-        );
-        this._selectToolDragStart = null;
-      } else if (leftMouseState.dragging) {
+      if (leftMouseState.dragging) {
         let dx = (leftMouseState.dragEnd.x - leftMouseState.prevPos.x) / zoom;
         let dy = (leftMouseState.dragEnd.y - leftMouseState.prevPos.y) / zoom;
+        this._dragX += dx;
+        this._dragY += dy;
         this.editor.panSelection(dx, dy);
-      }
-    } else {
-      if (leftMouseState.dragging && 
-          mouse.touchingCanvas &&
-          this._selectToolDragStart === null) {
-        
-        leftMouseState.dragStart.x = mouse.position.x;
-        leftMouseState.dragStart.y = mouse.position.y;
-        this._selectToolDragStart = 
-          this.editor.convertPagePosToWorldPos(mouse.position);
       }
     }
   }
   
   mouseLeave() {
-    let keyboard = this.editor.keyboard;
+    let keyboard       = this.editor.keyboard;
+    let mouse          = this.editor.mouse;
+    let leftMouseState = mouse.getState(1);
     
-    if (!keyboard.isPressed(keyboard.SHIFT)) {
-      let mouse          = this.editor.mouse;
-      let leftMouseState = mouse.getState(1);
-
-      // If dragging the left-click, keep reference to the mouse's current
-      // world position
-      if (leftMouseState.dragging) {
-        this._selectToolDragStart = 
+    if (leftMouseState.dragging) {
+      if (!keyboard.isPressed(keyboard.SHIFT)) {
+        // If dragging the left-click, keep reference to the mouse's current
+        // world position
+        this._mouseLeaveWorldPosition = 
           this.editor.convertPagePosToWorldPos(leftMouseState.prevPos);
+      } else {
+        // Undo dragging of the selected game objects
+        this.editor.panSelection(-this._dragX, -this._dragY);
+        this._dragX = 0;
+        this._dragY = 0;
+
+        // Start dragging the selection box from the mouse's current position
+        leftMouseState.dragStart.x = mouse.position.x;
+        leftMouseState.dragStart.y = mouse.position.y;
+        
+        // The selection has been panned back to its original position,
+        // so we can pan from that position instead of where the mouse left
+        this._mouseLeaveWorldPosition = this._dragStartWorldPosition;
       }
     }
   }
   
   mouseEnter() {
-    let keyboard = this.editor.keyboard;
+    let keyboard       = this.editor.keyboard;
+    let mouse          = this.editor.mouse;
+    let leftMouseState = mouse.getState(1);
     
     if (!keyboard.isPressed(keyboard.SHIFT)) {
-      // If we saved the mouse's current world position before leaving the
-      // canvas, move all selected objects to the mouse's current position
-      if (this._mouseLeaveWorldPosition) {
-        let mouse = this.editor.mouse;
-        /*this._panSelectionToMouseAfterDrag(
+      if (leftMouseState.dragging && this._mouseLeaveWorldPosition) {
+        this._panSelectionToMouseAfterDrag(
           this._mouseLeaveWorldPosition,
           mouse.position
-        );*/
+        );
       }
+      
+    } else if (leftMouseState.dragging) {
+      // Undo dragging of the selected game objects
+      this.editor.panSelection(-this._dragX, -this._dragY);
+      this._dragX = 0;
+      this._dragY = 0;
+
+      // Start dragging the selection box from the mouse's current position
+      leftMouseState.dragStart.x = mouse.position.x;
+      leftMouseState.dragStart.y = mouse.position.y;
     }
     
     this._mouseLeaveWorldPosition = null;
+  }
+  
+  handleInput() {
+    let keyboard       = this.editor.keyboard;
+    let mouse          = this.editor.mouse;
+    let leftMouseState = mouse.getState(1);
+    let mouseWorldPos  = this.editor.convertPagePosToWorldPos(mouse.position);
+    
+    if (mouse.touchingCanvas && leftMouseState.dragging) {
+      if (keyboard.justPressed(keyboard.SHIFT)) {
+        // Undo dragging of the selected game objects
+        this.editor.panSelection(-this._dragX, -this._dragY);
+        this._dragX = 0;
+        this._dragY = 0;
+
+        // Start dragging the selection box from the mouse's current position
+        leftMouseState.dragStart.x = mouse.position.x;
+        leftMouseState.dragStart.y = mouse.position.y;
+
+      } else if (keyboard.justReleased(keyboard.SHIFT)) {
+        // If shift was just released, move the selection back to the mouse
+        if (this._dragStartWorldPosition) {
+          this._panSelectionToMouseAfterDrag(
+            this._dragStartWorldPosition,
+            mouse.position
+          );
+        }
+      }
+    }
   }
 
   pan(dx, dy) {
@@ -225,6 +261,8 @@ class DrawTool extends WorldTool {
         endDragWorldPosition,
         startDragWorldPosition
       );
+      this._dragX += worldDisplacement.x;
+      this._dragY += worldDisplacement.y;
       this.editor.panSelection(worldDisplacement.x, worldDisplacement.y);
     }
   }

@@ -339,6 +339,11 @@ class WorldEditorScene extends EditorScene {
   }
   
   scheduleAddGameObjectBatch(objs, reversable = true) {
+    if (objs.length === 1) {
+      this.scheduleAddGameObject(objs[0], objs[0].layer, reversable);
+      return;
+    }
+    
     let data = {
       gameObjects: objs.slice(0),
       layers:      objs.map((obj) => obj.layer)
@@ -352,6 +357,11 @@ class WorldEditorScene extends EditorScene {
   }
   
   scheduleRemoveGameObjectBatch(objs, reversable = true) {
+    if (objs.length === 1) {
+      this.scheduleRemoveGameObject(objs[0], objs[0].layer, reversable);
+      return;
+    }
+    
     let data = {
       gameObjects: objs.slice(0),
       layers:      objs.map((obj) => obj.layer)
@@ -564,6 +574,10 @@ class WorldEditorScene extends EditorScene {
     if (key.isPressed(key.CONTROL) && key.isPressed(key.SHIFT)) {
       key.clear();
     }
+    
+    if (this.tool) {
+      this.tool.handleInput();
+    }
   }
   
   zoom(dz, _forceCenterZoom = false) {
@@ -672,10 +686,10 @@ class WorldEditorScene extends EditorScene {
         continue;
       }
 
-      if (x <= cur.position.x &&
-        x + width >= cur.position.x &&
-        y <= cur.position.y &&
-        y + height >= cur.position.y) {
+      if (x          <= cur.position.x &&
+          x + width  >= cur.position.x &&
+          y          <= cur.position.y &&
+          y + height >= cur.position.y) {
 
         selected.push(cur);
       }
@@ -700,10 +714,10 @@ class WorldEditorScene extends EditorScene {
         continue;
       }
 
-      if (x >= cur.position.x - width * 0.5 &&
-        x <= cur.position.x + width * 0.5 &&
-        y >= cur.position.y - height * 0.5 &&
-        y <= cur.position.y + height * 0.5) {
+      if (x >= cur.position.x - width  * 0.5 &&
+          x <= cur.position.x + width  * 0.5 &&
+          y >= cur.position.y - height * 0.5 &&
+          y <= cur.position.y + height * 0.5) {
 
         return cur;
       }
@@ -725,6 +739,8 @@ class WorldEditorScene extends EditorScene {
     if (e.which == 2) {
       this.draggingScene = true;
     } else {
+      this.draggingScene = false;
+      
       if (this.tool) {
         if (e.which === 1) {
           this.tool.leftDown();
@@ -746,44 +762,46 @@ class WorldEditorScene extends EditorScene {
       if (this.tool) {
         if (e.which === 1) {
           this.tool.leftUp();
+          
+          // Just added a new entity (and possibly dragged it)
+          if (this._addEntityActionData.gameObject) {
+            this.scheduleAddGameObject(
+              this._addEntityActionData.gameObject,
+              this._addEntityActionData.layerId
+            );
+
+            // Clear our references for the next entity to be added
+            this._addEntityActionData.gameObject = undefined;
+            this._addEntityActionData.layerId    = undefined;
+
+            // Reset the panning since the added entity's position will already
+            // reflect the position it was moved to
+            this._panActionData.dx = 0;
+            this._panActionData.dy = 0;
+
+          // If no entity was added, send out action data if entities were just
+          // being dragged
+          } else if (Math.round(this._panActionData.dx) !== 0 ||
+                     Math.round(this._panActionData.dy) !== 0) {
+            
+            this.scheduleSelectionMove(
+              Math.round(this._panActionData.dx),
+              Math.round(this._panActionData.dy)
+            );
+
+            this._panActionData.dx = 0;
+            this._panActionData.dy = 0;
+
+          // If no entities were dragged, send out action data if entities were
+          // just being rotated
+          } else if (this._rotateActionData.dTheta !== 0) {
+            this.scheduleSelectionRotate(this._rotateActionData.dTheta);
+            this._rotateActionData.dTheta = 0;
+          }
+          
         } else if (e.which === 3) {
           this.tool.rightUp();
         }
-      }
-
-      // Just added a new entity (and possibly dragged it)
-      if (this._addEntityActionData.gameObject) {
-        this.scheduleAddGameObject(
-          this._addEntityActionData.gameObject,
-          this._addEntityActionData.layerId
-        );
-
-        // Clear our references for the next entity to be added
-        this._addEntityActionData.gameObject = undefined;
-        this._addEntityActionData.layerId    = undefined;
-
-        // Reset the panning since the added entity's position will already
-        // reflect the position it was moved to
-        this._panActionData.dx = 0;
-        this._panActionData.dy = 0;
-      }
-
-      // If no entity was added, send out action data if entities were just
-      // being dragged
-      else if (this._panActionData.dx !== 0 || this._panActionData.dy !== 0) {
-        this.scheduleSelectionMove(
-          this._panActionData.dx,
-          this._panActionData.dy
-        );
-
-        this._panActionData.dx = 0;
-        this._panActionData.dy = 0;
-
-      // If no entities were dragged, send out action data if entities were
-      // just being rotated
-      } else if (this._rotateActionData.dTheta !== 0) {
-        this.scheduleSelectionRotate(this._rotateActionData.dTheta);
-        this._rotateActionData.dTheta = 0;
       }
     }
 
@@ -804,11 +822,6 @@ class WorldEditorScene extends EditorScene {
   }
 
   onContextMenu(e) {
-    let leftMouseState = this.mouse.getState(1);
-    if (!leftMouseState.isDown) {
-      this.selector.clear();
-    }
-    
     this.draggingScene = false;
     return false;
   }

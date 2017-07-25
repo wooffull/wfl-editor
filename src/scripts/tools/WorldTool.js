@@ -88,17 +88,21 @@ class WorldTool extends Tool {
   }
   
   removeSelection() {
-    let scene        = this.subwindowView.worldEditorScene;
-    let selector     = scene.selector;
-    let gameObjects  = selector.selectedObjects;
+    let scene          = this.subwindowView.worldEditorScene;
+    let leftMouseState = scene.mouse.getState(1);
     
-    if (gameObjects.length > 1) {
-      scene.scheduleRemoveGameObjectBatch(gameObjects);
-    } else if (gameObjects.length === 1) {
-      scene.scheduleRemoveGameObject(gameObjects[0], gameObjects[0].layer);
+    if (!leftMouseState.dragging) {
+      let selector     = scene.selector;
+      let gameObjects  = selector.selectedObjects;
+
+      if (gameObjects.length > 1) {
+        scene.scheduleRemoveGameObjectBatch(gameObjects);
+      } else if (gameObjects.length === 1) {
+        scene.scheduleRemoveGameObject(gameObjects[0], gameObjects[0].layer);
+      }
+
+      selector.clear();
     }
-    
-    selector.clear();
   }
   
   selectAllEntities() {
