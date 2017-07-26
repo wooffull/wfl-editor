@@ -21,7 +21,7 @@ class DrawTool extends WorldTool {
     super.reset();
     this.selectTool.reset();
     
-    this._dragStartWorldPosition = null;
+    this._dragStartWorldPosition  = null;
     this._mouseLeaveWorldPosition = null;
   }
 
@@ -42,6 +42,7 @@ class DrawTool extends WorldTool {
     let mouseWorldPos   = this.editor.convertPagePosToWorldPos(mouse.position);
     let selectorClicked = selector.hitTestPoint(mouseWorldPos);
     let clickObj        = this.editor.find(mouseWorldPos.x, mouseWorldPos.y);
+    let addedObj        = null;
 
     // Clicked an object that isn't yet selected, so it should be selected
     // Shift key also functions as a shortcut for selecting objects
@@ -64,9 +65,10 @@ class DrawTool extends WorldTool {
       tileWorldPos.x *= tileSize.x;
       tileWorldPos.y *= tileSize.y;
       
-      let x            = tileWorldPos.x + tileSize.x * 0.5;
-      let y            = tileWorldPos.y + tileSize.y * 0.5;
-      let addedObj     = this.editor.addCurrentGameObject(x, y);
+      let x = tileWorldPos.x + tileSize.x * 0.5;
+      let y = tileWorldPos.y + tileSize.y * 0.5;
+      
+      addedObj = this.editor.addCurrentGameObject(x, y);
       
       if (addedObj) {
         selector.clear();
@@ -74,9 +76,26 @@ class DrawTool extends WorldTool {
       }
     }
     
-    this._dragStartWorldPosition = mouseWorldPos;
     this._dragX = 0;
     this._dragY = 0;
+    
+    // Track the drag start position as the mouse's position if the user
+    // clicked on the selection
+    if (this.clickedSelection || addedObj) {
+      this._dragStartWorldPosition = mouseWorldPos;
+    
+    // If the selection wasn't clicked, then track the drag start position as
+    // the selection's center
+    } else {
+      let box              = selector.selectionBox;
+      let selectionCenterX = box.x + box.width  * 0.5;
+      let selectionCenterY = box.y + box.height * 0.5;
+      
+      this._dragStartWorldPosition = new geom.Vec2(
+        selectionCenterX,
+        selectionCenterY
+      );
+    }
   }
 
   leftUp() {
@@ -176,16 +195,16 @@ class DrawTool extends WorldTool {
         this.editor.panSelection(-this._dragX, -this._dragY);
         this._dragX = 0;
         this._dragY = 0;
-
-        // Start dragging the selection box from the mouse's current position
-        leftMouseState.dragStart.x = mouse.position.x;
-        leftMouseState.dragStart.y = mouse.position.y;
         
         // The selection has been panned back to its original position,
         // so we can pan from that position instead of where the mouse left
         this._mouseLeaveWorldPosition = this._dragStartWorldPosition;
       }
     }
+    
+    // Start dragging the selection box from the mouse's current position
+    leftMouseState.dragStart.x = mouse.position.x;
+    leftMouseState.dragStart.y = mouse.position.y;
   }
   
   mouseEnter() {
