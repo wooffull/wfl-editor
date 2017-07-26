@@ -31,6 +31,18 @@ class HistoryView extends SubwindowView {
     this.historyMenu.clear();
   }
   
+  resize() {
+    this.scrollToLastSelectedMenuItem();
+  }
+  
+  scrollToLastSelectedMenuItem() {
+    let lastSelected = this.historyMenu.getLastSelected();
+    
+    if (lastSelected) {
+      this.historyMenu.scrollTo(lastSelected);
+    }
+  }
+  
   getLastChangedTime() {
     let currentAction = this.historyMenu.getLastSelected().data;
     return currentAction.time;

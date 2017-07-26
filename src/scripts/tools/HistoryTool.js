@@ -46,6 +46,10 @@ class HistoryTool extends Tool {
   subwindowInit() {
   }
   
+  onSelect() {
+    this.subwindowView.scrollToLastSelectedMenuItem();
+  }
+  
   addAction(action) {
     if (action.type === Action.Type.HISTORY_CLEAR) {
       this.subwindowView.reset();

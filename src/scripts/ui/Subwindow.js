@@ -53,6 +53,8 @@ class Subwindow extends HtmlElement {
     
     this._currentTool = tool;
     this.updateView();
+    
+    tool.onSelect();
   }
   
   updateView() {

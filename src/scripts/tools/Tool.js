@@ -38,6 +38,11 @@ class Tool extends HtmlElement {
   subwindowInit() {}
   
   /**
+   * This is called when the tool is selected in a subwindow
+   */
+  onSelect() {}
+  
+  /**
    * This update is called when something significant changes in the project,
    * like loading a new project
    */

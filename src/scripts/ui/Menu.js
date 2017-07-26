@@ -87,15 +87,21 @@ class Menu extends HtmlElement {
   }
   
   /**
-   * Scrolls the top of the menu to the top of the htmlElement if it's
+   * Scrolls the bottom of the menu to the bottom of the htmlElement if it's
    * out of the menu's view
    */
   scrollTo(htmlElement) {
-    this.mainInterior.scrollTop(
-      htmlElement.element.offset().top -
-      this.mainInterior.offset().top +
-      this.mainInterior.scrollTop()
-    );
+    let elementTop     = htmlElement.element.offset().top;
+    let elementBottom  = elementTop + htmlElement.element.height();
+    let interiorTop    = this.mainInterior.offset().top;
+    let interiorBottom = interiorTop + this.mainInterior.height();
+    
+    if (elementBottom > interiorBottom) {
+      this.mainInterior.scrollTop(
+        this.mainInterior.scrollTop() +
+        (elementBottom - interiorBottom)
+      );
+    }
   }
   
   insert(htmlElement, position = this.list.length) {
