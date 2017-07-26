@@ -451,13 +451,24 @@ class WorldEditorScene extends EditorScene {
     let selectedGameObjects = this.selector.selectedObjects;
     
     if (selectedGameObjects.length > 0) {
-      let dThetaList = [];
+      let dThetaList        = [];
+      let hasUniqueRotation = false;
 
       for (const obj of selectedGameObjects) {
         let curRotation = obj.rotation;
         let newRotation = Math.round(8 * curRotation / (2 * Math.PI)) *
                           (2 * Math.PI) / 8;
         dThetaList.push(newRotation - curRotation);
+        
+        if (newRotation !== curRotation) {
+          hasUniqueRotation = true;
+        }
+      }
+      
+      // Don't perform an action if no rotations have changed after the
+      // snapping
+      if (!hasUniqueRotation) {
+        return;
       }
 
       let data = {

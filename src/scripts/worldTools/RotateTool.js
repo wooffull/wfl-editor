@@ -9,11 +9,15 @@ class RotateTool extends WorldTool {
     super(editor);
 
     this.selectTool = new SelectTool(editor);
+    
+    this._dragTheta = 0;
   }
   
   reset() {
     super.reset();
     this.selectTool.reset();
+    
+    this._dragTheta = 0;
   }
 
   draw(renderer) {
@@ -56,8 +60,6 @@ class RotateTool extends WorldTool {
     
     if (leftMouseState.isDown) {
       return;
-    } else {
-      this.editor.selector.clear();
     }
     
     // Holding Shift with the rotate tool is a shortcut for the Select tool
@@ -66,6 +68,8 @@ class RotateTool extends WorldTool {
     } else {
       this.editor.scheduleSelectionRotateSnap();
     }
+    
+    this.editor.selector.clear();
   }
   
   leftUp() {
@@ -76,8 +80,9 @@ class RotateTool extends WorldTool {
       this.selectTool.leftUp();
     }
     
-    this.clickedSelection = false;
+    this.clickedSelection            = false;
     this.selectTool.clickedSelection = false;
+    this._dragTheta                  = 0;
   }
   
   mouseMove() {
@@ -98,10 +103,21 @@ class RotateTool extends WorldTool {
         let dThetaSnapped =
             2 * Math.PI * (dTheta / (4 * PhysicsObject.TOTAL_DISPLAY_ANGLES));
         
+        this._dragTheta += dThetaSnapped;
+        
         this.editor.rotateSelection(dThetaSnapped);
         
         selector.update();
       }
+    }
+  }
+  
+  handleInput() {
+    let keyboard = this.editor.keyboard;
+    
+    if (keyboard.justPressed(keyboard.SHIFT)) {
+      this.editor.rotateSelection(-this._dragTheta);
+      this._dragTheta = 0;
     }
   }
 }
