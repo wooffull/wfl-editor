@@ -9,19 +9,21 @@ const tools             = require('./tools');
 class WflEditor {
   constructor() {
     // Create tools
-    this.toolBarTool      = new tools.ToolBarTool();
-    this.fileExplorerTool = new tools.FileExplorerTool();
-    this.entityTool       = new tools.EntityTool();
-    this.historyTool      = new tools.HistoryTool();
-    this.worldTool        = new tools.WorldTool();
-    this.layerTool        = new tools.LayerTool();
-    this.propertiesTool   = new tools.PropertiesTool();
+    this.toolBarTool         = new tools.ToolBarTool();
+    this.fileExplorerTool    = new tools.FileExplorerTool();
+    this.projectSettingsTool = new tools.ProjectSettingsTool();
+    this.entityTool          = new tools.EntityTool();
+    this.historyTool         = new tools.HistoryTool();
+    this.worldTool           = new tools.WorldTool();
+    this.layerTool           = new tools.LayerTool();
+    this.propertiesTool      = new tools.PropertiesTool();
     
     // Ordered in terms of which should be reset first
     this.tools = [];
     this.tools.push(this.historyTool);
     this.tools.push(this.toolBarTool);
     this.tools.push(this.fileExplorerTool);
+    this.tools.push(this.projectSettingsTool);
     this.tools.push(this.entityTool);
     this.tools.push(this.worldTool);
     this.tools.push(this.layerTool);
@@ -65,6 +67,7 @@ class WflEditor {
     this.componentSubwindow.addTool(this.fileExplorerTool);
     this.componentSubwindow.addTool(this.entityTool);
     this.componentSubwindow.addTool(this.propertiesTool);
+    this.componentSubwindow.addTool(this.projectSettingsTool);
     this.componentSubwindow.addTool(this.historyTool);
     
     this.primarySubwindow = new Subwindow();
