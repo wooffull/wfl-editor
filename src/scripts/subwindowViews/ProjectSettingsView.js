@@ -57,9 +57,9 @@ class ProjectSettingsView extends SubwindowView {
     // Ensure the value is above 0
     if (isNaN(value) || value < 1) {
       if (isX) {
-        value = DEFAULT_TILE_SIZE_X;
+        value = WorldEditorScene.DEFAULT_TILE_SIZE.x;
       } else {
-        value = DEFAULT_TILE_SIZE_Y;
+        value = WorldEditorScene.DEFAULT_TILE_SIZE.y;
       }
     }
     
