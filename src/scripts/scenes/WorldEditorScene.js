@@ -861,8 +861,8 @@ Object.defineProperties(WorldEditorScene, {
 
   DEFAULT_TILE_SIZE: {
     value: {
-      x: 168 * 0.25,
-      y: 144 * 0.25
+      x: 64,
+      y: 64
     }
   },
 

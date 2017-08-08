@@ -35,6 +35,7 @@ module.exports = {
   EXPANDABLE_MENU_COLLAPSE_BUTTON: 'expandable-menu-collapse-button',
   
   /* Classes for InputText */
+  INPUT_TEXT_LABEL: 'input-text-label',
   INPUT_TEXT: 'input-text',
   
   /* Lock button */

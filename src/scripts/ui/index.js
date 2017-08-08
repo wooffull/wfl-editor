@@ -8,6 +8,7 @@ const MenuItem       = require('./MenuItem');
 const PreviewWindow  = require('./PreviewWindow');
 const MenuButton     = require('./MenuButton');
 const InputText      = require('./InputText');
+const InputTextPair  = require('./InputTextPair');
 const HistoryMenu    = require('./HistoryMenu');
 const LayerMenu      = require('./LayerMenu');
 const FileMenu       = require('./FileMenu');
@@ -22,6 +23,7 @@ module.exports = {
   PreviewWindow:  PreviewWindow,
   MenuButton:     MenuButton,
   InputText:      InputText,
+  InputTextPair:  InputTextPair,
   HistoryMenu:    HistoryMenu,
   LayerMenu:      LayerMenu,
   FileMenu:       FileMenu,

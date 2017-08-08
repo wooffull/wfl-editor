@@ -38,6 +38,20 @@ Object.defineProperties(Action, {
       //  data: {}
       FILE_INIT: 'file-init',
       
+      // ProjectSettingsTool
+      //
+      //  data: {
+      //    prevTileWidth: <Project's previous tile width>
+      //    tileWidth: <Project's new tile width>
+      //  }
+      PROJECT_TILE_WIDTH_CHANGE: 'project-tile-width-change',
+      //
+      //  data: {
+      //    prevTileHeight: <Project's previous tile height>
+      //    tileHeight: <Project's new tile height>
+      //  }
+      PROJECT_TILE_HEIGHT_CHANGE: 'project-tile-height-change',
+      
       
       // ToolBarTool
       //

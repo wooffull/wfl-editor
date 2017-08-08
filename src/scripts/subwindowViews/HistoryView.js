@@ -78,6 +78,20 @@ class HistoryView extends SubwindowView {
         action.time = undefined;
         break;
         
+      case Action.Type.PROJECT_TILE_WIDTH_CHANGE:
+        label = 'Change Tile Width: '
+              + action.data.prevTileWidth
+              + ' -> '
+              + action.data.tileWidth;
+        break;
+        
+      case Action.Type.PROJECT_TILE_HEIGHT_CHANGE:
+        label = 'Change Tile Height: '
+              + action.data.prevTileHeight
+              + ' -> '
+              + action.data.tileHeight;
+        break;
+        
       case Action.Type.LAYER_ADD:
         label = 'Add Layer: ' + action.data.layerId;
         break;

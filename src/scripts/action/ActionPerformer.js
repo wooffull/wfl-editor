@@ -36,6 +36,26 @@ const ActionPerformer = {
     let revAction;
     
     switch (action.type) {
+      case Action.Type.PROJECT_TILE_WIDTH_CHANGE:
+        revAction = new Action(
+          Action.Type.PROJECT_TILE_WIDTH_CHANGE,
+          {
+            prevTileWidth: data.tileWidth,
+            tileWidth: data.prevTileWidth
+          }
+        );
+        break;
+        
+      case Action.Type.PROJECT_TILE_HEIGHT_CHANGE:
+        revAction = new Action(
+          Action.Type.PROJECT_TILE_HEIGHT_CHANGE,
+          {
+            prevTileHeight: data.tileHeight,
+            tileHeight: data.prevTileHeight
+          }
+        );
+        break;
+      
       case Action.Type.LAYER_ADD:
         revAction = new Action(
           Action.Type.LAYER_REMOVE,

@@ -168,7 +168,7 @@ class LayerView extends SubwindowView {
   }
   
   onActionLayerAdd(action) {
-    var {layerId, layerIndex} = action.data;
+    let {layerId, layerIndex} = action.data;
     let lockButton = new MenuButton('lock_open');
     let menuItem  = new MenuItem(layerId, lockButton);
     menuItem.data.layerIndex = layerIndex;

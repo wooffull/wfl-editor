@@ -19,7 +19,7 @@
   font-size: 1rem;
 }
 
-.menu-label {
+.menu-label, .input-text-label {
   font-size: 0.9em;
   color: #ccc;
 }
@@ -149,6 +149,10 @@
 /**
  * Input Text
  */
+.input-text-label {
+  padding-right: 5px;
+}
+
 .input-text {
   width: 40%;
 }

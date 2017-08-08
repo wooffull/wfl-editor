@@ -11,15 +11,15 @@ class LayerTool extends Tool {
     this.register(
       Action.Type.LAYER_SELECT,
       (action) => this.subwindowView.onActionLayerSelect(action)
-     );
+    );
     this.register(
       Action.Type.LAYER_ADD,
       (action) => this.subwindowView.onActionLayerAdd(action)
-     );
+    );
     this.register(
       Action.Type.LAYER_REMOVE,
       (action) => this.subwindowView.onActionLayerRemove(action)
-     );
+    );
     this.register(
       Action.Type.LAYER_LOCK,
       (action) => this.subwindowView.onActionLayerLock(action)

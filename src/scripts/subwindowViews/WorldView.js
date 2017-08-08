@@ -142,6 +142,18 @@ class WorldView extends SubwindowView {
     scene.tool = new tool.classReference(scene);
   }
   
+  onActionTileWidthChange(action) {
+    let {tileWidth}  = action.data;
+    let scene        = this.worldEditorScene;
+    scene.tileSize.x = parseInt(tileWidth);
+  }
+  
+  onActionTileHeightChange(action) {
+    let {tileHeight} = action.data;
+    let scene        = this.worldEditorScene;
+    scene.tileSize.y = parseInt(tileHeight);
+  }
+  
   onActionEntitySelect(action) {
     let {entity}    = action.data;
     let scene       = this.worldEditorScene;

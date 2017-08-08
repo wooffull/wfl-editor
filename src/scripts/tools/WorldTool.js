@@ -26,6 +26,14 @@ class WorldTool extends Tool {
       (action) => this.subwindowView.onActionMainToolSelect(action)
     );
     this.register(
+      Action.Type.PROJECT_TILE_WIDTH_CHANGE,
+      (action) => this.subwindowView.onActionTileWidthChange(action)
+    );
+    this.register(
+      Action.Type.PROJECT_TILE_HEIGHT_CHANGE,
+      (action) => this.subwindowView.onActionTileHeightChange(action)
+    );
+    this.register(
       Action.Type.ENTITY_PROJECT_LOAD_COMPLETE,
       (action) => this.onActionEntityProjectLoadComplete(action)
     );
@@ -135,17 +143,12 @@ class WorldTool extends Tool {
       addedObj.rotate(rotation);
       addedObj.customData.props = props;
     }
-    
-    if (tileSize) {
-      scene.tileSize.x = tileSize.x;
-      scene.tileSize.y = tileSize.y;
-    }
   }
   
   getData() {
-    let scene        = this.subwindowView.worldEditorScene;
-    let gameObjects  = scene.getGameObjects();
-    let data         = {
+    let scene       = this.subwindowView.worldEditorScene;
+    let gameObjects = scene.getGameObjects();
+    let data        = {
       tileSize:    scene.tileSize,
       gameObjects: []
     };

@@ -28,7 +28,7 @@ class Subwindow extends HtmlElement {
     this._toolContainer.append(tool.element);
     
     $(tool.element).on('click', (e) => {
-      if (typeof e.which === "undefined" ||  e.which === 1) {
+      if (typeof e.which === "undefined" || e.which === 1) {
         this.selectTool(tool);
       }
     });

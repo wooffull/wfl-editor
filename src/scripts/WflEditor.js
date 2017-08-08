@@ -11,23 +11,23 @@ class WflEditor {
     // Create tools
     this.toolBarTool         = new tools.ToolBarTool();
     this.fileExplorerTool    = new tools.FileExplorerTool();
-    this.projectSettingsTool = new tools.ProjectSettingsTool();
     this.entityTool          = new tools.EntityTool();
     this.historyTool         = new tools.HistoryTool();
     this.worldTool           = new tools.WorldTool();
     this.layerTool           = new tools.LayerTool();
     this.propertiesTool      = new tools.PropertiesTool();
+    this.projectSettingsTool = new tools.ProjectSettingsTool();
     
     // Ordered in terms of which should be reset first
     this.tools = [];
     this.tools.push(this.historyTool);
     this.tools.push(this.toolBarTool);
     this.tools.push(this.fileExplorerTool);
-    this.tools.push(this.projectSettingsTool);
     this.tools.push(this.entityTool);
     this.tools.push(this.worldTool);
     this.tools.push(this.layerTool);
     this.tools.push(this.propertiesTool);
+    this.tools.push(this.projectSettingsTool);
     
     // Set up listeners for Actions
     $(ActionPerformer).on(Action.Event.DEFAULT, (e, action) => {

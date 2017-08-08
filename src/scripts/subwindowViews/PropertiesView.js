@@ -3,7 +3,7 @@
 const $                 = wfl.jquery;
 const SubwindowView     = require('./SubwindowView');
 const CssClass          = require('../CssClasses'); 
-const {InputText,
+const {InputTextPair,
        MenuItem,
        MenuButton}      = require('../ui');
 const {Action,
@@ -59,7 +59,7 @@ class PropertiesView extends SubwindowView {
   
   addProperty(key, value) {
     if (this.gameObject) {
-      let newInput = new InputText(key, value);
+      let newInput = new InputTextPair(key, value);
       this.propertiesContainer.append(newInput.element);
       this.properties.push(newInput);
     }
