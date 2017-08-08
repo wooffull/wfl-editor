@@ -7,6 +7,7 @@ const {Action,
        ActionPerformer} = require('../action');
 const SubwindowView     = require('./SubwindowView');
 const CssClasses        = require('../CssClasses');
+const behaviors         = require('../behaviors');
 const scenes            = require('../scenes');
 
 class WorldView extends SubwindowView {
@@ -95,6 +96,12 @@ class WorldView extends SubwindowView {
       if (newGameObjects.length > 0) {
         this.playGameScene.player = newGameObjects[newGameObjects.length - 1];
         this.playGameScene.camera.follow(this.playGameScene.player);
+        
+        let arrowKeyMovement = new behaviors.ArrowKeyMovement(
+          this.playGameScene.player,
+          this.playGameScene.keyboard
+        );
+        this.playGameScene.player.addBehavior(arrowKeyMovement);
       }
       
       this.wflGame.setScene(this.playGameScene);
