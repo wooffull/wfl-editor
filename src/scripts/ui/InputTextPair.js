@@ -19,7 +19,13 @@ class InputTextPair extends HtmlElement {
     this.element.append(this.label);
     this.element.append(this.data);
     
-    $(document).click(this.onClick.bind(this));
+    this._onClickRef = this.onClick.bind(this);
+    
+    $(document).on('click', this._onClickRef);
+  }
+  
+  destroy() {
+    $(document).off('click', this._onClickRef);
   }
   
   onClick(e) {

@@ -191,6 +191,27 @@ class HistoryView extends SubwindowView {
       case Action.Type.HISTORY_CLEAR:
         label = action.data.msg;
         break;
+        
+      case Action.Type.PROPERTY_CHANGE_SOLID:
+        label = 'Changed Solid Property: '
+              + (!action.data.value).toString()
+              + ' -> '
+              + action.data.value.toString();
+        break;
+      
+      case Action.Type.PROPERTY_CHANGE_FIXED:
+        label = 'Changed Fixed Property: '
+              + (!action.data.value).toString()
+              + ' -> '
+              + action.data.value.toString();
+        break;
+      
+      case Action.Type.PROPERTY_CHANGE_PERSISTS:
+        label = 'Changed Persistence Property: '
+              + (!action.data.value).toString()
+              + ' -> '
+              + action.data.value.toString();
+        break;
       
       default:
         label = '???: ' + action.type;

@@ -152,6 +152,18 @@ const ActionPerformer = {
         );
         break;
       
+      case Action.Type.PROPERTY_CHANGE_SOLID:
+      case Action.Type.PROPERTY_CHANGE_FIXED:
+      case Action.Type.PROPERTY_CHANGE_PERSISTS:
+        revAction = new Action(
+          action.type,
+          {
+            entities: data.entities,
+            value: !data.value
+          }
+        );
+        break;
+      
       default:
         console.error("Missing Reverse Action for: " + action.type);
         revAction = new Action();

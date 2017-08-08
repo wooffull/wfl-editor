@@ -16,6 +16,18 @@ class PropertiesTool extends Tool {
       Action.Type.WORLD_ENTITY_DESELECT,
       (action) => this.subwindowView.onActionEntityDeselect(action)
     );
+    this.register(
+      Action.Type.PROPERTY_CHANGE_SOLID,
+      (action) => this.subwindowView.onActionPropertyChangeSolid(action)
+    );
+    this.register(
+      Action.Type.PROPERTY_CHANGE_FIXED,
+      (action) => this.subwindowView.onActionPropertyChangeFixed(action)
+    );
+    this.register(
+      Action.Type.PROPERTY_CHANGE_PERSISTS,
+      (action) => this.subwindowView.onActionPropertyChangePersists(action)
+    );
   }
 }
 

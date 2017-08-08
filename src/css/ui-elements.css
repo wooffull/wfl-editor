@@ -157,6 +157,16 @@
   width: 40%;
 }
 
+/**
+ * Check box
+ */
+.check-box {
+}
+
+.check-box.disabled > .input-text-label {
+  text-decoration: line-through;
+}
+
 /* Lock button */
 .unlock-button > i, .lock-button > i {
   color: #000;

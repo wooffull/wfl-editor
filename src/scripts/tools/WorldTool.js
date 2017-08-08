@@ -136,12 +136,13 @@ class WorldTool extends Tool {
     if (!gameObjects) return;
     
     for (const obj of gameObjects) {
-      let {entity, x, y, rotation, layer, props} = obj;
+      let {entity, x, y, rotation, layer, props, physics} = obj;
       let addedObj = scene.addEntity(entity, layer, false);
       addedObj.position.x = x;
       addedObj.position.y = y;
       addedObj.rotate(rotation);
       addedObj.customData.props = props;
+      addedObj.customData.physics = physics;
     }
   }
   
@@ -160,8 +161,20 @@ class WorldTool extends Tool {
         x:        obj.position.x,
         y:        obj.position.y,
         rotation: obj.rotation,
-        props:    obj.customData.props
+        props:    obj.customData.props,
+        physics:  obj.customData.physics
       };
+      
+      // Clear physics data if it only uses default values
+      // Note: This reduces the file size for projects
+      let {physics} = objData;
+      if (physics                    &&
+          physics.solid    === false &&
+          physics.fixed    === false &&
+          physics.persists === false) {
+        
+        objData.physics = undefined;
+      }
       
       data.gameObjects.push(objData);
     }

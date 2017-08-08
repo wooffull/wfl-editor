@@ -7,6 +7,8 @@ class HtmlElement {
     this.element = null;
   }
   
+  destroy() {}
+  
   hide() {
     if (this.element) {
       $(this.element).hide();

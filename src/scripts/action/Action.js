@@ -58,7 +58,8 @@ Object.defineProperties(Action, {
       //  data: {
       //    tool: <Object filled with data pertinent to the tool>
       //      - type: <A key defining which tool it is>
-      //      - classReference: <A reference to a function to be new'd to create the tool>
+      //      - classReference: <A reference to a function to be new'd to 
+      //                         create the tool>
       //      - materialIconLabel: <The string used by Google's Material Icons>
       //    icon: <The <i> tag in the DOM associated with the tool>
       //  }
@@ -182,10 +183,35 @@ Object.defineProperties(Action, {
       //
       //  data: {
       //    layerId: <The layer's name>,
-      //    layerIndex: <The layer's position in the layer menu before being removed>
-      //    @entities: <An array of all the entities in the layer before being removed>
+      //    layerIndex: <The layer's position in the layer menu before being 
+      //                 removed>
+      //    @entities: <An array of all the entities in the layer before being //                removed>
       //  }
       LAYER_REMOVE: 'layer-remove',
+      
+      
+      // PropertiesTool
+      //
+      //  data: {
+      //    entities: <An array of all the entties to have their solid
+      //               attribute changed>
+      //    value: <Whether or not the entities are solid>
+      //  }
+      PROPERTY_CHANGE_SOLID: 'property-change-solid',
+      //
+      //  data: {
+      //    entities: <An array of all the entties to have their fixed
+      //               attribute changed>
+      //    value: <Whether or not the entities are fixed in space>
+      //  }
+      PROPERTY_CHANGE_FIXED: 'property-change-fixed',
+      //
+      //  data: {
+      //    entities: <An array of all the entties to have their persists
+      //               attribute changed>
+      //    value: <Whether or not the entities are persists>
+      //  }
+      PROPERTY_CHANGE_PERSISTS: 'property-change-persists',
       
       
       HISTORY_CLEAR: 'history-clear'

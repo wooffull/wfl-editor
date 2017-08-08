@@ -15,11 +15,13 @@ class Selector {
   clear() {
     this.selectedObjects = [];
     this.selectionBox  = {
-      x:      -Infinity,
-      y:      -Infinity,
+      x:      0,
+      y:      0,
       width:  0,
       height: 0
     };
+    
+    this.update();
   }
 
   update() {
@@ -29,32 +31,30 @@ class Selector {
       this.selectionBox.y      = 0;
       this.selectionBox.width  = 0;
       this.selectionBox.height = 0;
+    } else {
+      // Coordinates for the selection box
+      var min = { x :  Infinity, y :  Infinity };
+      var max = { x : -Infinity, y : -Infinity };
 
-      return;
+      // Find the selection box to draw around the selected game objects
+      for (var i = 0; i < this.selectedObjects.length; i++) {
+        var cur        = this.selectedObjects[i];
+        var curPos     = cur.position;
+        var halfWidth  = cur.width  * 0.5;
+        var halfHeight = cur.height * 0.5;
+
+        // Update bounds when an object is outside of them
+        if (curPos.x - halfWidth  < min.x) min.x = curPos.x - halfWidth;
+        if (curPos.y - halfHeight < min.y) min.y = curPos.y - halfHeight;
+        if (curPos.x + halfWidth  > max.x) max.x = curPos.x + halfWidth;
+        if (curPos.y + halfHeight > max.y) max.y = curPos.y + halfHeight;
+      }
+
+      this.selectionBox.x    = min.x;
+      this.selectionBox.y    = min.y;
+      this.selectionBox.width  = max.x - min.x;
+      this.selectionBox.height = max.y - min.y;
     }
-
-    // Coordinates for the selection box
-    var min = { x :  Infinity, y :  Infinity };
-    var max = { x : -Infinity, y : -Infinity };
-
-    // Find the selection box to draw around the selected game objects
-    for (var i = 0; i < this.selectedObjects.length; i++) {
-      var cur        = this.selectedObjects[i];
-      var curPos     = cur.position;
-      var halfWidth  = cur.width  * 0.5;
-      var halfHeight = cur.height * 0.5;
-
-      // Update bounds when an object is outside of them
-      if (curPos.x - halfWidth  < min.x) min.x = curPos.x - halfWidth;
-      if (curPos.y - halfHeight < min.y) min.y = curPos.y - halfHeight;
-      if (curPos.x + halfWidth  > max.x) max.x = curPos.x + halfWidth;
-      if (curPos.y + halfHeight > max.y) max.y = curPos.y + halfHeight;
-    }
-
-    this.selectionBox.x    = min.x;
-    this.selectionBox.y    = min.y;
-    this.selectionBox.width  = max.x - min.x;
-    this.selectionBox.height = max.y - min.y;
     
     // Send out select event
     if (this.selectedObjects.length === 1) {

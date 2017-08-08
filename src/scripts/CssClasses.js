@@ -38,6 +38,9 @@ module.exports = {
   INPUT_TEXT_LABEL: 'input-text-label',
   INPUT_TEXT: 'input-text',
   
+  /* Classes for CheckBox */
+  CHECK_BOX: 'check-box',
+  
   /* Lock button */
   LOCK_BUTTON: 'lock-button',
   UNLOCK_BUTTON: 'unlock-button',
@@ -54,5 +57,6 @@ module.exports = {
   
   /* General usage */
   FLOAT_RIGHT: 'float-right',
-  FLOAT_LEFT: 'float-left'
+  FLOAT_LEFT: 'float-left',
+  DISABLED: 'disabled'
 };

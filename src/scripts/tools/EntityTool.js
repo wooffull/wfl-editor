@@ -40,7 +40,7 @@ class EntityTool extends Tool {
     // Load the entities then select the first one
     this.subwindowView.loadFromData(entities, false, () => {
       if (entities.length > 0) {
-        this.subwindowView.selectEntity(entities[0].name)
+        this.subwindowView.selectEntity(entities[0].name);
       }
       
       // Notify the project that entities have loaded

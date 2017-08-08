@@ -7,6 +7,7 @@ const ExpandableMenu = require('./ExpandableMenu');
 const MenuItem       = require('./MenuItem');
 const PreviewWindow  = require('./PreviewWindow');
 const MenuButton     = require('./MenuButton');
+const CheckBox       = require('./CheckBox');
 const InputText      = require('./InputText');
 const InputTextPair  = require('./InputTextPair');
 const HistoryMenu    = require('./HistoryMenu');
@@ -22,6 +23,7 @@ module.exports = {
   MenuItem:       MenuItem,
   PreviewWindow:  PreviewWindow,
   MenuButton:     MenuButton,
+  CheckBox:       CheckBox,
   InputText:      InputText,
   InputTextPair:  InputTextPair,
   HistoryMenu:    HistoryMenu,

@@ -84,10 +84,20 @@ class WorldView extends SubwindowView {
       
       // Add all game objects to the game world
       let gameObjects = this.worldEditorScene.getGameObjects();
-      let clone       = null;
+      let finalObj    = null;
+      let layer       = 0;
+      let persists    = false;
       for (let gameObject of gameObjects) {
-        clone = this.playGameScene.cloneGameObject(gameObject);
-        this.playGameScene.addGameObject(clone, gameObject.layer);
+        finalObj = this.playGameScene.createFinalizedGameObject(gameObject);
+        layer = gameObject.layer;
+        
+        if (gameObject.customData.physics) {
+          persists = gameObject.customData.physics.persists || false;
+        } else {
+          persists = false;
+        }
+        
+        this.playGameScene.addGameObject(finalObj, layer, persists);
       }
       
       // TODO: Remove this. This is only to test having a playing in the test
@@ -98,7 +108,6 @@ class WorldView extends SubwindowView {
         this.playGameScene.camera.follow(this.playGameScene.player);
         
         let arrowKeyMovement = new behaviors.ArrowKeyMovement(
-          this.playGameScene.player,
           this.playGameScene.keyboard
         );
         this.playGameScene.player.addBehavior(arrowKeyMovement);
