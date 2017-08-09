@@ -6,10 +6,11 @@ const HtmlElement   = require('./HtmlElement');
 const CssClass      = require('../CssClasses');
 
 class HistoryMenu extends Menu {
-  constructor(label) {
+  constructor(label, capacity = 50) {
     super(label);
     
     this.lastActiveIndex = -1;
+    this.capacity = capacity;
   }
   
   clear() {
@@ -24,7 +25,16 @@ class HistoryMenu extends Menu {
     
     return this.getAt(this.lastActiveIndex);
   }
-  
+
+  append(htmlElement) {
+    super.append(htmlElement);
+
+    while (this.list.length > this.capacity) {
+      // Remove the oldest action from the history
+      this.remove(this.getAt(0));
+    }
+  }
+
   prepend(htmlElement, position) {
     throw 'History Error: Cannot prepend history.';
   }
