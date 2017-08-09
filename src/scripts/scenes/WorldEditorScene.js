@@ -522,7 +522,6 @@ class WorldEditorScene extends EditorScene {
       this._addEntityActionData.layerId    = layerId;
     }
 
-    this.selector.update();
     this._entityCounter++;
     
     return gameObject;
@@ -717,18 +716,19 @@ class WorldEditorScene extends EditorScene {
     let gameObjects = this.getGameObjects();
 
     for (let i = 0; i < gameObjects.length; i++) {
-      let cur    = gameObjects[i];
-      let width  = cur.width;
-      let height = cur.height;
+      let cur        = gameObjects[i];
+      let cache      = cur.calculationCache;
+      let halfWidth  = cache.aabbHalfWidth;
+      let halfHeight = cache.aabbHalfHeight;
       
       if (this.lockedLayers.indexOf(cur.layer) >= 0) {
         continue;
       }
 
-      if (x >= cur.position.x - width  * 0.5 &&
-          x <= cur.position.x + width  * 0.5 &&
-          y >= cur.position.y - height * 0.5 &&
-          y <= cur.position.y + height * 0.5) {
+      if (x >= cur.position.x - halfWidth &&
+          x <= cur.position.x + halfWidth &&
+          y >= cur.position.y - halfHeight &&
+          y <= cur.position.y + halfHeight) {
 
         return cur;
       }

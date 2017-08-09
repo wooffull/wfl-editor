@@ -71,6 +71,9 @@ class DrawTool extends WorldTool {
       addedObj = this.editor.addCurrentGameObject(x, y);
       
       if (addedObj) {
+        // Cache calculations for access to optimzations
+        addedObj.cacheCalculations();
+        
         selector.clear();
         selector.add(addedObj);
       }

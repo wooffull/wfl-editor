@@ -159,7 +159,8 @@ const ActionPerformer = {
           action.type,
           {
             entities: data.entities,
-            value: !data.value
+            prevValues: data.values,
+            values: data.prevValues
           }
         );
         break;

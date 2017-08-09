@@ -193,24 +193,42 @@ class HistoryView extends SubwindowView {
         break;
         
       case Action.Type.PROPERTY_CHANGE_SOLID:
-        label = 'Changed Solid Property: '
-              + (!action.data.value).toString()
-              + ' -> '
-              + action.data.value.toString();
+        var length = action.data.entities;
+        
+        if (length === 1) {
+          label = 'Changed Solid Property: '
+                + action.data.prevValues[0].toString()
+                + ' -> '
+                + action.data.values[0].toString();
+        } else {
+          label = 'Changed Solid Property for group';
+        }
         break;
       
       case Action.Type.PROPERTY_CHANGE_FIXED:
-        label = 'Changed Fixed Property: '
-              + (!action.data.value).toString()
-              + ' -> '
-              + action.data.value.toString();
+        var length = action.data.entities;
+        
+        if (length === 1) {
+          label = 'Changed Fixed Property: '
+                + action.data.prevValues[0].toString()
+                + ' -> '
+                + action.data.values[0].toString();
+        } else {
+          label = 'Changed Fixed Property for group';
+        }
         break;
       
       case Action.Type.PROPERTY_CHANGE_PERSISTS:
-        label = 'Changed Persistence Property: '
-              + (!action.data.value).toString()
-              + ' -> '
-              + action.data.value.toString();
+        var length = action.data.entities;
+        
+        if (length === 1) {
+          label = 'Changed Persistence Property: '
+                + action.data.prevValues[0].toString()
+                + ' -> '
+                + action.data.values[0].toString();
+        } else {
+          label = 'Changed Persistence Property for group';
+        }
         break;
       
       default:

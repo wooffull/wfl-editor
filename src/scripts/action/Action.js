@@ -195,21 +195,24 @@ Object.defineProperties(Action, {
       //  data: {
       //    entities: <An array of all the entties to have their solid
       //               attribute changed>
-      //    value: <Whether or not the entities are solid>
+      //    prevValues: <The solid value before any changes>
+      //    values: <Whether or not the entities are solid>
       //  }
       PROPERTY_CHANGE_SOLID: 'property-change-solid',
       //
       //  data: {
       //    entities: <An array of all the entties to have their fixed
       //               attribute changed>
-      //    value: <Whether or not the entities are fixed in space>
+      //    prevValues: <The fixed value before any changes>
+      //    values: <Whether or not the entities are fixed in space>
       //  }
       PROPERTY_CHANGE_FIXED: 'property-change-fixed',
       //
       //  data: {
       //    entities: <An array of all the entties to have their persists
       //               attribute changed>
-      //    value: <Whether or not the entities are persists>
+      //    prevValues: <The persists value before any changes>
+      //    values: <Whether or not the entities persist>
       //  }
       PROPERTY_CHANGE_PERSISTS: 'property-change-persists',
       

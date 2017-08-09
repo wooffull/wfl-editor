@@ -21,16 +21,14 @@ class Selector {
       height: 0
     };
     
-    this.update();
+    this._deselect();
   }
 
   update() {
     // No selected game objects, so no need to draw anything
     if (this.selectedObjects.length === 0) {
-      this.selectionBox.x      = 0;
-      this.selectionBox.y      = 0;
-      this.selectionBox.width  = 0;
-      this.selectionBox.height = 0;
+      this.clear();
+      
     } else {
       // Coordinates for the selection box
       var min = { x :  Infinity, y :  Infinity };
@@ -40,8 +38,9 @@ class Selector {
       for (var i = 0; i < this.selectedObjects.length; i++) {
         var cur        = this.selectedObjects[i];
         var curPos     = cur.position;
-        var halfWidth  = cur.width  * 0.5;
-        var halfHeight = cur.height * 0.5;
+        var cache      = cur.calculationCache;
+        var halfWidth  = cache.aabbHalfWidth;
+        var halfHeight = cache.aabbHalfHeight;
 
         // Update bounds when an object is outside of them
         if (curPos.x - halfWidth  < min.x) min.x = curPos.x - halfWidth;
@@ -50,33 +49,22 @@ class Selector {
         if (curPos.y + halfHeight > max.y) max.y = curPos.y + halfHeight;
       }
 
-      this.selectionBox.x    = min.x;
-      this.selectionBox.y    = min.y;
+      this.selectionBox.x      = min.x;
+      this.selectionBox.y      = min.y;
       this.selectionBox.width  = max.x - min.x;
       this.selectionBox.height = max.y - min.y;
-    }
-    
-    // Send out select event
-    if (this.selectedObjects.length === 1) {
-      let gameObject = this.selectedObjects.slice(0)[0];
+      
+      let gameObjects = this.selectedObjects.slice(0);
       
       let data = {
-        gameObject: gameObject,
-        entity: gameObject.customData.entity,
-        layerId: gameObject.layer
+        gameObjects: gameObjects,
+        entities: gameObjects.map((x) => x.customData.entity),
+        layerIds: gameObjects.map((x) => x.layer)
       };
 
       ActionPerformer.do(
         Action.Type.WORLD_ENTITY_SELECT,
         data,
-        false
-      );
-
-    // Send out deselect event
-    } else {
-      ActionPerformer.do(
-        Action.Type.WORLD_ENTITY_DESELECT,
-        {},
         false
       );
     }
@@ -97,15 +85,18 @@ class Selector {
     debugContainer.endFill();
   }
 
-  add(obj) {
+  add(obj, _allowUpdate = true) {
     // Remove it first just in case to prevent duplicates
-    this.remove(obj);
+    this.remove(obj, false);
 
     this.selectedObjects.push(obj);
-    this.update();
+    
+    if (_allowUpdate) {
+      this.update();
+    }
   }
 
-  remove(obj) {
+  remove(obj, _allowUpdate = true) {
     var selectedIndex = this.selectedObjects.indexOf(obj);
 
     // Remove the game object from the list of selected game objects
@@ -113,7 +104,10 @@ class Selector {
       selectedIndex < this.selectedObjects.length) {
 
       this.selectedObjects.splice(selectedIndex, 1);
-      this.update();
+      
+      if (_allowUpdate) {
+        this.update();
+      }
     }
   }
 
@@ -147,6 +141,14 @@ class Selector {
     }
     
     this.update();
+  }
+  
+  _deselect() {
+    ActionPerformer.do(
+      Action.Type.WORLD_ENTITY_DESELECT,
+      {},
+      false
+    );
   }
 }
 

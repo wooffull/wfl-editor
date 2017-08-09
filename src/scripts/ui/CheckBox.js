@@ -29,10 +29,14 @@ class CheckBox extends HtmlElement {
   }
   
   set value(val) {
-    if (val) {
+    if (val === true) {
       this.check();
-    } else {
+      this.checkbox.prop('indeterminate', false);
+    } else if (val === false) {
       this.uncheck();
+      this.checkbox.prop('indeterminate', false);
+    } else {
+      this.checkbox.prop('indeterminate', true);
     }
   }
   
