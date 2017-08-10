@@ -11,7 +11,7 @@ html, body {
   height: 100vh;
   margin: 0;
   overflow: hidden;
-  
+
   -webkit-app-region: no-drag;
   -webkit-user-select: none;
 }
@@ -36,17 +36,17 @@ button {
   color: #ccc;
 }
 
-.toolbar-window-controls, .subwindow, .iconwindow, #inspector-container {   
+.toolbar-window-controls, .subwindow, .iconwindow {
   /* Prevent cursor from switching to text cursor */
   cursor: default;
 }
 
 .toolbar-window-controls, .toolbar-menu {
   background-color: #3c3c3c;
-  
+
   /* Ensure there's no white-space between the buttons */
   font-size: 0px;
-  
+
 }
 
 .toolbar-window-controls {
@@ -116,21 +116,12 @@ button {
 #subwindow-container {
   /* -26px for .toolbar-window-controls */
   /* -22px for .toolbar-menu */
-  height: calc(100vh - 26px - 22px - 25vh);
+  height: calc(100vh - 26px - 22px);
 }
 
 .ui-element-container {
   width: 100vw;
   display: flex;
-}
-
-#inspector-container {
-  height: 25vh;
-  background-color: #555;
-  border-top: 1px solid black;
-  box-sizing: border-box;
-  padding: 5px;
-  color: #ccc;
 }
 
 /**
