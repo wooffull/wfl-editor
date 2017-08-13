@@ -21,8 +21,6 @@ class InputText extends HtmlElement {
     this.element.append(this.label);
     this.element.append(this.data);
     
-    $(document).click(this.onClick.bind(this));
-    this.data.dblclick(this.onDoubleClick.bind(this));
     this.data.on("blur", this.onBlur.bind(this));
     this.data.on("focus", this.onFocus.bind(this));
     $(document).on("keydown", this.onKeyPress.bind(this));
@@ -32,6 +30,14 @@ class InputText extends HtmlElement {
     this._selected = false;
     
     this.size = InputText.DEFAULT_SIZE;
+  }
+  
+  get value() {
+    return this.data.val();
+  }
+  
+  set value(val) {
+    this.data.val(val);
   }
   
   get size() {
@@ -46,33 +52,15 @@ class InputText extends HtmlElement {
     this.data.prop('size', val);
   }
   
-  onClick(e) {
-    if (typeof e.which === "undefined" || e.which === 1) {
-      if (e.target === this.data[0]) {
-        this._select();
-      } else {
-        this._deselect();
-      }
-    }
-  }
-  
-  onDoubleClick(e) {
-    this.data.select();
-  }
-  
   onBlur(e) {
     if (this._selected) {
       this._onChange();
-
-      // Deselect the text by setting its value to its value
-      this.data.val(this.data.val());
     }
   }
   
   onFocus(e) {
     if (!this._selected) {
       this._select();
-      this.data.select();
     }
   }
   
@@ -89,14 +77,12 @@ class InputText extends HtmlElement {
   enable() {
     this.data.prop('disabled', false);
     this.disabled = false;
-    
     this.element.removeClass(CssClass.DISABLED);
   }
   
   disable() {
     this.data.prop('disabled', true);
     this.disabled = true;
-    
     this.element.addClass(CssClass.DISABLED);
   }
   
@@ -104,9 +90,6 @@ class InputText extends HtmlElement {
     if (!this._selected) {
       this._selected = true;
       this.data.focus();
-
-      // Deselect the text by setting its value to its value
-      this.data.val(this.data.val());
     }
   }
   
@@ -119,10 +102,10 @@ class InputText extends HtmlElement {
   }
   
   _onChange() {
-    if (!this.disabled) {
+    if (!this.disabled && this.prevValue !== this.data.val()) {
       $(this).trigger("change");
     }
-    
+
     this._deselect();
   }
 }

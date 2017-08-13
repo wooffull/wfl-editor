@@ -761,8 +761,8 @@ class WorldEditorScene extends EditorScene {
       }
     }
 
-    e.stopPropagation();
-    e.preventDefault();
+    //e.stopPropagation();
+    //e.preventDefault();
   }
 
   onBeforeMouseUp(e) {
@@ -816,8 +816,8 @@ class WorldEditorScene extends EditorScene {
       }
     }
 
-    e.stopPropagation();
-    e.preventDefault();
+    //e.stopPropagation();
+    //e.preventDefault();
   }
 
   onMouseLeave(e) {

@@ -52,15 +52,11 @@ class ProjectSettingsView extends SubwindowView {
       isX = false;
     }
     
-    value = inputText.data.val();
+    value = inputText.value;
     
     // Ensure the value is above 0
     if (isNaN(value) || value < 1) {
-      if (isX) {
-        value = WorldEditorScene.DEFAULT_TILE_SIZE.x;
-      } else {
-        value = WorldEditorScene.DEFAULT_TILE_SIZE.y;
-      }
+      value = inputText.prevValue;
     }
     
     // Only send out a change if the value has changed from the previous one
@@ -75,9 +71,9 @@ class ProjectSettingsView extends SubwindowView {
     // an action
     } else {
       if (isX) {
-        this.tileSizeXInputText.data.val(value);
+        this.tileSizeXInputText.value = value;
       } else {
-        this.tileSizeYInputText.data.val(value);
+        this.tileSizeYInputText.value = value;
       }
     }
   }
@@ -110,14 +106,14 @@ class ProjectSettingsView extends SubwindowView {
   
   onActionTileWidthChange(action) {
     let {tileWidth} = action.data;
-    this.tileSizeXInputText.data.val(tileWidth);
-    this.tileSizeXInputText.prevValue = tileWidth;
+    this.tileSizeXInputText.value = tileWidth;
+    this.tileSizeXInputText.prevValue = this.tileSizeXInputText.value;
   }
   
   onActionTileHeightChange(action) {
     let {tileHeight} = action.data;
-    this.tileSizeYInputText.data.val(tileHeight);
-    this.tileSizeYInputText.prevValue = tileHeight;
+    this.tileSizeYInputText.value = tileHeight;
+    this.tileSizeYInputText.prevValue = this.tileSizeYInputText.value;
   }
 }
 

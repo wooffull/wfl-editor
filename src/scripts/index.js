@@ -19,11 +19,14 @@ $(window).on('load', () => {
 
 // Prevent highlighting elements when dragging on UI
 $('.ui-element-container').on('mousedown', (e) => {
+  // TODO: Is this needed? With it, input text fields don't work properly
+  /*
   if (e.stopPropagation) e.stopPropagation();
   if (e.preventDefault)  e.preventDefault();
   e.cancelBubble = true;
   e.returnValue  = false;
   return false;
+  */
 });
 
 $('.app-icon').on('click', (e) => {
