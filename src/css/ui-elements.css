@@ -149,18 +149,29 @@
 /**
  * Input Text
  */
-.input-text-label {
-  padding-right: 5px;
+.input-text {
+  display: flex;
+  flex-direction: row;
 }
 
-.input-text {
-  width: 40%;
+.input-text-label {
+  padding-right: 5px;
+  flex: 1 0 auto;
+}
+
+.input-text-data {
 }
 
 /**
  * Check box
  */
 .check-box {
+  display: flex;
+  flex-direction: row;
+}
+
+.check-box > .input-text-label {
+  flex: 1 0 auto;
 }
 
 .check-box.disabled > .input-text-label {

@@ -14,8 +14,9 @@ class InputText extends HtmlElement {
     this.label = $("<span>").html(label);
     this.data = $("<input type=\"text\">").val(data);
     
+    this.element.addClass(CssClass.INPUT_TEXT);
     this.label.addClass(CssClass.INPUT_TEXT_LABEL);
-    this.data.addClass(CssClass.INPUT_TEXT);
+    this.data.addClass(CssClass.INPUT_TEXT_DATA);
     
     this.element.append(this.label);
     this.element.append(this.data);
@@ -27,7 +28,22 @@ class InputText extends HtmlElement {
     $(document).on("keydown", this.onKeyPress.bind(this));
     
     this.prevValue = data;
+    this.disabled  = false;
     this._selected = false;
+    
+    this.size = InputText.DEFAULT_SIZE;
+  }
+  
+  get size() {
+    return this.data.prop('size');
+  }
+  
+  set size(val) {
+    if (isNaN(val) || val < 1) {
+      val = 1;
+    }
+    
+    this.data.prop('size', val);
   }
   
   onClick(e) {
@@ -70,6 +86,20 @@ class InputText extends HtmlElement {
     }
   }
   
+  enable() {
+    this.data.prop('disabled', false);
+    this.disabled = false;
+    
+    this.element.removeClass(CssClass.DISABLED);
+  }
+  
+  disable() {
+    this.data.prop('disabled', true);
+    this.disabled = true;
+    
+    this.element.addClass(CssClass.DISABLED);
+  }
+  
   _select() {
     if (!this._selected) {
       this._selected = true;
@@ -89,9 +119,18 @@ class InputText extends HtmlElement {
   }
   
   _onChange() {
-    $(this).trigger("change");
+    if (!this.disabled) {
+      $(this).trigger("change");
+    }
+    
     this._deselect();
   }
 }
+
+Object.defineProperties(InputText, {
+  DEFAULT_SIZE: {
+    value: 4
+  }
+});
 
 module.exports = InputText;

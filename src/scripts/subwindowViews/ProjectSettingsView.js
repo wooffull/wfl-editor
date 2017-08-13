@@ -64,7 +64,7 @@ class ProjectSettingsView extends SubwindowView {
     }
     
     // Only send out a change if the value has changed from the previous one
-    if (value !== inputText.prevValue) {
+    if (parseInt(value) !== parseInt(inputText.prevValue)) {
       if (isX) {
         this.setTileSizeX(value);
       } else {
