@@ -28,6 +28,18 @@ class PropertiesTool extends Tool {
       Action.Type.PROPERTY_CHANGE_PERSISTS,
       (action) => this.subwindowView.onActionPropertyChangePersists(action)
     );
+    this.register(
+      Action.Type.PROPERTY_CHANGE_MASS,
+      (action) => this.subwindowView.onActionPropertyChangeMass(action)
+    );
+    this.register(
+      Action.Type.PROPERTY_CHANGE_FRICTION,
+      (action) => this.subwindowView.onActionPropertyChangeFriction(action)
+    );
+    this.register(
+      Action.Type.PROPERTY_CHANGE_RESTITUTION,
+      (action) => this.subwindowView.onActionPropertyChangeRestitution(action)
+    );
   }
 }
 

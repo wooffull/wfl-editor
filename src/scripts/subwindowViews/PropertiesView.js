@@ -1,9 +1,11 @@
 "use strict";
 
 const $                 = wfl.jquery;
+const PhysicsObject     = wfl.core.entities.PhysicsObject;
 const SubwindowView     = require('./SubwindowView');
 const CssClass          = require('../CssClasses'); 
 const {CheckBox,
+       InputText,
        InputTextPair,
        MenuItem,
        MenuButton}      = require('../ui');
@@ -39,9 +41,36 @@ class PropertiesView extends SubwindowView {
     this.fixedCheckbox    = new CheckBox('Fixed');
     this.persistsCheckbox = new CheckBox('Persists');
     
-    $(this.solidCheckbox).on('change',    (e) => this.changeSolid());
-    $(this.fixedCheckbox).on('change',    (e) => this.changeFixed());
-    $(this.persistsCheckbox).on('change', (e) => this.changePersists());
+    this.massInputText = new InputText(
+      "Mass",
+      PhysicsObject.DEFAULT_MASS
+    );
+    this.frictionInputText = new InputText(
+      "Surface Friction",
+      PhysicsObject.DEFAULT_SURFACE_FRICTION
+    );
+    this.restitutionInputText = new InputText(
+      "Surface Restitution",
+      PhysicsObject.DEFAULT_SURFACE_RESTITUTION
+    );
+    
+    // A map from physics property key to UI element.
+    // Used to quickly iterate over UI elements and assign values
+    this.physicsUiMap = {
+      solid:       this.solidCheckbox,
+      fixed:       this.fixedCheckbox,
+      persists:    this.persistsCheckbox,
+      mass:        this.massInputText,
+      friction:    this.frictionInputText,
+      restitution: this.restitutionInputText
+    };
+    
+    $(this.solidCheckbox).on('change',        (e) => this.changeSolid());
+    $(this.fixedCheckbox).on('change',        (e) => this.changeFixed());
+    $(this.persistsCheckbox).on('change',     (e) => this.changePersists());
+    $(this.massInputText).on('change',        (e) => this.changeMass());
+    $(this.frictionInputText).on('change',    (e) => this.changeFriction());
+    $(this.restitutionInputText).on('change', (e) => this.changeRestitution());
     
     this.propertiesContainer = $("<div>");
     this.properties = [];
@@ -50,6 +79,9 @@ class PropertiesView extends SubwindowView {
     this.element.append(this.solidCheckbox.element);
     this.element.append(this.fixedCheckbox.element);
     this.element.append(this.persistsCheckbox.element);
+    this.element.append(this.massInputText.element);
+    this.element.append(this.frictionInputText.element);
+    this.element.append(this.restitutionInputText.element);
     this.element.append(this.propertiesContainer);
     this.element.append(this.saveBtn.element);
     
@@ -66,10 +98,16 @@ class PropertiesView extends SubwindowView {
     this.solidCheckbox.value = false;
     this.fixedCheckbox.value = false;
     this.persistsCheckbox.value = false;
+    this.massInputText.value = '';
+    this.frictionInputText.value = '';
+    this.restitutionInputText.value = '';
     
     this.solidCheckbox.disable();
     this.fixedCheckbox.disable();
     this.persistsCheckbox.disable();
+    this.massInputText.disable();
+    this.frictionInputText.disable();
+    this.restitutionInputText.disable();
     
     this.solidCheckbox.uncheck();
     this.fixedCheckbox.uncheck();
@@ -149,16 +187,56 @@ class PropertiesView extends SubwindowView {
     );
   }
   
+  changeMass() {
+    let data = {
+      entities: this.gameObjects,
+      prevValues: this.gameObjects.map((x) => x.customData.physics.mass),
+      values: this.gameObjects.map((x) => this.massInputText.value)
+    };
+    ActionPerformer.do(
+      Action.Type.PROPERTY_CHANGE_MASS,
+      data
+    );
+  }
+  
+  changeFriction() {
+    let data = {
+      entities: this.gameObjects,
+      prevValues: this.gameObjects.map((x) => x.customData.physics.friction),
+      values: this.gameObjects.map((x) => this.frictionInputText.value)
+    };
+    ActionPerformer.do(
+      Action.Type.PROPERTY_CHANGE_FRICTION,
+      data
+    );
+  }
+  
+  changeRestitution() {
+    let data = {
+      entities: this.gameObjects,
+      prevValues: this.gameObjects.map(
+                    (x) => x.customData.physics.restitution
+                  ),
+      values: this.gameObjects.map((x) => this.restitutionInputText.value)
+    };
+    ActionPerformer.do(
+      Action.Type.PROPERTY_CHANGE_RESTITUTION,
+      data
+    );
+  }
+  
   onActionEntitySelect(action) {
     this.clearProperties();
     
     this.solidCheckbox.enable();
     this.fixedCheckbox.enable();
     this.persistsCheckbox.enable();
+    this.massInputText.enable();
+    this.frictionInputText.enable();
+    this.restitutionInputText.enable();
     
     this.gameObjects = action.data.gameObjects;
     let props        = this._consolidateProps(this.gameObjects);
-    let physics      = this._consolidatePhysics(this.gameObjects);
     
     for (const prop of props) {
       let key = prop.key;
@@ -166,9 +244,7 @@ class PropertiesView extends SubwindowView {
       this.addProperty(key, val);
     }
     
-    this.solidCheckbox.value    = physics.solid;
-    this.fixedCheckbox.value    = physics.fixed;
-    this.persistsCheckbox.value = physics.persists;
+    this._updatePhysicsPropertiesDisplay();
   }
   
   onActionEntityDeselect(action) {
@@ -180,18 +256,11 @@ class PropertiesView extends SubwindowView {
     
     for (let i = 0; i < entities.length; i++) {
       let entity = entities[i];
-      
-      if (!entity.customData.physics) {
-        this._addDefaultPhysicsProperties(entity);
-      }
-      
+      this._validatePhysicsProperties(entity);
       entity.customData.physics.solid = values[i];
     }
     
-    let physics                 = this._consolidatePhysics(this.gameObjects);
-    this.solidCheckbox.value    = physics.solid;
-    this.fixedCheckbox.value    = physics.fixed;
-    this.persistsCheckbox.value = physics.persists;
+    this._updatePhysicsPropertiesDisplay();
   }
   
   onActionPropertyChangeFixed(action) {
@@ -199,18 +268,11 @@ class PropertiesView extends SubwindowView {
     
     for (let i = 0; i < entities.length; i++) {
       let entity = entities[i];
-      
-      if (!entity.customData.physics) {
-        this._addDefaultPhysicsProperties(entity);
-      }
-      
+      this._validatePhysicsProperties(entity);
       entity.customData.physics.fixed = values[i];
     }
     
-    let physics                 = this._consolidatePhysics(this.gameObjects);
-    this.solidCheckbox.value    = physics.solid;
-    this.fixedCheckbox.value    = physics.fixed;
-    this.persistsCheckbox.value = physics.persists;
+    this._updatePhysicsPropertiesDisplay();
   }
   
   onActionPropertyChangePersists(action) {
@@ -218,18 +280,47 @@ class PropertiesView extends SubwindowView {
     
     for (let i = 0; i < entities.length; i++) {
       let entity = entities[i];
-      
-      if (!entity.customData.physics) {
-        this._addDefaultPhysicsProperties(entity);
-      }
-      
+      this._validatePhysicsProperties(entity);
       entity.customData.physics.persists = values[i];
     }
     
-    let physics                 = this._consolidatePhysics(this.gameObjects);
-    this.solidCheckbox.value    = physics.solid;
-    this.fixedCheckbox.value    = physics.fixed;
-    this.persistsCheckbox.value = physics.persists;
+    this._updatePhysicsPropertiesDisplay();
+  }
+  
+  onActionPropertyChangeMass(action) {
+    let {values, entities} = action.data;
+    
+    for (let i = 0; i < entities.length; i++) {
+      let entity = entities[i];
+      this._validatePhysicsProperties(entity);
+      entity.customData.physics.mass = values[i];
+    }
+    
+    this._updatePhysicsPropertiesDisplay();
+  }
+  
+  onActionPropertyChangeFriction(action) {
+    let {values, entities} = action.data;
+    
+    for (let i = 0; i < entities.length; i++) {
+      let entity = entities[i];
+      this._validatePhysicsProperties(entity);
+      entity.customData.physics.friction = values[i];
+    }
+    
+    this._updatePhysicsPropertiesDisplay();
+  }
+  
+  onActionPropertyChangeRestitution(action) {
+    let {values, entities} = action.data;
+    
+    for (let i = 0; i < entities.length; i++) {
+      let entity = entities[i];
+      this._validatePhysicsProperties(entity);
+      entity.customData.physics.restitution = values[i];
+    }
+    
+    this._updatePhysicsPropertiesDisplay();
   }
   
   _consolidateProps(gameObjects) {
@@ -291,53 +382,31 @@ class PropertiesView extends SubwindowView {
   }
   
   _consolidatePhysics(gameObjects) {
-    let consolidatedPhysics = {
-      solid:    false,
-      fixed:    false,
-      persists: false
-    };
+    let consolidatedPhysics = this._createDefaultPhysicsProperties();
+    let physicsKeys         = Object.keys(consolidatedPhysics);
     
     // Add default physics to game objects that don't have physics properties
     // defined
     for (let gameObject of gameObjects) {
-      if (typeof gameObject.customData.physics === 'undefined') {
-        this._addDefaultPhysicsProperties(gameObject);
-      }
+      this._validatePhysicsProperties(gameObject);
     }
     
     if (gameObjects.length > 0) {
-      let phys                     = gameObjects[0].customData.physics;
-      consolidatedPhysics.solid    = phys.solid;
-      consolidatedPhysics.fixed    = phys.fixed;
-      consolidatedPhysics.persists = phys.persists;
-    }
+      // Start comparisons against the first game object's physics propeties
+      Object.assign(consolidatedPhysics, gameObjects[0].customData.physics);
     
-    // Go through the selection and check if all game objects have the same
-    // value for their physics properties. Otherwise, conflicting properties 
-    // are in an "indeterminate" state
-    if (gameObjects.length > 1) {
-      for (let gameObject of gameObjects) {
-        let phys          = gameObject.customData.physics;
-        let matchSolid    = consolidatedPhysics.solid    === phys.solid;
-        let matchFixed    = consolidatedPhysics.fixed    === phys.fixed;
-        let matchPersists = consolidatedPhysics.persists === phys.persists;
-
-        if (!matchSolid) {
-          consolidatedPhysics.solid = null;
-        } else if (consolidatedPhysics.solid !== null) {
-          consolidatedPhysics.solid = phys.solid;
-        }
-
-        if (!matchFixed) {
-          consolidatedPhysics.fixed = null;
-        } else if (consolidatedPhysics.fixed !== null) {
-          consolidatedPhysics.fixed = phys.fixed;
-        }
-
-        if (!matchPersists) {
-          consolidatedPhysics.persists = null;
-        } else if (consolidatedPhysics.persists !== null) {
-          consolidatedPhysics.persists = phys.persists;
+      // Go through the selection and check if all game objects have the same
+      // value for their physics properties. Otherwise, conflicting properties 
+      // are in an "indeterminate" state
+      if (gameObjects.length > 1) {
+        for (let gameObject of gameObjects) {
+          for (let key of physicsKeys) {
+            this._consolidatePhysicsProperty(
+              key,
+              consolidatedPhysics,
+              gameObject.customData.physics
+            );
+          }
         }
       }
     }
@@ -345,12 +414,61 @@ class PropertiesView extends SubwindowView {
     return consolidatedPhysics;
   }
   
-  _addDefaultPhysicsProperties(gameObject) {
-    gameObject.customData.physics = {
-      solid:    false,
-      fixed:    false,
-      persists: false
+  _consolidatePhysicsProperty(key, consolidation, source) {
+    if (consolidation[key] !== source[key]) {
+      consolidation[key] = null;
+    } else if (consolidation[key] !== null) {
+      consolidation[key] = source[key];
+    }
+  }
+  
+  _createDefaultPhysicsProperties() {
+    return {
+      solid:       false,
+      fixed:       false,
+      persists:    false,
+      mass:        PhysicsObject.DEFAULT_MASS,
+      friction:    PhysicsObject.DEFAULT_SURFACE_FRICTION,
+      restitution: PhysicsObject.DEFAULT_SURFACE_RESTITUTION
     };
+  }
+  
+  /**
+   * Ensures gameObject has a valid value for all physics properties
+   *
+   * Note: Adds an object for default physics properties if none exists
+   * Note: Adds properties with default values to gameObject's physics object
+   * for any that don't exist
+   */
+  _validatePhysicsProperties(gameObject) {
+    // TODO: Keep a single reference to default physics instead of creating one
+    // for every function call?
+    let defaultPhys = this._createDefaultPhysicsProperties();
+    
+    if (typeof gameObject.customData.physics === 'undefined') {
+      gameObject.customData.physics = defaultPhys;
+    } else {
+      let phys = gameObject.customData.physics;
+      let keys = Object.keys(defaultPhys);
+      
+      for (let key of keys) {
+        if (typeof phys[key] === "undefined") {
+          phys[key] = defaultPhys[key];
+        }
+      }
+    }
+  }
+  
+  /**
+   * Reflects the current selection of gameObjects's physics properties in UI
+   */
+  _updatePhysicsPropertiesDisplay() {
+    let physics = this._consolidatePhysics(this.gameObjects);
+    let keys    = Object.keys(this.physicsUiMap);
+    
+    for (let key of keys) {
+      this.physicsUiMap[key].value = physics[key];
+    }
   }
 }
 

@@ -31,8 +31,8 @@ class ProjectSettingsView extends SubwindowView {
     this.add(this.tileSizeXInputText);
     this.add(this.tileSizeYInputText);
     
-    $(this.tileSizeXInputText).on("change", ($e) => this.onTileSizeChange($e));
-    $(this.tileSizeYInputText).on("change", ($e) => this.onTileSizeChange($e));
+    $(this.tileSizeXInputText).on("change", (e) => this.onTileSizeChange(e));
+    $(this.tileSizeYInputText).on("change", (e) => this.onTileSizeChange(e));
     
     this.reset();
   }
@@ -56,11 +56,11 @@ class ProjectSettingsView extends SubwindowView {
     
     // Ensure the value is above 0
     if (isNaN(value) || value < 1) {
-      value = inputText.prevValue;
+      value = inputText._prevValue;
     }
     
     // Only send out a change if the value has changed from the previous one
-    if (parseInt(value) !== parseInt(inputText.prevValue)) {
+    if (parseInt(value) !== parseInt(inputText._prevValue)) {
       if (isX) {
         this.setTileSizeX(value);
       } else {
@@ -80,7 +80,7 @@ class ProjectSettingsView extends SubwindowView {
   
   setTileSizeX(value, reversable = true) {
     let tileWidthData = {
-      prevTileWidth: this.tileSizeXInputText.prevValue,
+      prevTileWidth: this.tileSizeXInputText._prevValue,
       tileWidth: value
     };
     
@@ -93,7 +93,7 @@ class ProjectSettingsView extends SubwindowView {
   
   setTileSizeY(value, reversable = true) {
     let tileHeightData = {
-      prevTileHeight: this.tileSizeYInputText.prevValue,
+      prevTileHeight: this.tileSizeYInputText._prevValue,
       tileHeight: value
     };
     
@@ -107,13 +107,11 @@ class ProjectSettingsView extends SubwindowView {
   onActionTileWidthChange(action) {
     let {tileWidth} = action.data;
     this.tileSizeXInputText.value = tileWidth;
-    this.tileSizeXInputText.prevValue = this.tileSizeXInputText.value;
   }
   
   onActionTileHeightChange(action) {
     let {tileHeight} = action.data;
     this.tileSizeYInputText.value = tileHeight;
-    this.tileSizeYInputText.prevValue = this.tileSizeYInputText.value;
   }
 }
 

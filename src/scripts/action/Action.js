@@ -215,6 +215,32 @@ Object.defineProperties(Action, {
       //    values: <Whether or not the entities persist>
       //  }
       PROPERTY_CHANGE_PERSISTS: 'property-change-persists',
+      //
+      //  data: {
+      //    entities: <An array of all the entties to have their mass
+      //               value changed>
+      //    prevValues: <The mass value before any changes>
+      //    values: <Mass value for corresponding entities in the selection>
+      //  }
+      PROPERTY_CHANGE_MASS: 'property-change-mass',
+      //
+      //  data: {
+      //    entities: <An array of all the entties to have their friction
+      //               value changed>
+      //    prevValues: <The friction value before any changes>
+      //    values: <Friction value for corresponding entities in the 
+      //             selection>
+      //  }
+      PROPERTY_CHANGE_FRICTION: 'property-change-friction',
+      //
+      //  data: {
+      //    entities: <An array of all the entties to have their restitution
+      //               value changed>
+      //    prevValues: <The restitution value before any changes>
+      //    values: <Restitution value for corresponding entities in the 
+      //             selection>
+      //  }
+      PROPERTY_CHANGE_RESTITUTION: 'property-change-restitution',
       
       
       HISTORY_CLEAR: 'history-clear'

@@ -165,17 +165,6 @@ class WorldTool extends Tool {
         physics:  obj.customData.physics
       };
       
-      // Clear physics data if it only uses default values
-      // Note: This reduces the file size for projects
-      let {physics} = objData;
-      if (physics                    &&
-          physics.solid    === false &&
-          physics.fixed    === false &&
-          physics.persists === false) {
-        
-        objData.physics = undefined;
-      }
-      
       data.gameObjects.push(objData);
     }
     

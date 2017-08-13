@@ -193,7 +193,7 @@ class HistoryView extends SubwindowView {
         break;
         
       case Action.Type.PROPERTY_CHANGE_SOLID:
-        var length = action.data.entities;
+        var length = action.data.entities.length;
         
         if (length === 1) {
           label = 'Changed Solid Property: '
@@ -206,7 +206,7 @@ class HistoryView extends SubwindowView {
         break;
       
       case Action.Type.PROPERTY_CHANGE_FIXED:
-        var length = action.data.entities;
+        var length = action.data.entities.length;
         
         if (length === 1) {
           label = 'Changed Fixed Property: '
@@ -219,7 +219,7 @@ class HistoryView extends SubwindowView {
         break;
       
       case Action.Type.PROPERTY_CHANGE_PERSISTS:
-        var length = action.data.entities;
+        var length = action.data.entities.length;
         
         if (length === 1) {
           label = 'Changed Persistence Property: '
@@ -228,6 +228,45 @@ class HistoryView extends SubwindowView {
                 + action.data.values[0].toString();
         } else {
           label = 'Changed Persistence Property for group';
+        }
+        break;
+      
+      case Action.Type.PROPERTY_CHANGE_MASS:
+        var length = action.data.entities.length;
+        
+        if (length === 1) {
+          label = 'Changed Mass Property: '
+                + action.data.prevValues[0].toString()
+                + ' -> '
+                + action.data.values[0].toString();
+        } else {
+          label = 'Changed Mass Property for group';
+        }
+        break;
+      
+      case Action.Type.PROPERTY_CHANGE_FRICTION:
+        var length = action.data.entities.length;
+        
+        if (length === 1) {
+          label = 'Changed Friction Property: '
+                + action.data.prevValues[0].toString()
+                + ' -> '
+                + action.data.values[0].toString();
+        } else {
+          label = 'Changed Friction Property for group';
+        }
+        break;
+      
+      case Action.Type.PROPERTY_CHANGE_RESTITUTION:
+        var length = action.data.entities.length;
+        
+        if (length === 1) {
+          label = 'Changed Restitution Property: '
+                + action.data.prevValues[0].toString()
+                + ' -> '
+                + action.data.values[0].toString();
+        } else {
+          label = 'Changed Restitution Property for group';
         }
         break;
       

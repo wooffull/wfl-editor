@@ -25,9 +25,9 @@ class InputText extends HtmlElement {
     this.data.on("focus", this.onFocus.bind(this));
     $(document).on("keydown", this.onKeyPress.bind(this));
     
-    this.prevValue = data;
     this.disabled  = false;
     this._selected = false;
+    this._prevValue = data;
     
     this.size = InputText.DEFAULT_SIZE;
   }
@@ -38,6 +38,7 @@ class InputText extends HtmlElement {
   
   set value(val) {
     this.data.val(val);
+    this._prevValue = val;
   }
   
   get size() {
@@ -102,7 +103,7 @@ class InputText extends HtmlElement {
   }
   
   _onChange() {
-    if (!this.disabled && this.prevValue !== this.data.val()) {
+    if (!this.disabled && this._prevValue != this.data.val()) {
       $(this).trigger("change");
     }
 

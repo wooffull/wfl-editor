@@ -159,6 +159,10 @@
   flex: 1 0 auto;
 }
 
+.disabled > .input-text-label {
+  text-decoration: line-through;
+}
+
 .input-text-data {
 }
 
@@ -168,14 +172,6 @@
 .check-box {
   display: flex;
   flex-direction: row;
-}
-
-.check-box > .input-text-label {
-  flex: 1 0 auto;
-}
-
-.check-box.disabled > .input-text-label {
-  text-decoration: line-through;
 }
 
 /* Lock button */

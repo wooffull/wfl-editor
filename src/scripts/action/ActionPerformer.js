@@ -155,6 +155,9 @@ const ActionPerformer = {
       case Action.Type.PROPERTY_CHANGE_SOLID:
       case Action.Type.PROPERTY_CHANGE_FIXED:
       case Action.Type.PROPERTY_CHANGE_PERSISTS:
+      case Action.Type.PROPERTY_CHANGE_MASS:
+      case Action.Type.PROPERTY_CHANGE_FRICTION:
+      case Action.Type.PROPERTY_CHANGE_RESTITUTION:
         revAction = new Action(
           action.type,
           {
