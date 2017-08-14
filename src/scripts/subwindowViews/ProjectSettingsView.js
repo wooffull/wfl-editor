@@ -4,6 +4,7 @@ const $                  = wfl.jquery;
 const SubwindowView      = require('./SubwindowView');
 const CssClass           = require('../CssClasses'); 
 const {WorldEditorScene} = require('../scenes');
+const {DataValidator}    = require('../util');
 const {InputText,
        MenuItem,
        MenuButton}       = require('../ui');
@@ -26,6 +27,11 @@ class ProjectSettingsView extends SubwindowView {
       WorldEditorScene.DEFAULT_TILE_SIZE.y
     );
     
+    this.tileSizeXInputText.keyValidator =
+      DataValidator.keyValidatorForPositiveNumbers;
+    this.tileSizeYInputText.keyValidator =
+      DataValidator.keyValidatorForPositiveNumbers;
+    
     this.element.append(this.label);
     
     this.add(this.tileSizeXInputText);
@@ -45,36 +51,19 @@ class ProjectSettingsView extends SubwindowView {
   
   onTileSizeChange(e) {
     let inputText = e.target;
-    let isX       = true;
-    let value     = 0;
-    
-    if (inputText === this.tileSizeYInputText) {
-      isX = false;
-    }
-    
-    value = inputText.value;
-    
-    // Ensure the value is above 0
-    if (isNaN(value) || value < 1) {
-      value = inputText._prevValue;
-    }
+    let isX       = (inputText === this.tileSizeXInputText);
+    let value     = this._validateTileSize(inputText);
     
     // Only send out a change if the value has changed from the previous one
-    if (parseInt(value) !== parseInt(inputText._prevValue)) {
-      if (isX) {
-        this.setTileSizeX(value);
-      } else {
-        this.setTileSizeY(value);
-      }
+    if (value !== parseFloat(inputText._prevValue)) {
+      if (isX) this.setTileSizeX(value);
+      else     this.setTileSizeY(value);
     
     // Otherwise, just change the text field to that value without sending out
     // an action
     } else {
-      if (isX) {
-        this.tileSizeXInputText.value = value;
-      } else {
-        this.tileSizeYInputText.value = value;
-      }
+      if (isX) this.tileSizeXInputText.value = value;
+      else     this.tileSizeYInputText.value = value;
     }
   }
   
@@ -112,6 +101,16 @@ class ProjectSettingsView extends SubwindowView {
   onActionTileHeightChange(action) {
     let {tileHeight} = action.data;
     this.tileSizeYInputText.value = tileHeight;
+  }
+  
+  _validateTileSize(inputText) {
+    // Ensure the value is between [1, Infinity)
+    return DataValidator.stringToMatchedNumberRangeOrDefault(
+      inputText.value,
+      1,
+      Infinity,
+      inputText._prevValue
+    );
   }
 }
 

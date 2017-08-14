@@ -3,7 +3,8 @@
 const $                 = wfl.jquery;
 const PhysicsObject     = wfl.core.entities.PhysicsObject;
 const SubwindowView     = require('./SubwindowView');
-const CssClass          = require('../CssClasses'); 
+const CssClass          = require('../CssClasses');
+const {DataValidator}   = require('../util');
 const {CheckBox,
        InputText,
        InputTextPair,
@@ -43,16 +44,26 @@ class PropertiesView extends SubwindowView {
     
     this.massInputText = new InputText(
       "Mass",
-      PhysicsObject.DEFAULT_MASS
+      PhysicsObject.DEFAULT_MASS,
+      3
     );
     this.frictionInputText = new InputText(
       "Surface Friction",
-      PhysicsObject.DEFAULT_SURFACE_FRICTION
+      PhysicsObject.DEFAULT_SURFACE_FRICTION,
+      3
     );
     this.restitutionInputText = new InputText(
       "Surface Restitution",
-      PhysicsObject.DEFAULT_SURFACE_RESTITUTION
+      PhysicsObject.DEFAULT_SURFACE_RESTITUTION,
+      3
     );
+    
+    this.massInputText.keyValidator =
+      DataValidator.keyValidatorForPositiveNumbers;
+    this.frictionInputText.keyValidator =
+      DataValidator.keyValidatorForNumbers;
+    this.restitutionInputText.keyValidator =
+      DataValidator.keyValidatorForNumbers;
     
     // A map from physics property key to UI element.
     // Used to quickly iterate over UI elements and assign values
@@ -188,10 +199,22 @@ class PropertiesView extends SubwindowView {
   }
   
   changeMass() {
+    let value = DataValidator.stringToNumberOrDefault(
+      this.massInputText.value,
+      this.massInputText._prevValue
+    );
+    
+    // If the validated value is equivalent to its previous value, don't
+    // perform an action for its change
+    if (value === parseFloat(this.massInputText._prevValue)) {
+      this.massInputText.value = value;
+      return;
+    }
+    
     let data = {
       entities: this.gameObjects,
       prevValues: this.gameObjects.map((x) => x.customData.physics.mass),
-      values: this.gameObjects.map((x) => this.massInputText.value)
+      values: this.gameObjects.map((x) => value)
     };
     ActionPerformer.do(
       Action.Type.PROPERTY_CHANGE_MASS,
@@ -200,10 +223,22 @@ class PropertiesView extends SubwindowView {
   }
   
   changeFriction() {
+    let value = DataValidator.stringToNumberOrDefault(
+      this.frictionInputText.value,
+      this.frictionInputText._prevValue
+    );
+    
+    // If the validated value is equivalent to its previous value, don't
+    // perform an action for its change
+    if (value === parseFloat(this.frictionInputText._prevValue)) {
+      this.frictionInputText.value = value;
+      return;
+    }
+    
     let data = {
       entities: this.gameObjects,
       prevValues: this.gameObjects.map((x) => x.customData.physics.friction),
-      values: this.gameObjects.map((x) => this.frictionInputText.value)
+      values: this.gameObjects.map((x) => value)
     };
     ActionPerformer.do(
       Action.Type.PROPERTY_CHANGE_FRICTION,
@@ -212,12 +247,24 @@ class PropertiesView extends SubwindowView {
   }
   
   changeRestitution() {
+    let value = DataValidator.stringToNumberOrDefault(
+      this.restitutionInputText.value,
+      this.restitutionInputText._prevValue
+    );
+    
+    // If the validated value is equivalent to its previous value, don't
+    // perform an action for its change
+    if (value === parseFloat(this.frictionInputText._prevValue)) {
+      this.frictionInputText.value = value;
+      return;
+    }
+    
     let data = {
       entities: this.gameObjects,
       prevValues: this.gameObjects.map(
                     (x) => x.customData.physics.restitution
                   ),
-      values: this.gameObjects.map((x) => this.restitutionInputText.value)
+      values: this.gameObjects.map((x) => value)
     };
     ActionPerformer.do(
       Action.Type.PROPERTY_CHANGE_RESTITUTION,

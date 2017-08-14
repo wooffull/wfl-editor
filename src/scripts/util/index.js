@@ -1,7 +1,9 @@
 "use strict";
 
 const Selector = require('./Selector');
+const DataValidator = require('./DataValidator');
 
 module.exports = {
-  Selector: Selector
+  Selector: Selector,
+  DataValidator: DataValidator
 };
