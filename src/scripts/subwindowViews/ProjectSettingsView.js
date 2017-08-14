@@ -19,12 +19,14 @@ class ProjectSettingsView extends SubwindowView {
     this.label.addClass(CssClass.MENU_LABEL);
     
     this.tileSizeXInputText = new InputText(
-      "Tile Size X",
-      WorldEditorScene.DEFAULT_TILE_SIZE.x
+      "Tile Width",
+      WorldEditorScene.DEFAULT_TILE_SIZE.x,
+      3
     );
     this.tileSizeYInputText = new InputText(
-      "Tile Size Y",
-      WorldEditorScene.DEFAULT_TILE_SIZE.y
+      "Tile Height",
+      WorldEditorScene.DEFAULT_TILE_SIZE.y,
+      3
     );
     
     this.tileSizeXInputText.keyValidator =
