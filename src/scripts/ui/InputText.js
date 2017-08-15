@@ -6,7 +6,10 @@ const CssClass = require('../CssClasses');
 const {keys} = wfl.input;
 
 class InputText extends HtmlElement {
-  constructor(label = "Key", data = "Val", size = InputText.DEFAULT_SIZE) {
+  constructor(label        = "Key",
+              data         = "Val",
+              size         = InputText.DEFAULT_SIZE,
+              keyValidator = null) {
     super();
     
     this.element = $('<div>');
@@ -28,7 +31,7 @@ class InputText extends HtmlElement {
     
     // Function to determine if the key is valid or not.
     // Default: All keys are valid
-    this.keyValidator = (initialText, keyPressed) => true;
+    this.keyValidator = keyValidator || InputText.DEFAULT_KEY_VALIDATOR;
     
     this.disabled  = false;
     this._selected = false;
@@ -131,6 +134,10 @@ class InputText extends HtmlElement {
 Object.defineProperties(InputText, {
   DEFAULT_SIZE: {
     value: 4
+  },
+  
+  DEFAULT_KEY_VALIDATOR: {
+    value: (initialText, keyPressed) => true
   }
 });
 

@@ -155,6 +155,9 @@ const ActionPerformer = {
       case Action.Type.PROPERTY_CHANGE_SOLID:
       case Action.Type.PROPERTY_CHANGE_FIXED:
       case Action.Type.PROPERTY_CHANGE_PERSISTS:
+      case Action.Type.PROPERTY_CHANGE_POSITION_X:
+      case Action.Type.PROPERTY_CHANGE_POSITION_Y:
+      case Action.Type.PROPERTY_CHANGE_ROTATION:
       case Action.Type.PROPERTY_CHANGE_MASS:
       case Action.Type.PROPERTY_CHANGE_FRICTION:
       case Action.Type.PROPERTY_CHANGE_RESTITUTION:

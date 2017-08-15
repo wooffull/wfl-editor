@@ -38,32 +38,51 @@ class PropertiesView extends SubwindowView {
       }
     });
     
-    this.solidCheckbox    = new CheckBox('Solid');
-    this.fixedCheckbox    = new CheckBox('Fixed');
-    this.persistsCheckbox = new CheckBox('Persists');
+    /**
+     * CREATE UI ELEMENTS
+     */
+    // -------------------- CHECKBOXES --------------------
+    this.solidCheckbox      = new CheckBox('Solid');
+    this.fixedCheckbox      = new CheckBox('Fixed');
+    this.persistsCheckbox   = new CheckBox('Persists');
     
+    // -------------------- INPUT TEXT --------------------
+    this.positionXInputText = new InputText(
+      "Position (X)",
+      0,
+      3,
+      DataValidator.keyValidatorForNumbers
+    );
+    this.positionYInputText = new InputText(
+      "Position (Y)",
+      0,
+      3,
+      DataValidator.keyValidatorForNumbers
+    );
+    this.rotationInputText = new InputText(
+      "Rotation",
+      0,
+      3,
+      DataValidator.keyValidatorForNumbers
+    );
     this.massInputText = new InputText(
       "Mass",
       PhysicsObject.DEFAULT_MASS,
-      3
+      3,
+      DataValidator.keyValidatorForPositiveNumbers
     );
     this.frictionInputText = new InputText(
       "Surface Friction",
       PhysicsObject.DEFAULT_SURFACE_FRICTION,
-      3
+      3,
+      DataValidator.keyValidatorForNumbers
     );
     this.restitutionInputText = new InputText(
       "Surface Restitution",
       PhysicsObject.DEFAULT_SURFACE_RESTITUTION,
-      3
+      3,
+      DataValidator.keyValidatorForNumbers
     );
-    
-    this.massInputText.keyValidator =
-      DataValidator.keyValidatorForPositiveNumbers;
-    this.frictionInputText.keyValidator =
-      DataValidator.keyValidatorForNumbers;
-    this.restitutionInputText.keyValidator =
-      DataValidator.keyValidatorForNumbers;
     
     // A map from physics property key to UI element.
     // Used to quickly iterate over UI elements and assign values
@@ -71,6 +90,9 @@ class PropertiesView extends SubwindowView {
       solid:       this.solidCheckbox,
       fixed:       this.fixedCheckbox,
       persists:    this.persistsCheckbox,
+      x:           this.positionXInputText,
+      y:           this.positionYInputText,
+      rotation:    this.rotationInputText,
       mass:        this.massInputText,
       friction:    this.frictionInputText,
       restitution: this.restitutionInputText
@@ -79,6 +101,9 @@ class PropertiesView extends SubwindowView {
     $(this.solidCheckbox).on('change',        (e) => this.changeSolid());
     $(this.fixedCheckbox).on('change',        (e) => this.changeFixed());
     $(this.persistsCheckbox).on('change',     (e) => this.changePersists());
+    $(this.positionXInputText).on('change',   (e) => this.changePositionX());
+    $(this.positionYInputText).on('change',   (e) => this.changePositionY());
+    $(this.rotationInputText).on('change',    (e) => this.changeRotation());
     $(this.massInputText).on('change',        (e) => this.changeMass());
     $(this.frictionInputText).on('change',    (e) => this.changeFriction());
     $(this.restitutionInputText).on('change', (e) => this.changeRestitution());
@@ -87,6 +112,9 @@ class PropertiesView extends SubwindowView {
     this.properties = [];
     
     this.element.append(this.label);
+    this.element.append(this.positionXInputText.element);
+    this.element.append(this.positionYInputText.element);
+    this.element.append(this.rotationInputText.element);
     this.element.append(this.solidCheckbox.element);
     this.element.append(this.fixedCheckbox.element);
     this.element.append(this.persistsCheckbox.element);
@@ -109,16 +137,14 @@ class PropertiesView extends SubwindowView {
     this.solidCheckbox.value = false;
     this.fixedCheckbox.value = false;
     this.persistsCheckbox.value = false;
+    this.positionXInputText.value = '';
+    this.positionYInputText.value = '';
+    this.rotationInputText.value = '';
     this.massInputText.value = '';
     this.frictionInputText.value = '';
     this.restitutionInputText.value = '';
     
-    this.solidCheckbox.disable();
-    this.fixedCheckbox.disable();
-    this.persistsCheckbox.disable();
-    this.massInputText.disable();
-    this.frictionInputText.disable();
-    this.restitutionInputText.disable();
+    this._disablePhysicsPropertiesDisplay();
     
     this.solidCheckbox.uncheck();
     this.fixedCheckbox.uncheck();
@@ -194,6 +220,78 @@ class PropertiesView extends SubwindowView {
     };
     ActionPerformer.do(
       Action.Type.PROPERTY_CHANGE_PERSISTS,
+      data
+    );
+  }
+  
+  changePositionX() {
+    let value = DataValidator.stringToNumberOrDefault(
+      this.positionXInputText.value,
+      this.positionXInputText._prevValue
+    );
+    
+    // If the validated value is equivalent to its previous value, don't
+    // perform an action for its change
+    if (value === parseFloat(this.positionXInputText._prevValue)) {
+      this.positionXInputText.value = value;
+      return;
+    }
+    
+    let data = {
+      entities: this.gameObjects,
+      prevValues: this.gameObjects.map((x) => x.customData.physics.x),
+      values: this.gameObjects.map((x) => value)
+    };
+    ActionPerformer.do(
+      Action.Type.PROPERTY_CHANGE_POSITION_X,
+      data
+    );
+  }
+  
+  changePositionY() {
+    let value = DataValidator.stringToNumberOrDefault(
+      this.positionYInputText.value,
+      this.positionYInputText._prevValue
+    );
+    
+    // If the validated value is equivalent to its previous value, don't
+    // perform an action for its change
+    if (value === parseFloat(this.positionYInputText._prevValue)) {
+      this.positionYInputText.value = value;
+      return;
+    }
+    
+    let data = {
+      entities: this.gameObjects,
+      prevValues: this.gameObjects.map((x) => x.customData.physics.y),
+      values: this.gameObjects.map((x) => value)
+    };
+    ActionPerformer.do(
+      Action.Type.PROPERTY_CHANGE_POSITION_Y,
+      data
+    );
+  }
+  
+  changeRotation() {
+    let value = DataValidator.stringToNumberOrDefault(
+      this.rotationInputText.value,
+      this.rotationInputText._prevValue
+    );
+    
+    // If the validated value is equivalent to its previous value, don't
+    // perform an action for its change
+    if (value === parseFloat(this.rotationInputText._prevValue)) {
+      this.rotationInputText.value = value;
+      return;
+    }
+    
+    let data = {
+      entities: this.gameObjects,
+      prevValues: this.gameObjects.map((x) => x.customData.physics.rotation),
+      values: this.gameObjects.map((x) => value)
+    };
+    ActionPerformer.do(
+      Action.Type.PROPERTY_CHANGE_ROTATION,
       data
     );
   }
@@ -274,13 +372,7 @@ class PropertiesView extends SubwindowView {
   
   onActionEntitySelect(action) {
     this.clearProperties();
-    
-    this.solidCheckbox.enable();
-    this.fixedCheckbox.enable();
-    this.persistsCheckbox.enable();
-    this.massInputText.enable();
-    this.frictionInputText.enable();
-    this.restitutionInputText.enable();
+    this._enablePhysicsPropertiesDisplay();
     
     this.gameObjects = action.data.gameObjects;
     let props        = this._consolidateProps(this.gameObjects);
@@ -329,6 +421,42 @@ class PropertiesView extends SubwindowView {
       let entity = entities[i];
       this._validatePhysicsProperties(entity);
       entity.customData.physics.persists = values[i];
+    }
+    
+    this._updatePhysicsPropertiesDisplay();
+  }
+  
+  onActionPropertyChangePositionX(action) {
+    let {values, entities} = action.data;
+    
+    for (let i = 0; i < entities.length; i++) {
+      let entity = entities[i];
+      this._validatePhysicsProperties(entity);
+      entity.customData.physics.x = values[i];
+    }
+    
+    this._updatePhysicsPropertiesDisplay();
+  }
+  
+  onActionPropertyChangePositionY(action) {
+    let {values, entities} = action.data;
+    
+    for (let i = 0; i < entities.length; i++) {
+      let entity = entities[i];
+      this._validatePhysicsProperties(entity);
+      entity.customData.physics.y = values[i];
+    }
+    
+    this._updatePhysicsPropertiesDisplay();
+  }
+  
+  onActionPropertyChangeRotation(action) {
+    let {values, entities} = action.data;
+    
+    for (let i = 0; i < entities.length; i++) {
+      let entity = entities[i];
+      this._validatePhysicsProperties(entity);
+      entity.customData.physics.rotation = values[i];
     }
     
     this._updatePhysicsPropertiesDisplay();
@@ -474,6 +602,9 @@ class PropertiesView extends SubwindowView {
       solid:       false,
       fixed:       false,
       persists:    false,
+      x:           0,
+      y:           0,
+      rotation:    0,
       mass:        PhysicsObject.DEFAULT_MASS,
       friction:    PhysicsObject.DEFAULT_SURFACE_FRICTION,
       restitution: PhysicsObject.DEFAULT_SURFACE_RESTITUTION
@@ -515,6 +646,18 @@ class PropertiesView extends SubwindowView {
     
     for (let key of keys) {
       this.physicsUiMap[key].value = physics[key];
+    }
+  }
+  
+  _enablePhysicsPropertiesDisplay() {
+    for (let key of Object.keys(this.physicsUiMap)) {
+      this.physicsUiMap[key].enable();
+    }
+  }
+  
+  _disablePhysicsPropertiesDisplay() {
+    for (let key of Object.keys(this.physicsUiMap)) {
+      this.physicsUiMap[key].disable();
     }
   }
 }

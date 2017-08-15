@@ -217,6 +217,31 @@ Object.defineProperties(Action, {
       PROPERTY_CHANGE_PERSISTS: 'property-change-persists',
       //
       //  data: {
+      //    entities: <An array of all the entties to have their position's x
+      //               value changed>
+      //    prevValues: <The x value before any changes>
+      //    values: <X value for corresponding entities in the selection>
+      //  }
+      PROPERTY_CHANGE_POSITION_X: 'property-change-position-x',
+      //
+      //  data: {
+      //    entities: <An array of all the entties to have their position's y
+      //               value changed>
+      //    prevValues: <The y value before any changes>
+      //    values: <Y value for corresponding entities in the selection>
+      //  }
+      PROPERTY_CHANGE_POSITION_Y: 'property-change-position-y',
+      //
+      //  data: {
+      //    entities: <An array of all the entties to have their rotation
+      //               changed>
+      //    prevValues: <The rotation before any changes>
+      //    values: <Rotation value for corresponding entities in the 
+      //             selection>
+      //  }
+      PROPERTY_CHANGE_ROTATION: 'property-change-rotation',
+      //
+      //  data: {
       //    entities: <An array of all the entties to have their mass
       //               value changed>
       //    prevValues: <The mass value before any changes>

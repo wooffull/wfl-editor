@@ -231,6 +231,45 @@ class HistoryView extends SubwindowView {
         }
         break;
       
+      case Action.Type.PROPERTY_CHANGE_POSITION_X:
+        var length = action.data.entities.length;
+        
+        if (length === 1) {
+          label = 'Changed Position (X): '
+                + action.data.prevValues[0].toString()
+                + ' -> '
+                + action.data.values[0].toString();
+        } else {
+          label = 'Changed Position (X) for group';
+        }
+        break;
+      
+      case Action.Type.PROPERTY_CHANGE_POSITION_Y:
+        var length = action.data.entities.length;
+        
+        if (length === 1) {
+          label = 'Changed Position (Y): '
+                + action.data.prevValues[0].toString()
+                + ' -> '
+                + action.data.values[0].toString();
+        } else {
+          label = 'Changed Position (Y) for group';
+        }
+        break;
+      
+      case Action.Type.PROPERTY_CHANGE_ROTATION:
+        var length = action.data.entities.length;
+        
+        if (length === 1) {
+          label = 'Changed Rotation: '
+                + action.data.prevValues[0].toString()
+                + ' -> '
+                + action.data.values[0].toString();
+        } else {
+          label = 'Changed Rotation for group';
+        }
+        break;
+      
       case Action.Type.PROPERTY_CHANGE_MASS:
         var length = action.data.entities.length;
         

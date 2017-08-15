@@ -27,8 +27,11 @@ class PlayGameScene extends EditorScene {
     
     if (usesPhysics) {
       gameObject = new PhysicsObject();
-      gameObject.solid = physics.solid || false;
-      gameObject.fixed = physics.fixed || false;
+      gameObject.solid       = physics.solid;
+      gameObject.fixed       = physics.fixed;
+      gameObject.mass        = physics.mass;
+      gameObject.friction    = physics.friction;
+      gameObject.restitution = physics.restitution;
     } else {
       gameObject = new GameObject();
     }

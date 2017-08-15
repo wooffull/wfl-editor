@@ -21,18 +21,15 @@ class ProjectSettingsView extends SubwindowView {
     this.tileSizeXInputText = new InputText(
       "Tile Width",
       WorldEditorScene.DEFAULT_TILE_SIZE.x,
-      3
+      3,
+      DataValidator.keyValidatorForPositiveNumbers
     );
     this.tileSizeYInputText = new InputText(
       "Tile Height",
       WorldEditorScene.DEFAULT_TILE_SIZE.y,
-      3
+      3,
+      DataValidator.keyValidatorForPositiveNumbers
     );
-    
-    this.tileSizeXInputText.keyValidator =
-      DataValidator.keyValidatorForPositiveNumbers;
-    this.tileSizeYInputText.keyValidator =
-      DataValidator.keyValidatorForPositiveNumbers;
     
     this.element.append(this.label);
     

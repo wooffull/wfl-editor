@@ -33,6 +33,18 @@ class PropertiesTool extends Tool {
       (action) => this.subwindowView.onActionPropertyChangeMass(action)
     );
     this.register(
+      Action.Type.PROPERTY_CHANGE_POSITION_X,
+      (action) => this.subwindowView.onActionPropertyChangePositionX(action)
+    );
+    this.register(
+      Action.Type.PROPERTY_CHANGE_POSITION_Y,
+      (action) => this.subwindowView.onActionPropertyChangePositionY(action)
+    );
+    this.register(
+      Action.Type.PROPERTY_CHANGE_ROTATION,
+      (action) => this.subwindowView.onActionPropertyChangeRotation(action)
+    );
+    this.register(
       Action.Type.PROPERTY_CHANGE_FRICTION,
       (action) => this.subwindowView.onActionPropertyChangeFriction(action)
     );
