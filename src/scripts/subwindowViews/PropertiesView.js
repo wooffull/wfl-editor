@@ -20,24 +20,6 @@ class PropertiesView extends SubwindowView {
     this.label = $("<div>").html("Properties");
     this.label.addClass(CssClass.MENU_LABEL);
     
-    this.buttonContainer = $("<span>");
-    this.label.append(this.buttonContainer);
-    
-    this.addPropertyBtn = new MenuButton('add_box');
-    this.addPropertyBtn.element.on('click', (e) => {
-      if (typeof e.which === "undefined" || e.which === 1) {
-        this.addProperty();
-      }
-    });
-    this.buttonContainer.prepend(this.addPropertyBtn.element);
-    
-    this.saveBtn = new MenuButton('save');
-    this.saveBtn.element.on('click', (e) => {
-      if (typeof e.which === "undefined" || e.which === 1) {
-        this.saveProperties();
-      }
-    });
-    
     /**
      * CREATE UI ELEMENTS
      */
@@ -108,9 +90,6 @@ class PropertiesView extends SubwindowView {
     $(this.frictionInputText).on('change',    (e) => this.changeFriction());
     $(this.restitutionInputText).on('change', (e) => this.changeRestitution());
     
-    this.propertiesContainer = $("<div>");
-    this.properties = [];
-    
     this.element.append(this.label);
     this.element.append(this.positionXInputText.element);
     this.element.append(this.positionYInputText.element);
@@ -121,18 +100,13 @@ class PropertiesView extends SubwindowView {
     this.element.append(this.massInputText.element);
     this.element.append(this.frictionInputText.element);
     this.element.append(this.restitutionInputText.element);
-    this.element.append(this.propertiesContainer);
-    this.element.append(this.saveBtn.element);
     
     this.reset();
   }
   
   reset() {
     this.gameObjects = [];
-    this.props       = [];
     this.physics     = [];
-    
-    this.clearProperties();
     
     this.solidCheckbox.value = false;
     this.fixedCheckbox.value = false;
@@ -149,43 +123,6 @@ class PropertiesView extends SubwindowView {
     this.solidCheckbox.uncheck();
     this.fixedCheckbox.uncheck();
     this.persistsCheckbox.uncheck();
-  }
-  
-  clearProperties() {
-    for (let prop of this.properties) {
-      prop.destroy();
-    }
-    
-    this.propertiesContainer.empty();
-    this.properties = []
-  }
-  
-  addProperty(key, value) {
-    if (this.gameObjects.length > 0) {
-      let newInput = new InputTextPair(key, value);
-      this.propertiesContainer.append(newInput.element);
-      this.properties.push(newInput);
-    }
-  }
-  
-  saveProperties() {
-    if (this.gameObjects.length > 0) {
-      // TODO: Fix props so they merge with changes in a selection
-      for (let gameObject of this.gameObjects) {
-        let props = [];
-
-        for (const prop of this.properties) {
-          let key = prop.label.val();
-          let val = prop.data.val();
-          props.push({
-            key: key,
-            val: val
-          });
-        }
-        
-        gameObject.customData.props = props;
-      }
-    }
   }
   
   changeSolid() {
@@ -371,18 +308,8 @@ class PropertiesView extends SubwindowView {
   }
   
   onActionEntitySelect(action) {
-    this.clearProperties();
     this._enablePhysicsPropertiesDisplay();
-    
     this.gameObjects = action.data.gameObjects;
-    let props        = this._consolidateProps(this.gameObjects);
-    
-    for (const prop of props) {
-      let key = prop.key;
-      let val = prop.val;
-      this.addProperty(key, val);
-    }
-    
     this._updatePhysicsPropertiesDisplay();
   }
   
@@ -496,64 +423,6 @@ class PropertiesView extends SubwindowView {
     }
     
     this._updatePhysicsPropertiesDisplay();
-  }
-  
-  _consolidateProps(gameObjects) {
-    let entries = {};
-    let consolidatedProps = [];
-    
-    // Each key in entries will map to an array of values for the selection
-    for (let gameObject of gameObjects) {
-      if (gameObject.customData.props) {
-        for (const prop of gameObject.customData.props) {
-          let key = prop.key;
-          let val = prop.val;
-
-          if (!(key in entries)) {
-            entries[key] = [];
-          }
-
-          entries[key].push(val);
-        }
-      }
-    }
-    
-    let keys = Object.keys(entries);
-    
-    // If the amount of values for a key is equal to the amount of game objects
-    // then this key is shared among all game objects in the selection
-    for (const key of keys) {
-      let values = entries[key];
-      
-      if (values.length === gameObjects.length) {
-        let initialValue       = values[0];
-        let allValuesAreShared = true;
-
-        for (const value of values) {
-          if (value !== initialValue) {
-            allValuesAreShared = false;
-            break;
-          }
-        }
-        
-        // If all values are the same, that value can be displayed
-        if (allValuesAreShared) {
-          consolidatedProps.push({
-            key: key,
-            val: initialValue
-          });
-        
-        // Otherwise, null is used to represent an "indeterminate" value
-        } else {
-          consolidatedProps.push({
-            key: key,
-            val: null
-          });
-        }
-      }
-    }
-    
-    return consolidatedProps;
   }
   
   _consolidatePhysics(gameObjects) {
