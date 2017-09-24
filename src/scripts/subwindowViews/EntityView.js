@@ -11,7 +11,6 @@ const {Action,
        ActionPerformer} = require('../action');
 const {remote}          = require('electron');
 const {dialog}          = remote;
-const fs                = remote.require('fs');
 const path              = remote.require('path');
 
 class EntityView extends SubwindowView {

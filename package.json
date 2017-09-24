@@ -16,7 +16,7 @@
       "wfl",
       "window",
       "document",
-	  "Image"
+      "Image"
     ]
   },
   "repository": {
@@ -30,8 +30,9 @@
   },
   "homepage": "https://github.com/wooffull/wfl-editor#readme",
   "dependencies": {
+    "electron-prebuilt": "^1.4.1",
     "mkdirp": "^0.5.1",
-    "electron-prebuilt": "^1.4.1"
+    "watch": "^1.0.2"
   },
   "devDependencies": {
     "jshint": "^2.9.2"

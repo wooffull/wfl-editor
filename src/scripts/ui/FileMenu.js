@@ -43,8 +43,10 @@ class FileMenu extends Menu {
   update() {
     if (typeof this.rootPath !== 'undefined') {
       this.rootFileItem.setTitle(path.basename(this.rootPath));
-      this.rootFileItem.setFilepath(this.rootPath);
+      return this.rootFileItem.setFilepath(this.rootPath);
     }
+    
+    return Promise.resolve();
   }
   
   _addElement(htmlElement, position) {

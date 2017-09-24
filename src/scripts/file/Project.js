@@ -140,7 +140,7 @@ function saveProject(next) {
       
       if (next) next();
     });
-  })
+  });
 }
 
 

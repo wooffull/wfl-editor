@@ -82,8 +82,10 @@ class FileMenuItem extends HtmlElement {
     this.filepath = filepath;
     
     if (_allowUpdate) {
-      this.update();
+      return this.update();
     }
+    
+    return Promise.resolve();
   }
   
   addFile(filepath, _allowUpdate = true) {
@@ -95,9 +97,11 @@ class FileMenuItem extends HtmlElement {
       this.folderUl.append(fileItem.element);
       
       if (_allowUpdate) {
-        this.update();
+        return this.update();
       }
     }
+    
+    return Promise.resolve();
   }
   
   expand(_allowUpdate = true) {
@@ -107,9 +111,11 @@ class FileMenuItem extends HtmlElement {
       this.folderWrapper.show();
       
       if (_allowUpdate) {
-        this.update();
+        return this.update();
       }
     }
+    
+    return Promise.resolve();
   }
   
   collapse() {
@@ -123,41 +129,48 @@ class FileMenuItem extends HtmlElement {
   update() {
     if (this.isFolder && this.expanded) {
       if (typeof this.filepath === 'undefined') {
-        return;
+        return Promise.resolve();
       }
       
-      fs.readdir(this.filepath, (err, filepaths) => {
-        if (err) {
-          throw err;
-        }
-        
-        let missingFiles = this.files.concat();
-        
-        // Update contained files and add new files
-        for (const filepath of filepaths) {
-          let fullPath      = path.join(this.filepath, filepath);
-          let containedFile = this._contains(fullPath);
-          
-          if (containedFile) {
-            let index = missingFiles.indexOf(containedFile);
-            missingFiles.splice(index, 1);
-            
-            if (containedFile.isFolder && containedFile.expanded) {
-              containedFile.update();
-            }
-          } else {
-            this.addFile(fullPath, false);
+      return new Promise((resolve, reject) => {
+        fs.readdir(this.filepath, (err, filepaths) => {
+          if (err) {
+            reject(err);
           }
-        }
-        
-        // Remove missing files
-        for (const file of missingFiles) {
-          let index = this.files.indexOf(file);
-          file.destroy();
-          this.files.splice(index, 1);
-        }
+
+          let missingFiles = this.files.concat();
+          let updateFilePromises = [];
+
+          // Update contained files and add new files
+          for (const filepath of filepaths) {
+            let fullPath      = path.join(this.filepath, filepath);
+            let containedFile = this._contains(fullPath);
+
+            if (containedFile) {
+              let index = missingFiles.indexOf(containedFile);
+              missingFiles.splice(index, 1);
+
+              if (containedFile.isFolder && containedFile.expanded) {
+                updateFilePromises.push(containedFile.update());
+              }
+            } else {
+              this.addFile(fullPath, false);
+            }
+          }
+
+          // Remove missing files
+          for (const file of missingFiles) {
+            let index = this.files.indexOf(file);
+            file.destroy();
+            this.files.splice(index, 1);
+          }
+          
+          return Promise.all(updateFilePromises);
+        });
       });
     }
+    
+    return Promise.resolve();
   }
   
   _contains(filepath) {
