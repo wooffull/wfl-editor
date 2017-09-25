@@ -10,7 +10,8 @@ class FileMenuItem extends HtmlElement {
   constructor(filepath) {
     super();
     
-    this.isFolder      = (typeof filepath === 'undefined') || path.extname(filepath) === '';
+    this.isFolder      = (typeof filepath === 'undefined') || 
+                         path.extname(filepath) === '';
     this.filepath      = filepath;
     this.files         = undefined;
     this.expanded      = undefined;

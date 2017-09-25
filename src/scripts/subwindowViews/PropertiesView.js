@@ -7,9 +7,9 @@ const CssClass          = require('../CssClasses');
 const {DataValidator}   = require('../util');
 const {CheckBox,
        InputText,
-       InputTextPair,
-       MenuItem,
-       MenuButton}      = require('../ui');
+       BehaviorMenu,
+       BehaviorMenuItem,
+       Button}          = require('../ui');
 const {Action,
        ActionPerformer} = require('../action');
 
@@ -90,6 +90,13 @@ class PropertiesView extends SubwindowView {
     $(this.frictionInputText).on('change',    (e) => this.changeFriction());
     $(this.restitutionInputText).on('change', (e) => this.changeRestitution());
     
+    // Set up UI for Behaviors
+    this.behaviorsLabel = $("<div>").html("Behaviors");
+    this.behaviorsLabel.addClass(CssClass.MENU_LABEL);
+    
+    this.addBehaviorBtn = new Button("Add New Behavior");
+    this.behaviorMenu   = new BehaviorMenu('');
+    
     this.element.append(this.label);
     this.element.append(this.positionXInputText.element);
     this.element.append(this.positionYInputText.element);
@@ -100,6 +107,10 @@ class PropertiesView extends SubwindowView {
     this.element.append(this.massInputText.element);
     this.element.append(this.frictionInputText.element);
     this.element.append(this.restitutionInputText.element);
+    this.element.append($("<br>"));
+    this.element.append(this.behaviorsLabel);
+    this.element.append(this.addBehaviorBtn.element);
+    this.element.append(this.behaviorMenu.element);
     
     this.reset();
   }
@@ -123,6 +134,8 @@ class PropertiesView extends SubwindowView {
     this.solidCheckbox.uncheck();
     this.fixedCheckbox.uncheck();
     this.persistsCheckbox.uncheck();
+    
+    this.addBehaviorBtn.disable();
   }
   
   changeSolid() {
@@ -311,6 +324,8 @@ class PropertiesView extends SubwindowView {
     this._enablePhysicsPropertiesDisplay();
     this.gameObjects = action.data.gameObjects;
     this._updatePhysicsPropertiesDisplay();
+    
+    this.addBehaviorBtn.enable();
   }
   
   onActionEntityDeselect(action) {

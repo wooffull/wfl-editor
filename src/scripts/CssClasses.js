@@ -34,6 +34,15 @@ module.exports = {
   EXPANDABLE_MENU_MAIN_INTERIOR: 'expandable-menu-main-interior',
   EXPANDABLE_MENU_COLLAPSE_BUTTON: 'expandable-menu-collapse-button',
   
+  /* Classes for BehaviorMenuItems */
+  BEHAVIOR_MENU_ITEM: 'behavior-menu-item',
+  BEHAVIOR_MENU_ITEM_TOP: 'behavior-menu-item-top',
+  BEHAVIOR_MENU_ITEM_LABEL: 'behavior-menu-item-label',
+  BEHAVIOR_MENU_ITEM_CONTENTS: 'behavior-menu-item-contents',
+  BEHAVIOR_MENU_ITEM_PROPERTY: 'behavior-menu-item-property',
+  BEHAVIOR_MENU_ITEM_PROPERTY_CONTAINER:
+    'behavior-menu-item-property-container',
+  
   /* Classes for InputText */
   INPUT_TEXT: 'input-text',
   INPUT_TEXT_LABEL: 'input-text-label',

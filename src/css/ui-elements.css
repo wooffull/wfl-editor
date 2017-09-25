@@ -33,6 +33,7 @@
   overflow-y: auto;
   clear: both;
   display: block;
+  margin-top: 5px;
   
   transition: max-height 0.4s,
               min-height 0.4s;
@@ -144,6 +145,70 @@
 
 .expandable-menu-collapse-button:hover > i {
   color: #fff;
+}
+
+/**
+ * Behavior Menu Item
+ */
+.behavior-menu-item {
+  margin: 2px;
+  font-size: 12px;
+  border: 1px solid #000;
+  border-radius: 1px;
+}
+
+.behavior-menu-item:not(:first-of-type) {
+  margin-top: 5px;
+}
+
+.behavior-menu-item-top {
+  background-color: #000;
+  color: #ccc;
+}
+
+.behavior-menu-item-top > .menu-button {
+  height: 16px;
+}
+
+.behavior-menu-item-top > .menu-button > i {
+  font-size: 16px;
+}
+
+.behavior-menu-item-label {
+  padding-left: 3px;
+}
+
+.behavior-menu-item-contents {
+  background-color: #ccc;
+  color: #000;
+}
+
+.behavior-menu-item > .behavior-menu-item-contents {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  max-height: 500px;
+  height: 100%;
+  clear: both;
+  display: block;
+  
+  transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+}
+
+.behavior-menu-item.collapsed > .behavior-menu-item-contents {
+  max-height: 0px;
+}
+
+.behavior-menu-item-property {
+  padding-left: 3px;
+}
+
+.behavior-menu-item-property > .input-text-label,
+.behavior-menu-item-property > .input-text-data {
+  font-size: 12px;
+  color: #000;
+}
+
+.behavior-menu-item-property-container {
 }
 
 /**
