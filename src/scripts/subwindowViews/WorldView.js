@@ -106,6 +106,7 @@ class WorldView extends SubwindowView {
       if (newGameObjects.length > 0) {
         this.playGameScene.player = newGameObjects[newGameObjects.length - 1];
         this.playGameScene.camera.follow(this.playGameScene.player);
+        this.playGameScene.player.name = 'player';
         
         // Only allow movement for physics objects
         /*if (this.playGameScene.player.velocity) {

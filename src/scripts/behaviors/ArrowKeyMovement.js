@@ -16,7 +16,7 @@ class ArrowKeyMovement extends Behavior {
     this._walkDirectionStack = [];
   }
   
-  start() {
+  begin() {
     // TODO: Add max speed input fields
     // TODO: Make default max speed higher
     this.gameObject.maxSpeed = MOVE_SPEED;

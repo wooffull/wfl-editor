@@ -12,6 +12,9 @@ class PlayGameScene extends EditorScene {
     this.canvas   = canvas;
     this.mouse    = mouse;
     this.keyboard = keyboard;
+    
+    // TODO: Allow for configurable scene names
+    this.register('wfl');
   }
   
   createFinalizedGameObject(original) {
