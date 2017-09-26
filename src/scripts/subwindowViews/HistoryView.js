@@ -192,8 +192,21 @@ class HistoryView extends SubwindowView {
         label = action.data.msg;
         break;
         
+      case Action.Type.PROPERTY_CHANGE_NAME:
+        var length = action.data.gameObjects.length;
+        
+        if (length === 1) {
+          label = 'Change Name Property: '
+                + action.data.prevValues[0].toString()
+                + ' -> '
+                + action.data.values[0].toString();
+        } else {
+          label = 'Change Name Property for group';
+        }
+        break;
+        
       case Action.Type.PROPERTY_CHANGE_SOLID:
-        var length = action.data.entities.length;
+        var length = action.data.gameObjects.length;
         
         if (length === 1) {
           label = 'Change Solid Property: '
@@ -206,7 +219,7 @@ class HistoryView extends SubwindowView {
         break;
       
       case Action.Type.PROPERTY_CHANGE_FIXED:
-        var length = action.data.entities.length;
+        var length = action.data.gameObjects.length;
         
         if (length === 1) {
           label = 'Change Fixed Property: '
@@ -219,7 +232,7 @@ class HistoryView extends SubwindowView {
         break;
       
       case Action.Type.PROPERTY_CHANGE_PERSISTS:
-        var length = action.data.entities.length;
+        var length = action.data.gameObjects.length;
         
         if (length === 1) {
           label = 'Change Persistence Property: '
@@ -231,47 +244,8 @@ class HistoryView extends SubwindowView {
         }
         break;
       
-      case Action.Type.PROPERTY_CHANGE_POSITION_X:
-        var length = action.data.entities.length;
-        
-        if (length === 1) {
-          label = 'Change Position (X): '
-                + action.data.prevValues[0].toString()
-                + ' -> '
-                + action.data.values[0].toString();
-        } else {
-          label = 'Change Position (X) for group';
-        }
-        break;
-      
-      case Action.Type.PROPERTY_CHANGE_POSITION_Y:
-        var length = action.data.entities.length;
-        
-        if (length === 1) {
-          label = 'Change Position (Y): '
-                + action.data.prevValues[0].toString()
-                + ' -> '
-                + action.data.values[0].toString();
-        } else {
-          label = 'Change Position (Y) for group';
-        }
-        break;
-      
-      case Action.Type.PROPERTY_CHANGE_ROTATION:
-        var length = action.data.entities.length;
-        
-        if (length === 1) {
-          label = 'Change Rotation: '
-                + action.data.prevValues[0].toString()
-                + ' -> '
-                + action.data.values[0].toString();
-        } else {
-          label = 'Change Rotation for group';
-        }
-        break;
-      
       case Action.Type.PROPERTY_CHANGE_MASS:
-        var length = action.data.entities.length;
+        var length = action.data.gameObjects.length;
         
         if (length === 1) {
           label = 'Change Mass Property: '
@@ -284,7 +258,7 @@ class HistoryView extends SubwindowView {
         break;
       
       case Action.Type.PROPERTY_CHANGE_FRICTION:
-        var length = action.data.entities.length;
+        var length = action.data.gameObjects.length;
         
         if (length === 1) {
           label = 'Change Friction Property: '
@@ -297,7 +271,7 @@ class HistoryView extends SubwindowView {
         break;
       
       case Action.Type.PROPERTY_CHANGE_RESTITUTION:
-        var length = action.data.entities.length;
+        var length = action.data.gameObjects.length;
         
         if (length === 1) {
           label = 'Change Restitution Property: '

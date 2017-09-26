@@ -148,12 +148,13 @@ class WorldTool extends Tool {
       // If no game object data, exit early
       if (gameObjects) {
         for (const obj of gameObjects) {
-          let {entity, x, y, rotation, layer, physics, behaviors} = obj;
+          let {entity, x, y, rotation, layer, physics, behaviors, name} = obj;
           let addedObj = scene.addEntity(entity, layer, false);
-          addedObj.position.x = x;
-          addedObj.position.y = y;
-          addedObj.rotate(rotation);
+          addedObj.name               = name;
+          addedObj.position.x         = x;
+          addedObj.position.y         = y;
           addedObj.customData.physics = physics;
+          addedObj.rotate(rotation);
 
           if (behaviors) {
             addedObj.customData.behaviors = behaviors;
@@ -188,6 +189,7 @@ class WorldTool extends Tool {
       let objData = {
         layer:     obj.layer,
         entity:    obj.customData.entity,
+        name:      obj.name,
         x:         obj.position.x,
         y:         obj.position.y,
         rotation:  obj.rotation,

@@ -17,6 +17,22 @@ class PropertiesTool extends Tool {
       (action) => this.subwindowView.onActionEntityDeselect(action)
     );
     this.register(
+      Action.Type.WORLD_SELECTION_MOVE,
+      (action) => this.subwindowView.onActionWorldSelectionMove(action)
+    );
+    this.register(
+      Action.Type.WORLD_SELECTION_ALIGN,
+      (action) => this.subwindowView.onActionWorldSelectionAlign(action)
+    );
+    this.register(
+      Action.Type.WORLD_SELECTION_ROTATE,
+      (action) => this.subwindowView.onActionWorldSelectionRotate(action)
+    );
+    this.register(
+      Action.Type.PROPERTY_CHANGE_NAME,
+      (action) => this.subwindowView.onActionPropertyChangeName(action)
+    );
+    this.register(
       Action.Type.PROPERTY_CHANGE_SOLID,
       (action) => this.subwindowView.onActionPropertyChangeSolid(action)
     );
@@ -31,18 +47,6 @@ class PropertiesTool extends Tool {
     this.register(
       Action.Type.PROPERTY_CHANGE_MASS,
       (action) => this.subwindowView.onActionPropertyChangeMass(action)
-    );
-    this.register(
-      Action.Type.PROPERTY_CHANGE_POSITION_X,
-      (action) => this.subwindowView.onActionPropertyChangePositionX(action)
-    );
-    this.register(
-      Action.Type.PROPERTY_CHANGE_POSITION_Y,
-      (action) => this.subwindowView.onActionPropertyChangePositionY(action)
-    );
-    this.register(
-      Action.Type.PROPERTY_CHANGE_ROTATION,
-      (action) => this.subwindowView.onActionPropertyChangeRotation(action)
     );
     this.register(
       Action.Type.PROPERTY_CHANGE_FRICTION,

@@ -96,7 +96,7 @@ class RotateTool extends WorldTool {
       let leftMouseState = mouse.getState(1);
       
       if (leftMouseState.dragging) {
-        let dragY  = leftMouseState.dragEnd.y - leftMouseState.prevPos.y;
+        let dragY  = -(leftMouseState.dragEnd.y - leftMouseState.prevPos.y);
         let dTheta = dragY % (4 * PhysicsObject.TOTAL_DISPLAY_ANGLES);
         
         // Snap dTheta to nearest display angle

@@ -196,76 +196,60 @@ Object.defineProperties(Action, {
       // PropertiesTool
       //
       //  data: {
-      //    entities: <An array of all the entties to have their solid
-      //               attribute changed>
+      //    gameObjects: <An array of all the gameObjects to have their name
+      //                  attribute changed>
+      //    prevValues: <The name value before any changes>
+      //    values: <The new name value for all gameObjects>
+      //  }
+      PROPERTY_CHANGE_NAME: 'property-change-name',
+      //
+      //  data: {
+      //    gameObjects: <An array of all the gameObjects to have their solid
+      //                  attribute changed>
       //    prevValues: <The solid value before any changes>
-      //    values: <Whether or not the entities are solid>
+      //    values: <Whether or not the gameObjects are solid>
       //  }
       PROPERTY_CHANGE_SOLID: 'property-change-solid',
       //
       //  data: {
-      //    entities: <An array of all the entties to have their fixed
-      //               attribute changed>
+      //    gameObjects: <An array of all the gameObjects to have their fixed
+      //                  attribute changed>
       //    prevValues: <The fixed value before any changes>
-      //    values: <Whether or not the entities are fixed in space>
+      //    values: <Whether or not the gameObjects are fixed in space>
       //  }
       PROPERTY_CHANGE_FIXED: 'property-change-fixed',
       //
       //  data: {
-      //    entities: <An array of all the entties to have their persists
-      //               attribute changed>
+      //    gameObjects: <An array of all the gameObjects to have their 
+      //               persists attribute changed>
       //    prevValues: <The persists value before any changes>
-      //    values: <Whether or not the entities persist>
+      //    values: <Whether or not the gameObjects persist>
       //  }
       PROPERTY_CHANGE_PERSISTS: 'property-change-persists',
       //
       //  data: {
-      //    entities: <An array of all the entties to have their position's x
-      //               value changed>
-      //    prevValues: <The x value before any changes>
-      //    values: <X value for corresponding entities in the selection>
-      //  }
-      PROPERTY_CHANGE_POSITION_X: 'property-change-position-x',
-      //
-      //  data: {
-      //    entities: <An array of all the entties to have their position's y
-      //               value changed>
-      //    prevValues: <The y value before any changes>
-      //    values: <Y value for corresponding entities in the selection>
-      //  }
-      PROPERTY_CHANGE_POSITION_Y: 'property-change-position-y',
-      //
-      //  data: {
-      //    entities: <An array of all the entties to have their rotation
-      //               changed>
-      //    prevValues: <The rotation before any changes>
-      //    values: <Rotation value for corresponding entities in the 
-      //             selection>
-      //  }
-      PROPERTY_CHANGE_ROTATION: 'property-change-rotation',
-      //
-      //  data: {
-      //    entities: <An array of all the entties to have their mass
-      //               value changed>
+      //    gameObjects: <An array of all the gameObjects to have their mass
+      //                  value changed>
       //    prevValues: <The mass value before any changes>
-      //    values: <Mass value for corresponding entities in the selection>
+      //    values: <Mass value for corresponding gameObjects in the 
+      //             selection>
       //  }
       PROPERTY_CHANGE_MASS: 'property-change-mass',
       //
       //  data: {
-      //    entities: <An array of all the entties to have their friction
-      //               value changed>
+      //    gameObjects: <An array of all the gameObjects to have their 
+      //                  friction value changed>
       //    prevValues: <The friction value before any changes>
-      //    values: <Friction value for corresponding entities in the 
+      //    values: <Friction value for corresponding gameObjects in the 
       //             selection>
       //  }
       PROPERTY_CHANGE_FRICTION: 'property-change-friction',
       //
       //  data: {
-      //    entities: <An array of all the entties to have their restitution
-      //               value changed>
+      //    gameObjects: <An array of all the gameObjects to have their 
+      //                  restitution value changed>
       //    prevValues: <The restitution value before any changes>
-      //    values: <Restitution value for corresponding entities in the 
+      //    values: <Restitution value for corresponding gameObjects in the 
       //             selection>
       //  }
       PROPERTY_CHANGE_RESTITUTION: 'property-change-restitution',

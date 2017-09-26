@@ -10,6 +10,8 @@ const CssClasses        = require('../CssClasses');
 const behaviors         = require('../behaviors');
 const scenes            = require('../scenes');
 
+const MIN_ROTATION_RADIAN_EPSILON = 0.0005 / (Math.PI * 2);
+
 class WorldView extends SubwindowView {
   constructor() {
     super();
@@ -281,32 +283,64 @@ class WorldView extends SubwindowView {
   }
   
   onActionWorldSelectionRotate(action) {
+    let scene                     = this.worldEditorScene;
+    let rotationPerformed         = false;
+    let {dThetaList, gameObjects} = action.data;
+    
+    // If dThetaList contains unique values, this is a rotation snap
     if (action.data.unique) {
-      let {dThetaList, gameObjects} = action.data;
-      let scene                     = this.worldEditorScene;
-
-      // dThetas are negated if necessary by the ActionPerformer, so
-      // use addition
       for (let i = 0; i < gameObjects.length; i++) {
         gameObjects[i].rotate(dThetaList[i]);
       }
-
-      scene.selector.update();
-      
+      rotationPerformed = true;
+    
+    // Otherwise, a rotation Action is only sent at the end of rotation a
+    // selection so that live updates on rotation is possible. That's why
+    // normal rotations are only handled for undos and redos.
     } else if (action.direction !== Action.Direction.DEFAULT) {
       // If not unique, then there's only one value at dThetaList[0] for all
       // object rotations
-      let {dThetaList, gameObjects} = action.data;
-      let dTheta                    = dThetaList[0];
-      let scene                     = this.worldEditorScene;
-
-      // dThetas are negated if necessary by the ActionPerformer, so
-      // use addition
+      let dTheta = dThetaList[0];
       for (let i = 0; i < gameObjects.length; i++) {
         gameObjects[i].rotate(dTheta);
       }
+      rotationPerformed = true;
+    }
+    
+    if (rotationPerformed) {
+      this._snapRotations(gameObjects);
+    }
+    
+    scene.selector.update();
+  }
+  
+  _snapRotations(gameObjects) {
+    // Check for floating point errors to see if all rotations are within
+    // a specified epsilon of degrees away from each other. If so, they should
+    // have their rotation (degrees) rounded to the nearest 1000th place.
+    if (gameObjects.length > 0) {
+      let startRotation      = gameObjects[0].rotation;
+      let approximatelyEqual = true;
 
-      scene.selector.update();
+      for (let i = 0; i < gameObjects.length; i++) {
+        let difference = Math.abs(gameObjects[i].rotation - startRotation);
+        if (difference > MIN_ROTATION_RADIAN_EPSILON) {
+          approximatelyEqual = false;
+          break;
+        }
+      }
+
+      if (approximatelyEqual) {
+        let snappedRotationDegrees =
+            Math.round(1000 * startRotation * 180 / Math.PI) / 1000;
+        let snappedRotationRadians = snappedRotationDegrees * Math.PI / 180;
+        for (let i = 0; i < gameObjects.length; i++) {
+          gameObjects[i].rotate(
+            snappedRotationRadians - gameObjects[i].rotation
+          );
+          gameObjects[i].cacheCalculations();
+        }
+      }
     }
   }
   

@@ -30,6 +30,11 @@ class PropertiesView extends SubwindowView {
     this.persistsCheckbox   = new CheckBox('Persists');
     
     // -------------------- INPUT TEXT --------------------
+    this.nameInputText = new InputText(
+      "Name",
+      0,
+      3
+    );
     this.positionXInputText = new InputText(
       "Position (X)",
       0,
@@ -67,26 +72,30 @@ class PropertiesView extends SubwindowView {
       DataValidator.keyValidatorForNumbers
     );
     
-    // A map from physics property key to UI element.
+    // Maps from property keys to UI element.
     // Used to quickly iterate over UI elements and assign values
+    this.propertiesUiMap = {
+      name:     this.nameInputText,
+      x:        this.positionXInputText,
+      y:        this.positionYInputText,
+      rotation: this.rotationInputText
+    };
     this.physicsUiMap = {
       solid:       this.solidCheckbox,
       fixed:       this.fixedCheckbox,
       persists:    this.persistsCheckbox,
-      x:           this.positionXInputText,
-      y:           this.positionYInputText,
-      rotation:    this.rotationInputText,
       mass:        this.massInputText,
       friction:    this.frictionInputText,
       restitution: this.restitutionInputText
     };
     
+    $(this.nameInputText).on('change',        (e) => this.changeName());
+    $(this.positionXInputText).on('change',   (e) => this.changePosition());
+    $(this.positionYInputText).on('change',   (e) => this.changePosition());
+    $(this.rotationInputText).on('change',    (e) => this.changeRotation());
     $(this.solidCheckbox).on('change',        (e) => this.changeSolid());
     $(this.fixedCheckbox).on('change',        (e) => this.changeFixed());
     $(this.persistsCheckbox).on('change',     (e) => this.changePersists());
-    $(this.positionXInputText).on('change',   (e) => this.changePositionX());
-    $(this.positionYInputText).on('change',   (e) => this.changePositionY());
-    $(this.rotationInputText).on('change',    (e) => this.changeRotation());
     $(this.massInputText).on('change',        (e) => this.changeMass());
     $(this.frictionInputText).on('change',    (e) => this.changeFriction());
     $(this.restitutionInputText).on('change', (e) => this.changeRestitution());
@@ -101,6 +110,7 @@ class PropertiesView extends SubwindowView {
     this.behaviorMenu = new Menu('');
     
     this.element.append(this.label);
+    this.element.append(this.nameInputText.element);
     this.element.append(this.positionXInputText.element);
     this.element.append(this.positionYInputText.element);
     this.element.append(this.rotationInputText.element);
@@ -122,106 +132,92 @@ class PropertiesView extends SubwindowView {
     this.gameObjects = [];
     this.physics     = [];
     
-    this.solidCheckbox.value = false;
-    this.fixedCheckbox.value = false;
-    this.persistsCheckbox.value = false;
-    this.positionXInputText.value = '';
-    this.positionYInputText.value = '';
-    this.rotationInputText.value = '';
-    this.massInputText.value = '';
-    this.frictionInputText.value = '';
-    this.restitutionInputText.value = '';
-    
-    this._disablePhysicsPropertiesDisplay();
-    this._disableBehaviorsDisplay();
-    
     this.solidCheckbox.uncheck();
     this.fixedCheckbox.uncheck();
     this.persistsCheckbox.uncheck();
     
+    this._disablePropertiesDisplay();
+    this._disablePhysicsPropertiesDisplay();
+    this._disableBehaviorsDisplay();
+    
+    this._updatePropertiesDisplay();
+    this._updatePhysicsPropertiesDisplay();
     this._updateBehaviorsDisplay();
+    
+    this.nameInputText.value        = '';
+    this.positionXInputText.value   = '';
+    this.positionYInputText.value   = '';
+    this.rotationInputText.value    = '';
+    this.solidCheckbox.value        = false;
+    this.fixedCheckbox.value        = false;
+    this.persistsCheckbox.value     = false;
+    this.massInputText.value        = '';
+    this.frictionInputText.value    = '';
+    this.restitutionInputText.value = '';
   }
   
-  changeSolid() {
+  changeName() {
+    let value = this.nameInputText.value;
+    
+    // If the value is equivalent to its previous value, don't perform an
+    // action for its change
+    if (value === this.nameInputText._prevValue) {
+      return;
+    }
+    
     let data = {
-      entities: this.gameObjects,
-      prevValues: this.gameObjects.map((x) => x.customData.physics.solid),
-      values: this.gameObjects.map((x) => this.solidCheckbox.value)
+      gameObjects: this.gameObjects,
+      prevValues:  this.gameObjects.map((x) => x.name),
+      values:      this.gameObjects.map((x) => value)
     };
     ActionPerformer.do(
-      Action.Type.PROPERTY_CHANGE_SOLID,
+      Action.Type.PROPERTY_CHANGE_NAME,
       data
     );
   }
   
-  changeFixed() {
-    let data = {
-      entities: this.gameObjects,
-      prevValues: this.gameObjects.map((x) => x.customData.physics.fixed),
-      values: this.gameObjects.map((x) => this.fixedCheckbox.value)
-    };
-    ActionPerformer.do(
-      Action.Type.PROPERTY_CHANGE_FIXED,
-      data
-    );
-  }
-  
-  changePersists() {
-    let data = {
-      entities: this.gameObjects,
-      prevValues: this.gameObjects.map((x) => x.customData.physics.persists),
-      values: this.gameObjects.map((x) => this.persistsCheckbox.value)
-    };
-    ActionPerformer.do(
-      Action.Type.PROPERTY_CHANGE_PERSISTS,
-      data
-    );
-  }
-  
-  changePositionX() {
-    let value = DataValidator.stringToNumberOrDefault(
+  changePosition() {
+    let prevValueX = parseFloat(this.positionXInputText._prevValue);
+    let prevValueY = parseFloat(this.positionYInputText._prevValue);
+    let valueX = DataValidator.stringToNumberOrDefault(
       this.positionXInputText.value,
-      this.positionXInputText._prevValue
+      prevValueX
     );
-    
-    // If the validated value is equivalent to its previous value, don't
-    // perform an action for its change
-    if (value === parseFloat(this.positionXInputText._prevValue)) {
-      this.positionXInputText.value = value;
-      return;
-    }
-    
-    let data = {
-      entities: this.gameObjects,
-      prevValues: this.gameObjects.map((x) => x.customData.physics.x),
-      values: this.gameObjects.map((x) => value)
-    };
-    ActionPerformer.do(
-      Action.Type.PROPERTY_CHANGE_POSITION_X,
-      data
-    );
-  }
-  
-  changePositionY() {
-    let value = DataValidator.stringToNumberOrDefault(
+    let valueY = DataValidator.stringToNumberOrDefault(
       this.positionYInputText.value,
-      this.positionYInputText._prevValue
+      prevValueY
     );
     
     // If the validated value is equivalent to its previous value, don't
     // perform an action for its change
-    if (value === parseFloat(this.positionYInputText._prevValue)) {
-      this.positionYInputText.value = value;
+    if (valueX === prevValueX) {
+      this.positionXInputText.value = valueX;
+    }
+    
+    // If the validated value is equivalent to its previous value, don't
+    // perform an action for its change
+    if (valueY === prevValueY) {
+      this.positionYInputText.value = valueY;
+    }
+    
+    let xChanged = !isNaN(valueX) && prevValueX !== valueX;
+    let yChanged = !isNaN(valueY) && prevValueY !== valueY;
+    
+    if (!xChanged && !yChanged) {
       return;
     }
     
     let data = {
-      entities: this.gameObjects,
-      prevValues: this.gameObjects.map((x) => x.customData.physics.y),
-      values: this.gameObjects.map((x) => value)
+      gameObjects: this.gameObjects,
+      dxList:      this.gameObjects.map(
+        (obj) => xChanged ? valueX - obj.x : 0
+      ),
+      dyList:      this.gameObjects.map(
+        (obj) => yChanged ? valueY - obj.y : 0
+      )
     };
     ActionPerformer.do(
-      Action.Type.PROPERTY_CHANGE_POSITION_Y,
+      Action.Type.WORLD_SELECTION_ALIGN,
       data
     );
   }
@@ -239,13 +235,51 @@ class PropertiesView extends SubwindowView {
       return;
     }
     
+    let radians = (value * Math.PI / 180) % (Math.PI * 2);
+    
     let data = {
-      entities: this.gameObjects,
-      prevValues: this.gameObjects.map((x) => x.customData.physics.rotation),
-      values: this.gameObjects.map((x) => value)
+      gameObjects: this.gameObjects,
+      dThetaList:  this.gameObjects.map((obj) => radians - obj.rotation),
+      unique:      true
     };
     ActionPerformer.do(
-      Action.Type.PROPERTY_CHANGE_ROTATION,
+      Action.Type.WORLD_SELECTION_ROTATE,
+      data
+    );
+  }
+  
+  changeSolid() {
+    let data = {
+      gameObjects: this.gameObjects,
+      prevValues: this.gameObjects.map((x) => x.customData.physics.solid),
+      values: this.gameObjects.map((x) => this.solidCheckbox.value)
+    };
+    ActionPerformer.do(
+      Action.Type.PROPERTY_CHANGE_SOLID,
+      data
+    );
+  }
+  
+  changeFixed() {
+    let data = {
+      gameObjects: this.gameObjects,
+      prevValues: this.gameObjects.map((x) => x.customData.physics.fixed),
+      values: this.gameObjects.map((x) => this.fixedCheckbox.value)
+    };
+    ActionPerformer.do(
+      Action.Type.PROPERTY_CHANGE_FIXED,
+      data
+    );
+  }
+  
+  changePersists() {
+    let data = {
+      gameObjects: this.gameObjects,
+      prevValues: this.gameObjects.map((x) => x.customData.physics.persists),
+      values: this.gameObjects.map((x) => this.persistsCheckbox.value)
+    };
+    ActionPerformer.do(
+      Action.Type.PROPERTY_CHANGE_PERSISTS,
       data
     );
   }
@@ -264,7 +298,7 @@ class PropertiesView extends SubwindowView {
     }
     
     let data = {
-      entities: this.gameObjects,
+      gameObjects: this.gameObjects,
       prevValues: this.gameObjects.map((x) => x.customData.physics.mass),
       values: this.gameObjects.map((x) => value)
     };
@@ -288,7 +322,7 @@ class PropertiesView extends SubwindowView {
     }
     
     let data = {
-      entities: this.gameObjects,
+      gameObjects: this.gameObjects,
       prevValues: this.gameObjects.map((x) => x.customData.physics.friction),
       values: this.gameObjects.map((x) => value)
     };
@@ -312,7 +346,7 @@ class PropertiesView extends SubwindowView {
     }
     
     let data = {
-      entities: this.gameObjects,
+      gameObjects: this.gameObjects,
       prevValues: this.gameObjects.map(
                     (x) => x.customData.physics.restitution
                   ),
@@ -326,119 +360,110 @@ class PropertiesView extends SubwindowView {
   
   onActionEntitySelect(action) {
     this.gameObjects = action.data.gameObjects;
-    this._enableBehaviorsDisplay();
+    
+    this._enablePropertiesDisplay();
     this._enablePhysicsPropertiesDisplay();
-    this._updateBehaviorsDisplay();
+    this._enableBehaviorsDisplay();
+    
+    this._updatePropertiesDisplay();
     this._updatePhysicsPropertiesDisplay();
+    this._updateBehaviorsDisplay();
   }
   
   onActionEntityDeselect(action) {
     this.reset();
   }
   
-  onActionPropertyChangeSolid(action) {
-    let {values, entities} = action.data;
+  onActionWorldSelectionMove(action) {
+    this._updatePropertiesDisplay();
+  }
+  onActionWorldSelectionAlign(action) {
+    this._updatePropertiesDisplay();
+  }
+  
+  onActionWorldSelectionRotate(action) {
+    this._updatePropertiesDisplay();
+  }
+  
+  onActionPropertyChangeName(action) {
+    let {values, gameObjects} = action.data;
     
-    for (let i = 0; i < entities.length; i++) {
-      let entity = entities[i];
-      this._validatePhysicsProperties(entity);
-      entity.customData.physics.solid = values[i];
+    for (let i = 0; i < gameObjects.length; i++) {
+      let gameObject = gameObjects[i];
+      this._validateProperties(gameObject);
+      gameObject.name = values[i];
+    }
+    
+    this._updatePropertiesDisplay();
+  }
+  
+  onActionPropertyChangeSolid(action) {
+    let {values, gameObjects} = action.data;
+    
+    for (let i = 0; i < gameObjects.length; i++) {
+      let gameObject = gameObjects[i];
+      this._validatePhysicsProperties(gameObject);
+      gameObject.customData.physics.solid = values[i];
     }
     
     this._updatePhysicsPropertiesDisplay();
   }
   
   onActionPropertyChangeFixed(action) {
-    let {values, entities} = action.data;
+    let {values, gameObjects} = action.data;
     
-    for (let i = 0; i < entities.length; i++) {
-      let entity = entities[i];
-      this._validatePhysicsProperties(entity);
-      entity.customData.physics.fixed = values[i];
+    for (let i = 0; i < gameObjects.length; i++) {
+      let gameObject = gameObjects[i];
+      this._validatePhysicsProperties(gameObject);
+      gameObject.customData.physics.fixed = values[i];
     }
     
     this._updatePhysicsPropertiesDisplay();
   }
   
   onActionPropertyChangePersists(action) {
-    let {values, entities} = action.data;
+    let {values, gameObjects} = action.data;
     
-    for (let i = 0; i < entities.length; i++) {
-      let entity = entities[i];
-      this._validatePhysicsProperties(entity);
-      entity.customData.physics.persists = values[i];
-    }
-    
-    this._updatePhysicsPropertiesDisplay();
-  }
-  
-  onActionPropertyChangePositionX(action) {
-    let {values, entities} = action.data;
-    
-    for (let i = 0; i < entities.length; i++) {
-      let entity = entities[i];
-      this._validatePhysicsProperties(entity);
-      entity.customData.physics.x = values[i];
-    }
-    
-    this._updatePhysicsPropertiesDisplay();
-  }
-  
-  onActionPropertyChangePositionY(action) {
-    let {values, entities} = action.data;
-    
-    for (let i = 0; i < entities.length; i++) {
-      let entity = entities[i];
-      this._validatePhysicsProperties(entity);
-      entity.customData.physics.y = values[i];
-    }
-    
-    this._updatePhysicsPropertiesDisplay();
-  }
-  
-  onActionPropertyChangeRotation(action) {
-    let {values, entities} = action.data;
-    
-    for (let i = 0; i < entities.length; i++) {
-      let entity = entities[i];
-      this._validatePhysicsProperties(entity);
-      entity.customData.physics.rotation = values[i];
+    for (let i = 0; i < gameObjects.length; i++) {
+      let gameObject = gameObjects[i];
+      this._validatePhysicsProperties(gameObject);
+      gameObject.customData.physics.persists = values[i];
     }
     
     this._updatePhysicsPropertiesDisplay();
   }
   
   onActionPropertyChangeMass(action) {
-    let {values, entities} = action.data;
+    let {values, gameObjects} = action.data;
     
-    for (let i = 0; i < entities.length; i++) {
-      let entity = entities[i];
-      this._validatePhysicsProperties(entity);
-      entity.customData.physics.mass = values[i];
+    for (let i = 0; i < gameObjects.length; i++) {
+      let gameObject = gameObjects[i];
+      this._validatePhysicsProperties(gameObject);
+      gameObject.customData.physics.friction = values[i];
     }
     
     this._updatePhysicsPropertiesDisplay();
   }
   
   onActionPropertyChangeFriction(action) {
-    let {values, entities} = action.data;
+    let {values, gameObjects} = action.data;
     
-    for (let i = 0; i < entities.length; i++) {
-      let entity = entities[i];
-      this._validatePhysicsProperties(entity);
-      entity.customData.physics.friction = values[i];
+    for (let i = 0; i < gameObjects.length; i++) {
+      let gameObject = gameObjects[i];
+      this._validatePhysicsProperties(gameObject);
+      gameObject.customData.physics.friction = values[i];
     }
     
     this._updatePhysicsPropertiesDisplay();
   }
   
   onActionPropertyChangeRestitution(action) {
-    let {values, entities} = action.data;
+    let {values, gameObjects} = action.data;
     
-    for (let i = 0; i < entities.length; i++) {
-      let entity = entities[i];
-      this._validatePhysicsProperties(entity);
-      entity.customData.physics.restitution = values[i];
+    for (let i = 0; i < gameObjects.length; i++) {
+      let gameObject = gameObjects[i];
+      this._validatePhysicsProperties(gameObject);
+      gameObject.customData.physics.restitution = values[i];
     }
     
     this._updatePhysicsPropertiesDisplay();
@@ -566,6 +591,41 @@ class PropertiesView extends SubwindowView {
     console.log(sourceBehavior, consolidatedBehavior);
   }
   
+  _consolidateGameObjectProperties(gameObjects) {
+    let consolidatedProperties = this._createDefaultProperties();
+    let propertyKeys           = Object.keys(consolidatedProperties);
+    
+    // Add default values to game objects that don't have properties defined
+    for (let gameObject of gameObjects) {
+      this._validateProperties(gameObject);
+    }
+    
+    if (gameObjects.length > 0) {
+      // Start comparisons against the first game object's propeties
+      Object.assign(
+        consolidatedProperties,
+        this._getGameObjectProperties(gameObjects[0])
+      );
+    
+      // Go through the selection and check if all game objects have the same
+      // value for their properties. Otherwise, conflicting properties are in
+      // an "indeterminate" state
+      if (gameObjects.length > 1) {
+        for (let gameObject of gameObjects) {
+          for (let key of propertyKeys) {
+            this._consolidateProperty(
+              key,
+              consolidatedProperties,
+              gameObject
+            );
+          }
+        }
+      }
+    }
+    
+    return consolidatedProperties;
+  }
+  
   _consolidateGameObjectPhysics(gameObjects) {
     let consolidatedPhysics = this._createDefaultPhysicsProperties();
     let physicsKeys         = Object.keys(consolidatedPhysics);
@@ -586,7 +646,7 @@ class PropertiesView extends SubwindowView {
       if (gameObjects.length > 1) {
         for (let gameObject of gameObjects) {
           for (let key of physicsKeys) {
-            this._consolidatePhysicsProperty(
+            this._consolidateProperty(
               key,
               consolidatedPhysics,
               gameObject.customData.physics
@@ -599,7 +659,7 @@ class PropertiesView extends SubwindowView {
     return consolidatedPhysics;
   }
   
-  _consolidatePhysicsProperty(key, consolidation, source) {
+  _consolidateProperty(key, consolidation, source) {
     if (consolidation[key] !== source[key]) {
       consolidation[key] = null;
     } else if (consolidation[key] !== null) {
@@ -607,18 +667,55 @@ class PropertiesView extends SubwindowView {
     }
   }
   
+  _getGameObjectProperties(gameObject) {
+    let properties = this._createDefaultProperties();
+    let keys       = Object.keys(properties);
+
+    for (let key of keys) {
+      properties[key] = gameObject[key];
+    }
+    
+    return properties;
+  }
+  
+  _createDefaultProperties() {
+    return {
+      name:     '',
+      layer:    0,
+      x:        0,
+      y:        0,
+      rotation: 0
+    };
+  }
+  
   _createDefaultPhysicsProperties() {
     return {
       solid:       false,
       fixed:       false,
       persists:    false,
-      x:           0,
-      y:           0,
-      rotation:    0,
       mass:        PhysicsObject.DEFAULT_MASS,
       friction:    PhysicsObject.DEFAULT_SURFACE_FRICTION,
       restitution: PhysicsObject.DEFAULT_SURFACE_RESTITUTION
     };
+  }
+  
+  /**
+   * Ensures gameObject has a valid value for all customizable properties
+   *
+   * Note: Adds properties with default values to gameObject for any that don't
+   * exist
+   */
+  _validateProperties(gameObject) {
+    // TODO: Keep a single reference to default properties instead of creating
+    // one for every function call?
+    let defaultProps = this._createDefaultProperties();
+    let keys         = Object.keys(defaultProps);
+
+    for (let key of keys) {
+      if (typeof gameObject[key] === "undefined") {
+        gameObject[key] = defaultProps[key];
+      }
+    }
   }
   
   /**
@@ -681,6 +778,38 @@ class PropertiesView extends SubwindowView {
   
   _disableBehaviorsDisplay() {
     this.addBehaviorBtn.disable();
+  }
+  
+  /**
+   * Reflects the current selection of gameObjects's properties in UI
+   */
+  _updatePropertiesDisplay() {
+    let properties = this._consolidateGameObjectProperties(this.gameObjects);
+    let keys       = Object.keys(this.propertiesUiMap);
+    
+    for (let key of keys) {
+      this.propertiesUiMap[key].value = properties[key];
+    }
+    
+    // Convert rotation's input text from radians to angles
+    let rotation = parseFloat(this.rotationInputText.value);
+    if (!isNaN(rotation)) {
+      rotation = (rotation * 180 / Math.PI) % 360;
+      rotation = Math.round(rotation * 100) / 100;
+      this.rotationInputText.value = rotation
+    }
+  }
+  
+  _enablePropertiesDisplay() {
+    for (let key of Object.keys(this.propertiesUiMap)) {
+      this.propertiesUiMap[key].enable();
+    }
+  }
+  
+  _disablePropertiesDisplay() {
+    for (let key of Object.keys(this.propertiesUiMap)) {
+      this.propertiesUiMap[key].disable();
+    }
   }
   
   /**

@@ -164,6 +164,7 @@ class DrawTool extends WorldTool {
   }
 
   mouseMove() {
+    let selector       = this.editor.selector;
     let keyboard       = this.editor.keyboard;
     let mouse          = this.editor.mouse;
     let zoom           = this.editor.camera.zoom;
@@ -178,6 +179,8 @@ class DrawTool extends WorldTool {
         this._dragX += dx;
         this._dragY += dy;
         this.editor.panSelection(dx, dy);
+        
+        selector.update();
       }
     }
   }
