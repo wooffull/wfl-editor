@@ -108,12 +108,12 @@ class WorldView extends SubwindowView {
         this.playGameScene.camera.follow(this.playGameScene.player);
         
         // Only allow movement for physics objects
-        if (this.playGameScene.player.velocity) {
+        /*if (this.playGameScene.player.velocity) {
           let arrowKeyMovement = new behaviors.ArrowKeyMovement(
             this.playGameScene.keyboard
           );
           this.playGameScene.player.addBehavior(arrowKeyMovement);
-        }
+        }*/
       }
       
       this.wflGame.setScene(this.playGameScene);

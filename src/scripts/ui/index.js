@@ -6,7 +6,6 @@ const Button           = require('./Button');
 const Menu             = require('./Menu');
 const ExpandableMenu   = require('./ExpandableMenu');
 const MenuItem         = require('./MenuItem');
-const BehaviorMenu     = require('./BehaviorMenu');
 const BehaviorMenuItem = require('./BehaviorMenuItem');
 const PreviewWindow    = require('./PreviewWindow');
 const MenuButton       = require('./MenuButton');
@@ -25,7 +24,6 @@ module.exports = {
   Menu:             Menu,
   ExpandableMenu:   ExpandableMenu,
   MenuItem:         MenuItem,
-  BehaviorMenu:     BehaviorMenu,
   BehaviorMenuItem: BehaviorMenuItem,
   PreviewWindow:    PreviewWindow,
   MenuButton:       MenuButton,

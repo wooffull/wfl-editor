@@ -27,11 +27,21 @@ class PlayGameScene extends EditorScene {
     
     if (usesPhysics) {
       gameObject = new PhysicsObject();
-      gameObject.solid       = physics.solid;
-      gameObject.fixed       = physics.fixed;
-      gameObject.mass        = physics.mass;
-      gameObject.friction    = physics.friction;
-      gameObject.restitution = physics.restitution;
+      
+      gameObject.solid = physics.solid;
+      gameObject.fixed = physics.fixed;
+      
+      gameObject.mass = 'mass' in physics
+                      ? parseFloat(physics.mass)
+                      : PhysicsObject.DEFAULT_MASS;
+      
+      gameObject.friction = 'friction' in physics
+                      ? parseFloat(physics.friction)
+                      : PhysicsObject.DEFAULT_SURFACE_FRICTION;
+      
+      gameObject.restitution = 'restitution' in physics
+                      ? parseFloat(physics.restitution)
+                      : PhysicsObject.DEFAULT_SURFACE_RESTITUTION;
     } else {
       gameObject = new GameObject();
     }
@@ -49,7 +59,18 @@ class PlayGameScene extends EditorScene {
     gameObject.position._x = original.position._x;
     gameObject.position._y = original.position._y;
     gameObject.rotate(original.rotation);
-    gameObject.allowVertexRotation = original.allowVertexRotation;
+    gameObject.allowVertexRotation  = original.allowVertexRotation;
+    gameObject.customData.behaviors = original.customData.behaviors;
+    
+    // Add behaviors
+    if (gameObject.customData.behaviors) {
+      let behaviorKeys = Object.keys(gameObject.customData.behaviors);
+      for (let key of behaviorKeys) {
+        let behavior = gameObject.customData.behaviors[key];
+        let instance = new behavior.module(this.keyboard);
+        gameObject.addBehavior(instance);
+      }
+    }
     
     return gameObject;
   }

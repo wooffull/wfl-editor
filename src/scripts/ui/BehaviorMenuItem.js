@@ -18,8 +18,7 @@ class BehaviorMenuItem extends HtmlElement {
     this.labelContainer = $('<span>');
     
     this.contentContainer = $('<div>');
-    this.propertiesContainer = $('<div>')
-      .html('No properties');
+    this.propertiesContainer = $('<div>').html('No properties');
     
     this.expandMoreBtn = new MenuButton('expand_more');
     this.expandLessBtn = new MenuButton('expand_less');
@@ -27,7 +26,7 @@ class BehaviorMenuItem extends HtmlElement {
     
     this.expandMoreBtn.element.on('click', (e) => this.expand());
     this.expandLessBtn.element.on('click', (e) => this.collapse());
-    this.removeBtn.element.on('click',     (e) => this.destroy());
+    this.removeBtn.element.on('click',     (e) => this._onRemoveBtnClick());
     
     this.element.addClass(CssClass.BEHAVIOR_MENU_ITEM);
     this.topContainer.addClass(CssClass.BEHAVIOR_MENU_ITEM_TOP);
@@ -66,8 +65,6 @@ class BehaviorMenuItem extends HtmlElement {
     $(this.expandMoreBtn.element).off();
     $(this.expandLessBtn.element).off();
     $(this.removeBtn.element).off();
-    
-    this.element.trigger('remove');
   }
   
   expand() {
@@ -155,6 +152,10 @@ class BehaviorMenuItem extends HtmlElement {
       DataValidator.keyValidatorForIntegers
     );
     return inputText;
+  }
+  
+  _onRemoveBtnClick() {
+    $(this).trigger('remove');
   }
 }
 

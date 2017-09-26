@@ -37,6 +37,9 @@ Object.defineProperties(Action, {
       //
       //  data: {}
       FILE_INIT: 'file-init',
+      //
+      //  data: {}
+      FILE_REFRESH: 'file-refresh',
       
       // ProjectSettingsTool
       //
@@ -266,7 +269,33 @@ Object.defineProperties(Action, {
       //             selection>
       //  }
       PROPERTY_CHANGE_RESTITUTION: 'property-change-restitution',
-      
+      //
+      //  data: {
+      //    behaviorData: <Data for the behavior>
+      //      module: <The behavior's module.exports>
+      //      absolutePath: <Absolute path of the module>
+      //      basename: <The module's name with its extension>
+      //      name: <The module's name>
+      //    @gameObjects: <An array of all the game objects that will add the 
+      //                  new behavior>
+      //  }
+      PROPERTY_ADD_BEHAVIOR: 'property-add-behavior',
+      //
+      //  data: {
+      //    behaviorData: <Data for the behavior>
+      //      module: <The behavior's module.exports>
+      //      absolutePath: <Absolute path of the module>
+      //      basename: <The module's name with its extension>
+      //      name: <The module's name>
+      //    gameObjects: <An array of all the game objects that will remove the
+      //                  behavior>
+      //  }
+      PROPERTY_REMOVE_BEHAVIOR: 'property-remove-behavior',
+      //
+      //  data: {
+      //    popupType: <The type of popup to display over the editor>
+      //  }
+      GLOBAL_POPUP: 'global-popup',
       
       HISTORY_CLEAR: 'history-clear'
     }

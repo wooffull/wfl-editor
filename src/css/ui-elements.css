@@ -12,6 +12,26 @@
   flex-grow: 1;
 }
 
+.flex-row-box {
+  display: flex;
+  flex-direction: row;
+}
+
+.button-container {
+  text-align: center;
+}
+
+.button {
+}
+
+.button-container > .button {
+  min-width: 100px;
+}
+
+.button-container > .button:not(:first-of-type) {
+  margin-left: 5px;
+}
+
 /**
  * Menu
  */

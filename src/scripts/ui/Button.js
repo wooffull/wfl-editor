@@ -1,8 +1,8 @@
 "use strict";
 
-const $ = wfl.jquery;
+const $           = wfl.jquery;
 const HtmlElement = require('./HtmlElement');
-const CssClass = require('../CssClasses');
+const CssClass    = require('../CssClasses');
 
 class Button extends HtmlElement {
   constructor(label = "label") {
@@ -13,6 +13,10 @@ class Button extends HtmlElement {
     this.disabled = false;
     
     this.element.append(this.element);
+    
+    this.element.addClass(CssClass.BUTTON);
+    
+    this.element.on('click', () => $(this).trigger('click'));
   }
   
   get label() {

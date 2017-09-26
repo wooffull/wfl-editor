@@ -101,11 +101,11 @@ class HistoryView extends SubwindowView {
         break;
       
       case Action.Type.LAYER_LOCK:
-        label = 'Locked Layer: ' + action.data.layerId;
+        label = 'Lock Layer: ' + action.data.layerId;
         break;
       
       case Action.Type.LAYER_UNLOCK:
-        label = 'Unlocked Layer: ' + action.data.layerId;
+        label = 'Unlock Layer: ' + action.data.layerId;
         break;
       
       case Action.Type.ENTITY_ADD:
@@ -149,10 +149,10 @@ class HistoryView extends SubwindowView {
           var movedLayerId    = movedGameObject.layer;
           var movedEntity     = movedGameObject.customData.entity;
           var movedId         = movedGameObject.customData.id;
-          label = 'Moved Entity: ' + movedEntity.name + '#' + movedId +
+          label = 'Move Entity: ' + movedEntity.name + '#' + movedId +
                 ' [' + movedLayerId + ']';
         } else {
-          label = 'Moved ' + length + ' Entities';
+          label = 'Move ' + length + ' Entities';
         }
         break;
       
@@ -165,10 +165,10 @@ class HistoryView extends SubwindowView {
           var movedLayerId    = movedGameObject.layer;
           var movedEntity     = movedGameObject.customData.entity;
           var movedId         = movedGameObject.customData.id;
-          label = 'Aligned Entity: ' + movedEntity.name + '#' + movedId +
+          label = 'Align Entity: ' + movedEntity.name + '#' + movedId +
                 ' [' + movedLayerId + ']';
         } else {
-          label = 'Aligned ' + length + ' Entities';
+          label = 'Align ' + length + ' Entities';
         }
         break;
       
@@ -181,10 +181,10 @@ class HistoryView extends SubwindowView {
           var movedLayerId    = movedGameObject.layer;
           var movedEntity     = movedGameObject.customData.entity;
           var movedId         = movedGameObject.customData.id;
-          label = 'Rotated Entity: ' + movedEntity.name + '#' + movedId +
+          label = 'Rotate Entity: ' + movedEntity.name + '#' + movedId +
                 ' [' + movedLayerId + ']';
         } else {
-          label = 'Rotated ' + length + ' Entities';
+          label = 'Rotate ' + length + ' Entities';
         }
         break;
         
@@ -196,12 +196,12 @@ class HistoryView extends SubwindowView {
         var length = action.data.entities.length;
         
         if (length === 1) {
-          label = 'Changed Solid Property: '
+          label = 'Change Solid Property: '
                 + action.data.prevValues[0].toString()
                 + ' -> '
                 + action.data.values[0].toString();
         } else {
-          label = 'Changed Solid Property for group';
+          label = 'Change Solid Property for group';
         }
         break;
       
@@ -209,12 +209,12 @@ class HistoryView extends SubwindowView {
         var length = action.data.entities.length;
         
         if (length === 1) {
-          label = 'Changed Fixed Property: '
+          label = 'Change Fixed Property: '
                 + action.data.prevValues[0].toString()
                 + ' -> '
                 + action.data.values[0].toString();
         } else {
-          label = 'Changed Fixed Property for group';
+          label = 'Change Fixed Property for group';
         }
         break;
       
@@ -222,12 +222,12 @@ class HistoryView extends SubwindowView {
         var length = action.data.entities.length;
         
         if (length === 1) {
-          label = 'Changed Persistence Property: '
+          label = 'Change Persistence Property: '
                 + action.data.prevValues[0].toString()
                 + ' -> '
                 + action.data.values[0].toString();
         } else {
-          label = 'Changed Persistence Property for group';
+          label = 'Change Persistence Property for group';
         }
         break;
       
@@ -235,12 +235,12 @@ class HistoryView extends SubwindowView {
         var length = action.data.entities.length;
         
         if (length === 1) {
-          label = 'Changed Position (X): '
+          label = 'Change Position (X): '
                 + action.data.prevValues[0].toString()
                 + ' -> '
                 + action.data.values[0].toString();
         } else {
-          label = 'Changed Position (X) for group';
+          label = 'Change Position (X) for group';
         }
         break;
       
@@ -248,12 +248,12 @@ class HistoryView extends SubwindowView {
         var length = action.data.entities.length;
         
         if (length === 1) {
-          label = 'Changed Position (Y): '
+          label = 'Change Position (Y): '
                 + action.data.prevValues[0].toString()
                 + ' -> '
                 + action.data.values[0].toString();
         } else {
-          label = 'Changed Position (Y) for group';
+          label = 'Change Position (Y) for group';
         }
         break;
       
@@ -261,12 +261,12 @@ class HistoryView extends SubwindowView {
         var length = action.data.entities.length;
         
         if (length === 1) {
-          label = 'Changed Rotation: '
+          label = 'Change Rotation: '
                 + action.data.prevValues[0].toString()
                 + ' -> '
                 + action.data.values[0].toString();
         } else {
-          label = 'Changed Rotation for group';
+          label = 'Change Rotation for group';
         }
         break;
       
@@ -274,12 +274,12 @@ class HistoryView extends SubwindowView {
         var length = action.data.entities.length;
         
         if (length === 1) {
-          label = 'Changed Mass Property: '
+          label = 'Change Mass Property: '
                 + action.data.prevValues[0].toString()
                 + ' -> '
                 + action.data.values[0].toString();
         } else {
-          label = 'Changed Mass Property for group';
+          label = 'Change Mass Property for group';
         }
         break;
       
@@ -287,12 +287,12 @@ class HistoryView extends SubwindowView {
         var length = action.data.entities.length;
         
         if (length === 1) {
-          label = 'Changed Friction Property: '
+          label = 'Change Friction Property: '
                 + action.data.prevValues[0].toString()
                 + ' -> '
                 + action.data.values[0].toString();
         } else {
-          label = 'Changed Friction Property for group';
+          label = 'Change Friction Property for group';
         }
         break;
       
@@ -300,12 +300,38 @@ class HistoryView extends SubwindowView {
         var length = action.data.entities.length;
         
         if (length === 1) {
-          label = 'Changed Restitution Property: '
+          label = 'Change Restitution Property: '
                 + action.data.prevValues[0].toString()
                 + ' -> '
                 + action.data.values[0].toString();
         } else {
-          label = 'Changed Restitution Property for group';
+          label = 'Change Restitution Property for group';
+        }
+        break;
+        
+      case Action.Type.PROPERTY_ADD_BEHAVIOR:
+        var length = action.data.gameObjects.length;
+        var name   = action.data.behaviorData.name;
+        
+        if (length === 1) {
+          var entity = action.data.gameObjects[0].customData.entity;
+          label = `Add Behavior (${name}) to `
+                + entity.name;
+        } else {
+          label = `Add Behavior (${name}) to group`;
+        }
+        break;
+        
+      case Action.Type.PROPERTY_REMOVE_BEHAVIOR:
+        var length = action.data.gameObjects.length;
+        var name   = action.data.behaviorData.name;
+        
+        if (length === 1) {
+          var entity = action.data.gameObjects[0].customData.entity;
+          label = `Remove Behavior (${name}) from `
+                + entity.name;
+        } else {
+          label = `Remove Behavior (${name}) from group`;
         }
         break;
       

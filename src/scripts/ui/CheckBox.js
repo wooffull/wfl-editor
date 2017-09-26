@@ -1,8 +1,8 @@
 "use strict";
 
-const $ = wfl.jquery;
+const $           = wfl.jquery;
 const HtmlElement = require('./HtmlElement');
-const CssClass = require('../CssClasses');
+const CssClass    = require('../CssClasses');
 
 class CheckBox extends HtmlElement {
   constructor(label = "Key") {

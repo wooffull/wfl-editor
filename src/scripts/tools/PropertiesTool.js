@@ -52,6 +52,14 @@ class PropertiesTool extends Tool {
       Action.Type.PROPERTY_CHANGE_RESTITUTION,
       (action) => this.subwindowView.onActionPropertyChangeRestitution(action)
     );
+    this.register(
+      Action.Type.PROPERTY_ADD_BEHAVIOR,
+      (action) => this.subwindowView.onActionPropertyAddBehavior(action)
+    );
+    this.register(
+      Action.Type.PROPERTY_REMOVE_BEHAVIOR,
+      (action) => this.subwindowView.onActionPropertyRemoveBehavior(action)
+    );
   }
 }
 

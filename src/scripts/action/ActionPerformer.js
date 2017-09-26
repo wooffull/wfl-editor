@@ -170,6 +170,20 @@ const ActionPerformer = {
           }
         );
         break;
+        
+      case Action.Type.PROPERTY_ADD_BEHAVIOR:
+        revAction = new Action(
+          Action.Type.PROPERTY_REMOVE_BEHAVIOR,
+          data
+        );
+        break;
+        
+      case Action.Type.PROPERTY_REMOVE_BEHAVIOR:
+        revAction = new Action(
+          Action.Type.PROPERTY_ADD_BEHAVIOR,
+          data
+        );
+        break;
       
       default:
         console.error("Missing Reverse Action for: " + action.type);

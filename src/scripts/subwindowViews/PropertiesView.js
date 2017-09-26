@@ -4,10 +4,11 @@ const $                 = wfl.jquery;
 const PhysicsObject     = wfl.core.entities.PhysicsObject;
 const SubwindowView     = require('./SubwindowView');
 const CssClass          = require('../CssClasses');
+const popup             = require('../popup');
 const {DataValidator}   = require('../util');
 const {CheckBox,
        InputText,
-       BehaviorMenu,
+       Menu,
        BehaviorMenuItem,
        Button}          = require('../ui');
 const {Action,
@@ -95,7 +96,9 @@ class PropertiesView extends SubwindowView {
     this.behaviorsLabel.addClass(CssClass.MENU_LABEL);
     
     this.addBehaviorBtn = new Button("Add New Behavior");
-    this.behaviorMenu   = new BehaviorMenu('');
+    $(this.addBehaviorBtn).on('click', () => this._onAddBehaviorBtnClick());
+    
+    this.behaviorMenu = new Menu('');
     
     this.element.append(this.label);
     this.element.append(this.positionXInputText.element);
@@ -130,12 +133,13 @@ class PropertiesView extends SubwindowView {
     this.restitutionInputText.value = '';
     
     this._disablePhysicsPropertiesDisplay();
+    this._disableBehaviorsDisplay();
     
     this.solidCheckbox.uncheck();
     this.fixedCheckbox.uncheck();
     this.persistsCheckbox.uncheck();
     
-    this.addBehaviorBtn.disable();
+    this._updateBehaviorsDisplay();
   }
   
   changeSolid() {
@@ -321,11 +325,11 @@ class PropertiesView extends SubwindowView {
   }
   
   onActionEntitySelect(action) {
-    this._enablePhysicsPropertiesDisplay();
     this.gameObjects = action.data.gameObjects;
+    this._enableBehaviorsDisplay();
+    this._enablePhysicsPropertiesDisplay();
+    this._updateBehaviorsDisplay();
     this._updatePhysicsPropertiesDisplay();
-    
-    this.addBehaviorBtn.enable();
   }
   
   onActionEntityDeselect(action) {
@@ -440,7 +444,129 @@ class PropertiesView extends SubwindowView {
     this._updatePhysicsPropertiesDisplay();
   }
   
-  _consolidatePhysics(gameObjects) {
+  onActionPropertyAddBehavior(action) {
+    let {behaviorData} = action.data;
+    
+    if (typeof action.data.gameObjects === 'undefined') {
+      // DATA_APPEND
+      action.data.gameObjects = this.gameObjects.concat();
+    }
+    
+    let gameObjects = action.data.gameObjects;
+    for (let i = 0; i < gameObjects.length; i++) {
+      let gameObject = gameObjects[i];
+      gameObject.customData.behaviors[behaviorData.name] = behaviorData;
+    }
+    
+    this._updateBehaviorsDisplay();
+  }
+  
+  onActionPropertyRemoveBehavior(action) {
+    let {behaviorData, gameObjects} = action.data;
+    
+    for (let i = 0; i < gameObjects.length; i++) {
+      let gameObject = gameObjects[i];
+      gameObject.customData.behaviors[behaviorData.name] = null;
+      delete gameObject.customData.behaviors[behaviorData.name];
+    }
+    
+    this._updateBehaviorsDisplay();
+  }
+  
+  _onAddBehaviorBtnClick() {
+    let data = {
+      popupType: popup.Type.ADD_NEW_BEHAVIOR
+    };
+    ActionPerformer.do(
+      Action.Type.GLOBAL_POPUP,
+      data
+    );
+  }
+  
+  _removeBehavior(menuItem) {
+    let data = {
+      behaviorData: menuItem.data,
+      gameObjects:  this.gameObjects.concat()
+    };
+    
+    ActionPerformer.do(
+      Action.Type.PROPERTY_REMOVE_BEHAVIOR,
+      data
+    );
+  }
+  
+  _consolidateGameObjectBehaviors(gameObjects) {
+    let consolidatedBehaviors = {};
+    
+    // Validate behaviors
+    for (let gameObject of gameObjects) {
+      if (!('behaviors' in gameObject.customData)) {
+        gameObject.customData.behaviors = {};
+      }
+    }
+    
+    if (gameObjects.length > 0) {
+      // Start comparisons against the first game object's behaviors
+      Object.assign(
+        consolidatedBehaviors,
+        gameObjects[0].customData.behaviors
+      );
+    
+      // Go through the selection and check if all game objects have the same
+      // properties for their behaviors. Otherwise, conflicting properties are
+      // in an "indeterminate" state
+      if (gameObjects.length > 1) {
+        for (let gameObject of gameObjects) {
+          this._consolidateBehaviors(
+            gameObject.customData.behaviors,
+            consolidatedBehaviors
+          );
+        }
+      }
+    }
+    
+    return consolidatedBehaviors;
+  }
+  
+  _consolidateBehaviors(sourceBehaviors, consolidations) {
+    let sourceBehaviorKeys = Object.keys(sourceBehaviors);
+    let consolidatedKeys   = Object.keys(consolidations);
+    let consolidatedBools  = {};
+    
+    for (let key of consolidatedKeys) {
+      consolidatedBools[key] = false;
+    }
+    
+    for (let sourceBehaviorKey of sourceBehaviorKeys) {
+      let sourceBehavior = sourceBehaviors[sourceBehaviorKey];
+      let behaviorName   = sourceBehavior.name;
+      
+      if (typeof consolidations[behaviorName] !== 'undefined') {
+        this._consolidateBehaviorProperties(
+          sourceBehavior,
+          consolidations[behaviorName]
+        );
+        consolidatedBools[behaviorName] = true;
+      }
+    }
+    
+    // If a behavior wasn't consolidated, it doesn't exist in both the source
+    // and consolidations. Therefore, it cannot be consolidated and should be
+    // removed from the consolidations.
+    for (let key of consolidatedKeys) {
+      if (!consolidatedBools[key]) {
+        consolidations[key] = null;
+        delete consolidations[key];
+      }
+    }
+  }
+  
+  _consolidateBehaviorProperties(sourceBehavior, consolidatedBehavior) {
+    // TODO: Add and consolidate properties for behaviors.
+    console.log(sourceBehavior, consolidatedBehavior);
+  }
+  
+  _consolidateGameObjectPhysics(gameObjects) {
     let consolidatedPhysics = this._createDefaultPhysicsProperties();
     let physicsKeys         = Object.keys(consolidatedPhysics);
     
@@ -521,11 +647,47 @@ class PropertiesView extends SubwindowView {
     }
   }
   
+  _updateBehaviorsDisplay() {
+    // First, remove the 'remove' listener for all menu items
+    let behaviorLabels = this.behaviorMenu.getLabels();
+    for (let label of behaviorLabels) {
+      let behaviorMenuItem = this.behaviorMenu.find(label);
+      $(behaviorMenuItem).off('remove');
+    }
+    
+    // Then, consolidate the behaviors for the current game objects
+    let consolidatedBehaviors =
+        this._consolidateGameObjectBehaviors(this.gameObjects);
+    let keys = Object.keys(consolidatedBehaviors);
+    
+    // Then, clear the menu from before
+    this.behaviorMenu.clear();
+    
+    // Finally, add all the new menu items and add 'remove' listeners to them
+    for (let key of keys) {
+      let behavior         = consolidatedBehaviors[key];
+      let behaviorMenuItem = new BehaviorMenuItem(behavior.name, behavior);
+      this.behaviorMenu.insert(behaviorMenuItem);
+      
+      $(behaviorMenuItem).on('remove', () => {
+        this._removeBehavior(behaviorMenuItem);
+      });
+    }
+  }
+  
+  _enableBehaviorsDisplay() {
+    this.addBehaviorBtn.enable();
+  }
+  
+  _disableBehaviorsDisplay() {
+    this.addBehaviorBtn.disable();
+  }
+  
   /**
    * Reflects the current selection of gameObjects's physics properties in UI
    */
   _updatePhysicsPropertiesDisplay() {
-    let physics = this._consolidatePhysics(this.gameObjects);
+    let physics = this._consolidateGameObjectPhysics(this.gameObjects);
     let keys    = Object.keys(this.physicsUiMap);
     
     for (let key of keys) {

@@ -12,6 +12,9 @@ module.exports = {
   WORLD_CANVAS: 'world-canvas',
   TOOL_BAR_TOOL_ICON: 'tool-bar-tool-icon',
   
+  BUTTON: 'button',
+  BUTTON_CONTAINER: 'button-container',
+  
   /* Classes for Menu */
   MENU: 'flex-column-box menu',
   MENU_LABEL: 'menu-label',
@@ -62,10 +65,18 @@ module.exports = {
   PREVIEW_WINDOW: 'preview-window',
   IMAGE_CONTAINER: 'image-container',
   
+  /* Classes for Popups */
+  POPUP: 'popup',
+  POPUP_SHADOW_BOX: 'popup-shadow-box',
+  
+  ADD_NEW_BEHAVIOR_POPUP: 'add-new-behavior-popup',
+  
   /* Misc. accessories */
   ARROW_LEFT: 'arrow-left',
   
   /* General usage */
+  FLEX_COLUMN: 'flex-column-box',
+  FLEX_ROW: 'flex-row-box',
   FLOAT_RIGHT: 'float-right',
   FLOAT_LEFT: 'float-left',
   DISABLED: 'disabled'

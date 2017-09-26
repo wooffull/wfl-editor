@@ -8,6 +8,8 @@ const tools             = require('./tools');
 
 class WflEditor {
   constructor() {
+    this.popups = [];
+    
     // Create tools
     this.toolBarTool         = new tools.ToolBarTool();
     this.fileExplorerTool    = new tools.FileExplorerTool();
@@ -40,6 +42,12 @@ class WflEditor {
         // as COMPLETED
         if (action.state === Action.State.IN_PROGRESS) {
           action.state = Action.State.COMPLETED;
+        }
+        
+        if (action.type === Action.Type.GLOBAL_POPUP) {
+          // Global popups cannot be undone
+          action.reversable = false;
+          this.popup(action.data);
         }
       }
       
@@ -130,6 +138,20 @@ class WflEditor {
     }
     
     return project;
+  }
+  
+  popup(data) {
+    if (typeof data.popupType !== 'undefined') {
+      let newPopup = new data.popupType();
+      $('#subwindow-container').append(newPopup.element);
+      
+      this.popups.push(newPopup);
+      
+      $(newPopup).on('remove', () => {
+        this.popups.splice(this.popups.indexOf(newPopup), 1);
+        newPopup.element.remove();
+      });
+    }
   }
 }
 

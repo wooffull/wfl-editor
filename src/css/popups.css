@@ -1,0 +1,32 @@
+.popup.subwindow {
+  background-color: #333333;
+}
+
+.popup {
+  position: absolute;
+  margin: auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid #000;
+  border-radius: 2px;
+}
+
+.popup-shadow-box {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/**
+ * AddNewBehaviorPopup
+ */
+.add-new-behavior-popup {
+  width: 40vw;
+  height: 40vh;
+  min-width: 200px;
+  min-height: 200px;
+}

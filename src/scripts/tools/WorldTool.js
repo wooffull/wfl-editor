@@ -2,6 +2,7 @@
 
 const Tool             = require('./Tool');
 const {Action}         = require('../action'); 
+const behaviors        = require('../behaviors');
 const {remote}         = require('electron');
 const {globalShortcut} = remote;
 const subwindowViews   = require('../subwindowViews');
@@ -9,6 +10,11 @@ const subwindowViews   = require('../subwindowViews');
 class WorldTool extends Tool {
   constructor() {
     super('terrain', new subwindowViews.WorldView());
+    
+    this._entitiesLoaded = null;
+    this._filesLoaded    = null;
+    
+    this._resetFlags();
     
     // (Shortcut) Ctrl+A: Select all entities
     // TODO: Select only entities for layers that are not locked
@@ -32,6 +38,10 @@ class WorldTool extends Tool {
     this.register(
       Action.Type.PROJECT_TILE_HEIGHT_CHANGE,
       (action) => this.subwindowView.onActionTileHeightChange(action)
+    );
+    this.register(
+      Action.Type.FILE_REFRESH,
+      (action) => this.onActionFileRefresh(action)
     );
     this.register(
       Action.Type.ENTITY_PROJECT_LOAD_COMPLETE,
@@ -123,26 +133,41 @@ class WorldTool extends Tool {
     }
   }
   
+  onActionFileRefresh(action) {
+    this._filesLoaded = true;
+    this._onLoadComplete();
+  }
+  
   onActionEntityProjectLoadComplete(action) {
     let {project} = action.data;
     
-    // If no level data, exit early
-    if (!project.level) return;
-      
-    let {gameObjects, tileSize} = project.level;
-    let scene         = this.subwindowView.worldEditorScene;
+    if (project.level) {
+      let {gameObjects, tileSize} = project.level;
+      let scene         = this.subwindowView.worldEditorScene;
 
-    // If no game object data, exit early
-    if (!gameObjects) return;
-    
-    for (const obj of gameObjects) {
-      let {entity, x, y, rotation, layer, physics} = obj;
-      let addedObj = scene.addEntity(entity, layer, false);
-      addedObj.position.x = x;
-      addedObj.position.y = y;
-      addedObj.rotate(rotation);
-      addedObj.customData.physics = physics;
+      // If no game object data, exit early
+      if (gameObjects) {
+        for (const obj of gameObjects) {
+          let {entity, x, y, rotation, layer, physics, behaviors} = obj;
+          let addedObj = scene.addEntity(entity, layer, false);
+          addedObj.position.x = x;
+          addedObj.position.y = y;
+          addedObj.rotate(rotation);
+          addedObj.customData.physics = physics;
+
+          if (behaviors) {
+            addedObj.customData.behaviors = behaviors;
+          }
+        }
+      }
     }
+    
+    this._entitiesLoaded = true;
+    this._onLoadComplete();
+  }
+  
+  onProjectUpdate(project) {
+    this._resetFlags();
   }
   
   getData() {
@@ -154,19 +179,66 @@ class WorldTool extends Tool {
     };
     
     for (const obj of gameObjects) {
+      // Empty behaviors should not be saved
+      let behaviors = obj.customData.behaviors;
+      if (behaviors && Object.keys(behaviors).length === 0) {
+        behaviors = undefined;
+      }
+      
       let objData = {
-        layer:    obj.layer,
-        entity:   obj.customData.entity,
-        x:        obj.position.x,
-        y:        obj.position.y,
-        rotation: obj.rotation,
-        physics:  obj.customData.physics
+        layer:     obj.layer,
+        entity:    obj.customData.entity,
+        x:         obj.position.x,
+        y:         obj.position.y,
+        rotation:  obj.rotation,
+        physics:   obj.customData.physics,
+        behaviors: behaviors
       };
       
       data.gameObjects.push(objData);
     }
     
     return data;
+  }
+  
+  _onAllAssetsLoaded() {
+    this._updateBehaviors();
+  }
+  
+  _updateBehaviors() {
+    let scene           = this.subwindowView.worldEditorScene;
+    let gameObjects     = scene.getGameObjects();
+    let loadedBehaviors = behaviors.getLoadedBehaviors();
+    
+    for (const obj of gameObjects) {
+      let behaviors    = obj.customData.behaviors || {};
+      let behaviorKeys = Object.keys(behaviors);
+      
+      for (const key of behaviorKeys) {
+        // TODO: Update refreshed behaviors with more sophistication.
+        if (key in loadedBehaviors) {
+          obj.customData.behaviors[key] = loadedBehaviors[key];
+        } else {
+          obj.customData.behaviors[key].module = null;
+        }
+      }
+    }
+  }
+  
+  _resetFlags() {
+    this._entitiesLoaded = false;
+    this._filesLoaded    = false;
+  }
+  
+  _onLoadComplete() {
+    if (this._everythingLoaded) {
+      this._onAllAssetsLoaded();
+    }
+  }
+  
+  get _everythingLoaded() {
+    return this._entitiesLoaded &&
+           this._filesLoaded;
   }
 }
 
