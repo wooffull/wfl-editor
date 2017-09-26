@@ -12,6 +12,10 @@ class PlayGameScene extends EditorScene {
     this.canvas   = canvas;
     this.mouse    = mouse;
     this.keyboard = keyboard;
+  }
+  
+  reset() {
+    super.reset();
     
     // TODO: Allow for configurable scene names
     this.register('wfl');
@@ -79,7 +83,11 @@ class PlayGameScene extends EditorScene {
   }
 
   update(dt) {
-    super.update(dt);
+    try {
+      super.update(dt);
+    } catch (err) {
+      $(this).trigger('throw-error', [err]);
+    }
   }
 }
 

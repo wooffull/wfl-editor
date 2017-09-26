@@ -59,17 +59,21 @@ class WorldView extends SubwindowView {
     // Set up listeners
     $(this.editBtn.element).on('click', (e) => {
       if (typeof e.which === "undefined" || e.which === 1) {
-        this.onGameEdit(e);
+        this.onGameEdit();
       }
     });
     $(this.playBtn.element).on('click', (e) => {
       if (typeof e.which === "undefined" || e.which === 1) {
-        this.onGamePlay(e);
+        this.onGamePlay();
       }
+    });
+    $(this.playGameScene).on('throw-error', (e, err) => {
+      console.error(err);
+      this.onGameEdit();
     });
   }
   
-  onGameEdit(e) {
+  onGameEdit() {
     if (this.wflGame.getScene() !== this.worldEditorScene) {
       this.wflGame.setScene(this.worldEditorScene);
       this.worldEditorScene.enableMouseEvents();
@@ -77,7 +81,7 @@ class WorldView extends SubwindowView {
     }
   }
   
-  onGamePlay(e) {
+  onGamePlay() {
     if (this.wflGame.getScene() !== this.playGameScene) {
       // Reset the game scene
       this.playGameScene.reset();
@@ -107,14 +111,6 @@ class WorldView extends SubwindowView {
         this.playGameScene.player = newGameObjects[newGameObjects.length - 1];
         this.playGameScene.camera.follow(this.playGameScene.player);
         this.playGameScene.player.name = 'player';
-        
-        // Only allow movement for physics objects
-        /*if (this.playGameScene.player.velocity) {
-          let arrowKeyMovement = new behaviors.ArrowKeyMovement(
-            this.playGameScene.keyboard
-          );
-          this.playGameScene.player.addBehavior(arrowKeyMovement);
-        }*/
       }
       
       this.wflGame.setScene(this.playGameScene);
