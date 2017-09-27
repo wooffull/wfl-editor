@@ -2,6 +2,8 @@
 
 const $                 = wfl.jquery;
 const SubwindowView     = require('./SubwindowView');
+const {remote}          = require('electron');
+const {Project}         = remote.require('./scripts/file');
 const {HistoryMenu,
        MenuItem}        = require('../ui');
 const {Action,
@@ -71,11 +73,11 @@ class HistoryView extends SubwindowView {
       case Action.Type.FILE_INIT:
         label = 'Start Project';
         
-        // Force the time to be undefined so that when this action is the current
-        // one in the history menu, the project thinks it hasn't been changed. This
-        // works because the FILE_INIT is supposed to be the very first action, and
-        // that cannot be undone.
-        action.time = undefined;
+        // Force the action's time to match the last time the project was
+        // changed. This gives it a relevant time stamp when checking if the
+        // project has been changed.
+        let project = Project.getProject();
+        action.time = project.lastChanged;
         break;
         
       case Action.Type.PROJECT_TILE_WIDTH_CHANGE:
