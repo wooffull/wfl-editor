@@ -3,7 +3,7 @@
 const $ = wfl.jquery;
 const HtmlElement = require('./HtmlElement');
 const CssClass = require('../CssClasses');
-const {keys} = wfl.input;
+const {Keyboard} = wfl.input;
 
 class InputText extends HtmlElement {
   constructor(label        = "Key",
@@ -83,8 +83,8 @@ class InputText extends HtmlElement {
   
   onKeyPress(e) {
     let isSubmitKey =
-        e.keyCode === keys.ENTER ||
-        e.keyCode === keys.TAB;
+        e.keyCode === Keyboard.ENTER ||
+        e.keyCode === Keyboard.TAB;
     
     if (this._selected) {
       if (isSubmitKey) {

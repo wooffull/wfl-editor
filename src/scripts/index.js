@@ -2,12 +2,12 @@
 
 const {ipcRenderer} = require('electron');
 
-const $                = wfl.jquery;
-const WflEditor        = require('./scripts/WflEditor');
-const {remote}         = require('electron');
+const $             = wfl.jquery;
+const {Keyboard}    = wfl.input;
+const WflEditor     = require('./scripts/WflEditor');
+const {remote}      = require('electron');
 const {Menu,
-       MenuItem,
-       globalShortcut} = remote;
+       MenuItem}    = remote;
 
 // Create a new WFL Editor when the window loads
 let editor;
@@ -87,21 +87,66 @@ ipcRenderer.on('request-project-data', (e, nextEvent) => {
   }
 });
 
+// Key Shortcuts:
+let lastPressed = -1;
+$(Keyboard).on('keypressed', (e) => {
+  let justPressed = Keyboard.getKeyJustPressed();
+  if (justPressed !== -1 && justPressed !== lastPressed) {
+    lastPressed = justPressed;
+  }
+  
+  if (Keyboard.isPressed(Keyboard.CONTROL)) {
+    switch (lastPressed) {
+      // CTRL+A: Select all entities
+      case Keyboard.A:
+        editor.worldTool.selectAllEntities();
+        break;
+        
+      case Keyboard.S:
+        // CTRL+SHIFT+S: Save project as...
+        if (Keyboard.isPressed(Keyboard.SHIFT)) {
+          ipcRenderer.send('project-save-as');
+          
+        // CTRL+S: Save project
+        } else {
+          ipcRenderer.send('project-save'); 
+        }
+        break;
 
-// Set up keyboard shortcuts
-globalShortcut.register("CommandOrControl+S", () => {
-  ipcRenderer.send('project-save');
-});
-globalShortcut.register("CommandOrControl+Shift+S", () => {
-  ipcRenderer.send('project-save-as');
-});
-globalShortcut.register("CommandOrControl+N", () => {
-  ipcRenderer.send('project-new');
-});
-globalShortcut.register("CommandOrControl+Q", () => {
-  ipcRenderer.send('window-close')
-});
+      // CTRL+N: New project
+      case Keyboard.N:
+        ipcRenderer.send('project-new');
+        break;
 
+      // CTRL+O: Open project
+      case Keyboard.O:
+        ipcRenderer.send('project-load');
+        break;
+
+      // CTRL+Z: Undo last action
+      case Keyboard.Z:
+        editor.historyTool.undo();
+        break;
+
+      // CTRL+Y: Redo last action
+      case Keyboard.Y:
+        editor.historyTool.redo();
+        break;
+
+      // CTRL+Q: Quit program
+      case Keyboard.Q:
+        ipcRenderer.send('window-close');
+        break;
+    }
+  } else {
+    // DELETE: Removes all currently selected game objects
+    if (lastPressed === Keyboard.DELETE) {
+      if (editor.worldTool.element.hasClass('selected')) {
+        editor.worldTool.removeSelection();
+      }
+    }
+  }
+});
 
 // Create context menus
 const fileMenuTemplate = [

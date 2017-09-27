@@ -4,7 +4,6 @@ const Tool             = require('./Tool');
 const {Action}         = require('../action'); 
 const behaviorModule   = require('../behaviors');
 const {remote}         = require('electron');
-const {globalShortcut} = remote;
 const subwindowViews   = require('../subwindowViews');
 
 class WorldTool extends Tool {
@@ -15,17 +14,6 @@ class WorldTool extends Tool {
     this._filesLoaded    = null;
     
     this._resetFlags();
-    
-    // (Shortcut) Ctrl+A: Select all entities
-    // TODO: Select only entities for layers that are not locked
-    globalShortcut.register("CommandOrControl+A", () => {
-      this.selectAllEntities();
-    });
-    
-    // (Shortcut) Delete: Removes all currently selected game objects
-    globalShortcut.register("Delete", () => {
-      this.removeSelection();
-    });
     
     this.register(
       Action.Type.MAIN_TOOL_SELECT,

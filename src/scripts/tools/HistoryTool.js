@@ -3,18 +3,11 @@
 const Tool             = require('./Tool');
 const {Action}         = require('../action');
 const {remote}         = require('electron');
-const {globalShortcut} = remote;
 const subwindowViews   = require('../subwindowViews');
 
 class HistoryTool extends Tool {
   constructor() {
     super('history', new subwindowViews.HistoryView());
-
-    // (Shortcut) Undo: Ctrl+Z
-    globalShortcut.register('CommandOrControl+Z', () => this.undo());
-    
-    // (Shortcut) Redo: Ctrl+Y
-    globalShortcut.register('CommandOrControl+Y', () => this.redo());
   }
   
   undo() {
