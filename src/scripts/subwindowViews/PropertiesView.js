@@ -358,6 +358,29 @@ class PropertiesView extends SubwindowView {
     );
   }
   
+  changeBehaviorProperty(propertyData) {
+    let behaviorName  = propertyData.behavior.name;
+    let propertyName  = propertyData.propertyName;
+    let propertyValue = propertyData.property.value;
+    
+    let data = {
+      gameObjects: this.gameObjects,
+      prevValues: this.gameObjects.map(
+                    (x) => {
+                      let behavior = x.customData.behaviors[behaviorName];
+                      return behavior.properties[propertyName].value;
+                    }
+                  ),
+      values: this.gameObjects.map((x) => propertyValue),
+      behaviorData: propertyData.behavior,
+      propertyName: propertyName
+    };
+    ActionPerformer.do(
+      Action.Type.PROPERTY_CHANGE_BEHAVIOR,
+      data
+    );
+  }
+  
   onActionEntitySelect(action) {
     this.gameObjects = action.data.gameObjects;
     
@@ -480,7 +503,8 @@ class PropertiesView extends SubwindowView {
     let gameObjects = action.data.gameObjects;
     for (let i = 0; i < gameObjects.length; i++) {
       let gameObject = gameObjects[i];
-      gameObject.customData.behaviors[behaviorData.name] = behaviorData;
+      gameObject.customData.behaviors[behaviorData.name] =
+        behaviorData.clone();
     }
     
     this._updateBehaviorsDisplay();
@@ -493,6 +517,18 @@ class PropertiesView extends SubwindowView {
       let gameObject = gameObjects[i];
       gameObject.customData.behaviors[behaviorData.name] = null;
       delete gameObject.customData.behaviors[behaviorData.name];
+    }
+    
+    this._updateBehaviorsDisplay();
+  }
+  
+  onActionPropertyChangeBehavior(action) {
+    let {values, behaviorData, propertyName, gameObjects} = action.data;
+    
+    for (let i = 0; i < gameObjects.length; i++) {
+      let gameObject = gameObjects[i];
+      let behavior = gameObject.customData.behaviors[behaviorData.name];
+      behavior.properties[propertyName].value = values[i];
     }
     
     this._updateBehaviorsDisplay();
@@ -532,10 +568,11 @@ class PropertiesView extends SubwindowView {
     
     if (gameObjects.length > 0) {
       // Start comparisons against the first game object's behaviors
-      Object.assign(
-        consolidatedBehaviors,
-        gameObjects[0].customData.behaviors
-      );
+      let firstBehaviors = gameObjects[0].customData.behaviors;
+      let firstBehaviorKeys = Object.keys(firstBehaviors);
+      for (let key of firstBehaviorKeys) {
+        consolidatedBehaviors[key] = firstBehaviors[key].clone();
+      }
     
       // Go through the selection and check if all game objects have the same
       // properties for their behaviors. Otherwise, conflicting properties are
@@ -543,8 +580,8 @@ class PropertiesView extends SubwindowView {
       if (gameObjects.length > 1) {
         for (let gameObject of gameObjects) {
           this._consolidateBehaviors(
-            gameObject.customData.behaviors,
-            consolidatedBehaviors
+            consolidatedBehaviors,
+            gameObject.customData.behaviors
           );
         }
       }
@@ -553,7 +590,7 @@ class PropertiesView extends SubwindowView {
     return consolidatedBehaviors;
   }
   
-  _consolidateBehaviors(sourceBehaviors, consolidations) {
+  _consolidateBehaviors(consolidations, sourceBehaviors) {
     let sourceBehaviorKeys = Object.keys(sourceBehaviors);
     let consolidatedKeys   = Object.keys(consolidations);
     let consolidatedBools  = {};
@@ -568,8 +605,8 @@ class PropertiesView extends SubwindowView {
       
       if (typeof consolidations[behaviorName] !== 'undefined') {
         this._consolidateBehaviorProperties(
-          sourceBehavior,
-          consolidations[behaviorName]
+          consolidations[behaviorName],
+          sourceBehavior
         );
         consolidatedBools[behaviorName] = true;
       }
@@ -586,9 +623,29 @@ class PropertiesView extends SubwindowView {
     }
   }
   
-  _consolidateBehaviorProperties(sourceBehavior, consolidatedBehavior) {
-    // TODO: Add and consolidate properties for behaviors.
-    console.log(sourceBehavior, consolidatedBehavior);
+  _consolidateBehaviorProperties(consolidatedBehavior, sourceBehavior) {
+    let consolidatedKeys = Object.keys(consolidatedBehavior.module);
+    
+    for (const key of consolidatedKeys) {
+      this._consolidateBehaviorProperty(
+        key,
+        consolidatedBehavior,
+        sourceBehavior
+      );
+    }
+  }
+  
+  _consolidateBehaviorProperty(key, consolidatedBehavior, sourceBehavior) {
+    let sourceProperty = sourceBehavior.properties[key];
+    let consolidatedProperty = consolidatedBehavior.properties[key];
+    
+    if (consolidatedBehavior.indeterminate !== true) {
+      if (sourceProperty.value !== consolidatedProperty.value) {
+        consolidatedProperty.indeterminate = true;
+      } else {
+        consolidatedProperty.value = sourceProperty.value;
+      }
+    }
   }
   
   _consolidateGameObjectProperties(gameObjects) {
@@ -764,10 +821,14 @@ class PropertiesView extends SubwindowView {
     for (let key of keys) {
       let behavior         = consolidatedBehaviors[key];
       let behaviorMenuItem = new BehaviorMenuItem(behavior.name, behavior);
+      behaviorMenuItem.update();
       this.behaviorMenu.insert(behaviorMenuItem);
       
       $(behaviorMenuItem).on('remove', () => {
         this._removeBehavior(behaviorMenuItem);
+      });
+      $(behaviorMenuItem).on('change', (e, propertyData) => {
+        this.changeBehaviorProperty(propertyData);
       });
     }
   }

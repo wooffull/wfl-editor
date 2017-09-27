@@ -277,6 +277,20 @@ Object.defineProperties(Action, {
       PROPERTY_REMOVE_BEHAVIOR: 'property-remove-behavior',
       //
       //  data: {
+      //    gameObjects: <An array of all the gameObjects with an arbitrary
+      //                  property change>
+      //    prevValues: <The property's value before any changes>
+      //    values: <The new property value for all gameObjects>
+      //    behaviorData: <Data for the behavior>
+      //      module: <The behavior's module.exports>
+      //      absolutePath: <Absolute path of the module>
+      //      basename: <The module's name with its extension>
+      //      name: <The module's name>
+      //    propertyName: <Name of the property being changed>
+      //  }
+      PROPERTY_CHANGE_BEHAVIOR: 'property-change-behavior',
+      //
+      //  data: {
       //    popupType: <The type of popup to display over the editor>
       //  }
       GLOBAL_POPUP: 'global-popup',

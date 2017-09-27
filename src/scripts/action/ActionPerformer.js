@@ -182,6 +182,19 @@ const ActionPerformer = {
           data
         );
         break;
+        
+      case Action.Type.PROPERTY_CHANGE_BEHAVIOR:
+        revAction = new Action(
+          action.type,
+          {
+            gameObjects: data.gameObjects,
+            prevValues: data.values,
+            values: data.prevValues,
+            behaviorData: data.behaviorData,
+            propertyName: data.propertyName
+          }
+        );
+        break;
       
       default:
         console.error("Missing Reverse Action for: " + action.type);

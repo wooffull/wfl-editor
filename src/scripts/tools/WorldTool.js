@@ -2,7 +2,7 @@
 
 const Tool             = require('./Tool');
 const {Action}         = require('../action'); 
-const behaviors        = require('../behaviors');
+const behaviorModule   = require('../behaviors');
 const {remote}         = require('electron');
 const {globalShortcut} = remote;
 const subwindowViews   = require('../subwindowViews');
@@ -157,7 +157,7 @@ class WorldTool extends Tool {
           addedObj.rotate(rotation);
 
           if (behaviors) {
-            addedObj.customData.behaviors = behaviors;
+            addedObj.customData.tempBehaviorData = behaviors;
           }
         }
       }
@@ -181,9 +181,24 @@ class WorldTool extends Tool {
     
     for (const obj of gameObjects) {
       // Empty behaviors should not be saved
-      let behaviors = obj.customData.behaviors;
-      if (behaviors && Object.keys(behaviors).length === 0) {
-        behaviors = undefined;
+      let behaviors    = obj.customData.behaviors;
+      let behaviorData = undefined;
+      if (behaviors && Object.keys(behaviors).length > 0) {
+        behaviorData = {};
+        
+        let behaviorKeys = Object.keys(behaviors);
+        for (let behaviorKey of behaviorKeys) {
+          behaviorData[behaviorKey] = {};
+          let properties = behaviors[behaviorKey].properties;
+          
+          if (properties) {
+            let propertyKeys = Object.keys(properties);
+            for (let propertyKey of propertyKeys) {
+              behaviorData[behaviorKey][propertyKey] =
+                properties[propertyKey].value;
+            }
+          }
+        }
       }
       
       let objData = {
@@ -194,7 +209,7 @@ class WorldTool extends Tool {
         y:         obj.position.y,
         rotation:  obj.rotation,
         physics:   obj.customData.physics,
-        behaviors: behaviors
+        behaviors: behaviorData
       };
       
       data.gameObjects.push(objData);
@@ -210,18 +225,66 @@ class WorldTool extends Tool {
   _updateBehaviors() {
     let scene           = this.subwindowView.worldEditorScene;
     let gameObjects     = scene.getGameObjects();
-    let loadedBehaviors = behaviors.getLoadedBehaviors();
+    let loadedBehaviors = behaviorModule.getLoadedBehaviors();
     
     for (const obj of gameObjects) {
-      let behaviors    = obj.customData.behaviors || {};
+      if (typeof obj.customData.behaviors === 'undefined') {
+        obj.customData.behaviors = {};
+      }
+
+      let behaviors    = obj.customData.tempBehaviorData || {};
       let behaviorKeys = Object.keys(behaviors);
       
       for (const key of behaviorKeys) {
-        // TODO: Update refreshed behaviors with more sophistication.
+        // If the behavior module is loaded, fill it with the game object's
+        // saved data
         if (key in loadedBehaviors) {
-          obj.customData.behaviors[key] = loadedBehaviors[key];
-        } else {
-          obj.customData.behaviors[key].module = null;
+          let behaviorData = behaviors[key];
+          let behavior     = loadedBehaviors[key].clone();
+          
+          // Set properties
+          let propertyKeys = Object.keys(behaviorData);
+          for (let propertyKey of propertyKeys) {
+            let property = behavior.properties[propertyKey];
+            
+            if (property !== undefined) {
+              property.value = behaviorData[propertyKey];
+            }
+          }
+          
+          obj.customData.behaviors[key] = behavior;
+        
+        // Otherwise, the behavior module may not be accessible, so hold onto
+        // the current behavior module's data until we can access it later
+        } else if (obj.customData.tempBehaviorData !== undefined) {
+          // If the game object already had the behavior module loaded, that
+          // means it was made inaccessible while editing the level
+          if (obj.customData.behaviors[key] !== undefined &&
+              obj.customData.behaviors[key].module !== undefined) {
+            
+            let behavior = obj.customData.behaviors[key];
+            obj.customData.tempBehaviorData[key] = {};
+            
+            // Retain properties in temp data
+            let propertyKeys = Object.keys(behavior.properties);
+            for (let propertyKey of propertyKeys) {
+              let property = behavior.properties[propertyKey];
+              
+              if (property !== undefined) {
+                obj.customData.tempBehaviorData[key][propertyKey] =
+                  property.value;
+              }
+            }
+            
+            behavior.module = undefined;
+          
+          // Otherwise, the level was loaded and the behavior module cannot be
+          // accessed
+          } else {
+            obj.customData.behaviors[key] =
+              behaviorModule.getPlaceholderBehavior();
+            obj.customData.behaviors[key].name = key;
+          }
         }
       }
     }

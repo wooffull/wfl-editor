@@ -308,6 +308,21 @@ class HistoryView extends SubwindowView {
           label = `Remove Behavior (${name}) from group`;
         }
         break;
+        
+      case Action.Type.PROPERTY_CHANGE_BEHAVIOR:
+        var length       = action.data.gameObjects.length;
+        var behaviorName = action.data.behaviorData.name;
+        var propertyName = action.data.propertyName;
+        
+        if (length === 1) {
+          var entity = action.data.gameObjects[0].customData.entity;
+          label = `Change Behavior Property (${behaviorName}::`
+                + `${propertyName}) for ` + entity.name;
+        } else {
+          label = `Change Behavior Property (${behaviorName}::`
+                + `${propertyName}) for group`;
+        }
+        break;
       
       default:
         label = '???: ' + action.type;

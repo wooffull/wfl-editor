@@ -75,6 +75,14 @@ class PlayGameScene extends EditorScene {
       for (let key of behaviorKeys) {
         let behavior = gameObject.customData.behaviors[key];
         let instance = new behavior.module(this.keyboard);
+        
+        // Set all properties
+        let propertyKeys = Object.keys(behavior.properties);
+        for (let propertyKey of propertyKeys) {
+          let property = behavior.properties[propertyKey];
+          instance[propertyKey] = property.value;
+        }
+        
         gameObject.addBehavior(instance);
       }
     }

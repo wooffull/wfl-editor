@@ -1,6 +1,7 @@
 "use strict";
 
 const $               = wfl.jquery;
+const PropertyType    = wfl.behavior.property.Type;
 const HtmlElement     = require('./HtmlElement');
 const CssClass        = require('../CssClasses');
 const InputText       = require('./InputText');
@@ -51,6 +52,14 @@ class BehaviorMenuItem extends HtmlElement {
     this.expanded = true;
     
     this.expand();
+    
+    // Add any properties from the given data
+    if ('properties' in data) {
+      let keys = Object.keys(data.properties);
+      for (let key of keys) {
+        this.addProperty(key, data.properties[key]);
+      }
+    }
   }
   
   get label() {
@@ -65,6 +74,10 @@ class BehaviorMenuItem extends HtmlElement {
     $(this.expandMoreBtn.element).off();
     $(this.expandLessBtn.element).off();
     $(this.removeBtn.element).off();
+    
+    for (let property of this.properties) {
+      $(property.htmlElement).off();
+    }
   }
   
   expand() {
@@ -83,6 +96,17 @@ class BehaviorMenuItem extends HtmlElement {
     this.expandLessBtn.hide();
   }
   
+  update() {
+    // Update to display indeterminate values
+    for (let property of this.properties) {
+      let {data, htmlElement} = property;
+      
+      if (data.value === null) {
+        htmlElement.value = null;
+      }
+    }
+  }
+  
   addProperty(label, data) {
     if (this.properties.length === 0) {
       this.propertiesContainer.html('');
@@ -94,16 +118,24 @@ class BehaviorMenuItem extends HtmlElement {
     
     if (data && ('type' in data)) {
       switch (data.type) {
-      case 'string':
+      case PropertyType.BOOLEAN:
+        propertyHtmlElement = this._createBooleanProperty(label, data);
+        break;
+          
+      case PropertyType.STRING:
         propertyHtmlElement = this._createStringProperty(label, data);
         break;
           
-      case 'number':
-        propertyHtmlElement = this._createNumberProperty(label, data);
+      case PropertyType.INTEGER:
+        propertyHtmlElement = this._createIntegerProperty(label, data);
         break;
           
-      case 'integer':
-        propertyHtmlElement = this._createIntegerProperty(label, data);
+      case PropertyType.NUMBER:
+        propertyHtmlElement = this._createNumberProperty(label, data);
+        break;
+        
+      default:
+        propertyHtmlElement = this._createDynamicProperty(label, data);
         break;
       }
       
@@ -125,33 +157,83 @@ class BehaviorMenuItem extends HtmlElement {
     this.properties.push(property);
   }
   
+  _createBooleanProperty(label, data) {
+    let checkBox = new CheckBox(label);
+    
+    if (data.value === true) {
+      checkBox.check();
+    }
+    
+    $(checkBox).on('change', () => this._onPropertyChange(checkBox, data));
+    return checkBox;
+  }
+  
   _createStringProperty(label, data) {
     let inputText = new InputText(
       label,
-      '',
+      data.value,
       10
     );
-    return inputText;
-  }
-  
-  _createNumberProperty(label, data) {
-    let inputText = new InputText(
-      label,
-      0,
-      10,
-      DataValidator.keyValidatorForNumbers
-    );
+    $(inputText).on('change', () => this._onPropertyChange(inputText, data));
     return inputText;
   }
   
   _createIntegerProperty(label, data) {
     let inputText = new InputText(
       label,
-      0,
+      data.value,
       10,
       DataValidator.keyValidatorForIntegers
     );
+    $(inputText).on('change', () => this._onPropertyChange(inputText, data));
     return inputText;
+  }
+  
+  _createNumberProperty(label, data) {
+    let inputText = new InputText(
+      label,
+      data.value,
+      10,
+      DataValidator.keyValidatorForNumbers
+    );
+    $(inputText).on('change', () => this._onPropertyChange(inputText, data));
+    return inputText;
+  }
+  
+  _createDynamicProperty(label, data) {
+    let inputText = new InputText(
+      label,
+      data.value,
+      10
+    );
+    $(inputText).on('change', () => this._onPropertyChange(inputText, data));
+    return inputText;
+  }
+  
+  _onPropertyChange(htmlElement, property) {
+    let prevPropertyValue = property.value;
+    
+    // Try updating the value
+    try {
+      property.value = htmlElement.value;
+
+      // If the update was successful, send out a notfication
+      if (prevPropertyValue !== property.value) {
+        let data = {
+          property:     property,
+          propertyName: htmlElement.label.html(),
+          behavior:     this.data
+        };
+        $(this).trigger('change', [data]);
+
+      // Otherwise keep the previous value
+      } else {
+        htmlElement.value = prevPropertyValue;
+      }
+    } catch (err) {
+      property.value    = prevPropertyValue;
+      htmlElement.value = prevPropertyValue;
+    }
   }
   
   _onRemoveBtnClick() {

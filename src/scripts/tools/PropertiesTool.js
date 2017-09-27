@@ -64,6 +64,10 @@ class PropertiesTool extends Tool {
       Action.Type.PROPERTY_REMOVE_BEHAVIOR,
       (action) => this.subwindowView.onActionPropertyRemoveBehavior(action)
     );
+    this.register(
+      Action.Type.PROPERTY_CHANGE_BEHAVIOR,
+      (action) => this.subwindowView.onActionPropertyChangeBehavior(action)
+    );
   }
 }
 

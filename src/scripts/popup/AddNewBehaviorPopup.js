@@ -46,7 +46,7 @@ class AddNewBehaviorPopup extends Popup {
   addSelectedBehavior() {
     let menuItem = this.behaviorsMenu.getLastSelected();
     let data     = {
-      behaviorData: menuItem.data
+      behaviorData: menuItem.data.clone()
     };
     
     ActionPerformer.do(
