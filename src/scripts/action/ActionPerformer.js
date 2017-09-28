@@ -55,6 +55,15 @@ const ActionPerformer = {
           }
         );
         break;
+        
+      case Action.Type.PROJECT_DYNAMIC_Z_ORDER_CHANGE:
+        revAction = new Action(
+          Action.Type.PROJECT_DYNAMIC_Z_ORDER_CHANGE,
+          {
+            value: !data.value
+          }
+        );
+        break;
       
       case Action.Type.LAYER_ADD:
         revAction = new Action(

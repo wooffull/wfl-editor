@@ -165,6 +165,12 @@ class WorldView extends SubwindowView {
     scene.tileSize.y = parseInt(tileHeight);
   }
   
+  onActionDynamicZOrderChange(action) {
+    let {value}                            = action.data;
+    this.worldEditorScene.useDynamicZOrder = value;
+    this.playGameScene.useDynamicZOrder    = value;
+  }
+  
   onActionEntitySelect(action) {
     let {entity}    = action.data;
     let scene       = this.worldEditorScene;

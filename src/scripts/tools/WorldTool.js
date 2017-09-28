@@ -28,6 +28,10 @@ class WorldTool extends Tool {
       (action) => this.subwindowView.onActionTileHeightChange(action)
     );
     this.register(
+      Action.Type.PROJECT_DYNAMIC_Z_ORDER_CHANGE,
+      (action) => this.subwindowView.onActionDynamicZOrderChange(action)
+    );
+    this.register(
       Action.Type.FILE_REFRESH,
       (action) => this.onActionFileRefresh(action)
     );
@@ -163,7 +167,6 @@ class WorldTool extends Tool {
     let scene       = this.subwindowView.worldEditorScene;
     let gameObjects = scene.getGameObjects();
     let data        = {
-      tileSize:    scene.tileSize,
       gameObjects: []
     };
     

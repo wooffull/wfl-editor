@@ -7,7 +7,8 @@ const {WorldEditorScene} = require('../scenes');
 const {DataValidator}    = require('../util');
 const {InputText,
        MenuItem,
-       MenuButton}       = require('../ui');
+       MenuButton,
+       CheckBox}         = require('../ui');
 const {Action,
        ActionPerformer}  = require('../action');
 
@@ -30,14 +31,20 @@ class ProjectSettingsView extends SubwindowView {
       3,
       DataValidator.keyValidatorForPositiveNumbers
     );
+    this.dynamicZOrderCheckBox = new CheckBox('Dynamic Z-Order');
     
     this.element.append(this.label);
     
     this.add(this.tileSizeXInputText);
     this.add(this.tileSizeYInputText);
+    this.add(this.dynamicZOrderCheckBox);
     
     $(this.tileSizeXInputText).on("change", (e) => this.onTileSizeChange(e));
     $(this.tileSizeYInputText).on("change", (e) => this.onTileSizeChange(e));
+    $(this.dynamicZOrderCheckBox).on(
+      "change",
+      (e) => this.changeDynamicZOrder()
+    );
     
     this.reset();
   }
@@ -46,6 +53,9 @@ class ProjectSettingsView extends SubwindowView {
     // Set the project's tile size to default values
     this.setTileSizeX(WorldEditorScene.DEFAULT_TILE_SIZE.x, false);
     this.setTileSizeY(WorldEditorScene.DEFAULT_TILE_SIZE.y, false);
+    
+    this.dynamicZOrderCheckBox.check();
+    this.changeDynamicZOrder(false);
   }
   
   onTileSizeChange(e) {
@@ -92,6 +102,18 @@ class ProjectSettingsView extends SubwindowView {
     );
   }
   
+  changeDynamicZOrder(reversable = true) {
+    let data = {
+      value: this.dynamicZOrderCheckBox.value
+    };
+    
+    ActionPerformer.do(
+      Action.Type.PROJECT_DYNAMIC_Z_ORDER_CHANGE,
+      data,
+      reversable
+    );
+  }
+  
   onActionTileWidthChange(action) {
     let {tileWidth} = action.data;
     this.tileSizeXInputText.value = tileWidth;
@@ -100,6 +122,11 @@ class ProjectSettingsView extends SubwindowView {
   onActionTileHeightChange(action) {
     let {tileHeight} = action.data;
     this.tileSizeYInputText.value = tileHeight;
+  }
+  
+  onActionDynamicZOrderChange(action) {
+    let {value} = action.data;
+    this.dynamicZOrderCheckBox.value = value;
   }
   
   _validateTileSize(inputText) {

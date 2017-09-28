@@ -16,6 +16,10 @@ class ProjectSettingsTool extends Tool {
       Action.Type.PROJECT_TILE_HEIGHT_CHANGE,
       (action) => this.subwindowView.onActionTileHeightChange(action)
     );
+    this.register(
+      Action.Type.PROJECT_DYNAMIC_Z_ORDER_CHANGE,
+      (action) => this.subwindowView.onActionDynamicZOrderChange(action)
+    );
   }
   
   subwindowInit() {
@@ -26,7 +30,7 @@ class ProjectSettingsTool extends Tool {
     // If no level data, exit early
     if (!project.level) return;
       
-    let {tileSize} = project.level;
+    let {tileSize, dynamicZOrder} = project.level;
     
     if (tileSize) {
       if (tileSize.x) {
@@ -45,6 +49,26 @@ class ProjectSettingsTool extends Tool {
         }
       }
     }
+    
+    if (dynamicZOrder === true) {
+      this.subwindowView.dynamicZOrderCheckBox.value = true;
+    } else {
+      this.subwindowView.dynamicZOrderCheckBox.value = false;
+    }
+    
+    this.subwindowView.changeDynamicZOrder(false);
+  }
+  
+  getData() {
+    let data = {
+      tileSize: {
+        x: this.subwindowView.tileSizeXInputText.value,
+        y: this.subwindowView.tileSizeYInputText.value
+      },
+      dynamicZOrder: this.subwindowView.dynamicZOrderCheckBox.value
+    };
+    
+    return data;
   }
 }
 

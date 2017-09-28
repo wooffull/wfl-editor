@@ -94,6 +94,13 @@ class HistoryView extends SubwindowView {
               + action.data.tileHeight;
         break;
         
+      case Action.Type.PROJECT_DYNAMIC_Z_ORDER_CHANGE:
+        label = 'Change Dynamic Z-Order: '
+              + (!action.data.value)
+              + ' -> '
+              + action.data.value;
+        break;
+        
       case Action.Type.LAYER_ADD:
         label = 'Add Layer: ' + action.data.layerId;
         break;

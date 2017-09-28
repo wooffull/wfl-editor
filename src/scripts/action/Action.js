@@ -54,6 +54,11 @@ Object.defineProperties(Action, {
       //    tileHeight: <Project's new tile height>
       //  }
       PROJECT_TILE_HEIGHT_CHANGE: 'project-tile-height-change',
+      //
+      //  data: {
+      //    value: <Project's new dynamic z-order value>
+      //  }
+      PROJECT_DYNAMIC_Z_ORDER_CHANGE: 'project-dynamic-z-order-change',
       
       
       // ToolBarTool
