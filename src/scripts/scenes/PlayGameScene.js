@@ -63,6 +63,7 @@ class PlayGameScene extends EditorScene {
     gameObject.customData.entity = entity;
     
     // Copy over necessary properties
+    gameObject.name = original.name;
     gameObject.position._x = original.position._x;
     gameObject.position._y = original.position._y;
     gameObject.rotate(original.rotation);

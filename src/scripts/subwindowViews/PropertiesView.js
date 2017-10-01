@@ -462,7 +462,7 @@ class PropertiesView extends SubwindowView {
     for (let i = 0; i < gameObjects.length; i++) {
       let gameObject = gameObjects[i];
       this._validatePhysicsProperties(gameObject);
-      gameObject.customData.physics.friction = values[i];
+      gameObject.customData.physics.mass = values[i];
     }
     
     this._updatePhysicsPropertiesDisplay();
