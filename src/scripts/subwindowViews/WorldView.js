@@ -106,13 +106,14 @@ class WorldView extends SubwindowView {
         this.playGameScene.addGameObject(finalObj, layer, persists);
       }
       
-      // TODO: Remove this. This is only to test having a playing in the test
+      // TODO: Remove this. This is only to test having a player in the test
       // game scene.
-      let newGameObjects = this.playGameScene.getGameObjects();
-      if (newGameObjects.length > 0) {
-        this.playGameScene.player = newGameObjects[newGameObjects.length - 1];
+      let defaultPlayer = this.playGameScene.findGameObjectByName('player');
+      if (defaultPlayer) {
+        this.playGameScene.player = defaultPlayer;
         this.playGameScene.camera.follow(this.playGameScene.player);
-        this.playGameScene.player.name = 'player';
+        this.playGameScene.camera.position._x = defaultPlayer.x;
+        this.playGameScene.camera.position._y = defaultPlayer.y;
       }
       
       this.wflGame.setScene(this.playGameScene);
