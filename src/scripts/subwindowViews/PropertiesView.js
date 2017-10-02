@@ -340,8 +340,8 @@ class PropertiesView extends SubwindowView {
     
     // If the validated value is equivalent to its previous value, don't
     // perform an action for its change
-    if (value === parseFloat(this.frictionInputText._prevValue)) {
-      this.frictionInputText.value = value;
+    if (value === parseFloat(this.restitutionInputText._prevValue)) {
+      this.restitutionInputText.value = value;
       return;
     }
     
