@@ -87,6 +87,8 @@ class WorldView extends SubwindowView {
     if (this.wflGame.getScene() !== this.playGameScene) {
       // Reset the game scene
       this.playGameScene.reset();
+      this.playGameScene._bucketConfig.size =
+        this.worldEditorScene._bucketConfig.size;
       
       // Add all game objects to the game world
       let gameObjects = this.worldEditorScene.getGameObjects();
