@@ -5,6 +5,7 @@ const {Action}         = require('../action');
 const behaviorModule   = require('../behaviors');
 const {remote}         = require('electron');
 const subwindowViews   = require('../subwindowViews');
+const PhysicsObject    = wfl.core.entities.PhysicsObject;
 
 class WorldTool extends Tool {
   constructor() {
@@ -142,13 +143,22 @@ class WorldTool extends Tool {
         for (const obj of gameObjects) {
           let {entity, x, y, rotation, layer, physics, behaviors, name} = obj;
           let addedObj = scene.addEntity(entity, layer, false);
-          addedObj.name               = name;
-          addedObj.position.x         = x;
-          addedObj.position.y         = y;
-          addedObj.customData.physics = physics;
-          addedObj.rotate(rotation);
+          addedObj.position.x = x;
+          addedObj.position.y = y;
+          
+          if (typeof name !== 'undefined') {
+            addedObj.name = name;
+          }
+          
+          if (typeof physics !== 'undefined') {
+            addedObj.customData.physics = physics;
+          }
+          
+          if (typeof rotation !== 'undefined') {
+            addedObj.rotate(rotation);
+          }
 
-          if (behaviors) {
+          if (typeof behaviors !== 'undefined') {
             addedObj.customData.tempBehaviorData = behaviors;
           }
         }
@@ -202,6 +212,33 @@ class WorldTool extends Tool {
         physics:   obj.customData.physics,
         behaviors: behaviorData
       };
+      
+      // Remove keys with default values
+      if (objData.name === '')    delete objData.name;
+      if (objData.rotation === 0) delete objData.rotation;
+      if (objData.physics) {
+        if (objData.physics.solid === false)    delete objData.physics.solid;
+        if (objData.physics.fixed === false)    delete objData.physics.fixed;
+        if (objData.physics.persists === false) delete objData.physics.persists;
+        
+        if (objData.physics.mass === PhysicsObject.DEFAULT_MASS) {
+          delete objData.physics.mass;
+        }
+        
+        if (objData.physics.friction ===
+            PhysicsObject.DEFAULT_SURFACE_FRICTION) {
+          delete objData.physics.friction;
+        }
+        
+        if (objData.physics.restitution === 
+            PhysicsObject.DEFAULT_SURFACE_RESTITUTION) {
+          delete objData.physics.restitution;
+        }
+        
+        if (Object.keys(objData.physics).length === 0) {
+          delete objData.physics;
+        }
+      }
       
       data.gameObjects.push(objData);
     }

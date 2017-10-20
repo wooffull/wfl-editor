@@ -508,8 +508,15 @@ class WorldEditorScene extends EditorScene {
     
     state.addFrame(frame);
     gameObject.addState(GameObject.STATE.DEFAULT, state);
-    gameObject.customData.entity = entity;
-    gameObject.customData.id     = this._entityCounter;
+    gameObject.customData.id = this._entityCounter;
+    
+    // Copy over entity data, ignoring the imageSource property
+    gameObject.customData.entity = {};
+    for (let key of Object.keys(entity)) {
+      if (key !== 'imageSource') {
+        gameObject.customData.entity[key] = entity[key];
+      }
+    }
 
     // If the mouse is up, then the entity has been placed.
     // If the mouse is still down, the entity is being dragged and we'll 
