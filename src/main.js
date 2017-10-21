@@ -133,4 +133,5 @@ ipcMain.on('history-update', (e, time) => {
 });
 
 ipcMain.on('game-export', () => {
+  file.Project.export();
 });

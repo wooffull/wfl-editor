@@ -1,0 +1,23 @@
+/* These are default styles for a WFL game created with the WFL Game Editor */
+
+html {
+  background-color: black;
+}
+        
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+#game-canvas {
+  display: block;
+  margin: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px #222 solid;
+} 

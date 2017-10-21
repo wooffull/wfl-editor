@@ -1,10 +1,11 @@
 "use strict";
 
-const fs        = require('fs');
-const path      = require('path');
-const {dialog}  = require('electron');
-const AppConfig = require('./AppConfig');
-const mkdirp    = require('mkdirp');
+const fs         = require('fs-extra');
+const path       = require('path');
+const {dialog}   = require('electron');
+const AppConfig  = require('./AppConfig');
+const mkdirp     = require('mkdirp');
+const browserify = require('browserify');
 
 let win         = undefined;
 let project     = undefined;
@@ -78,12 +79,188 @@ function newProject(winRef, _preventConfirmation = false) {
 }
 
 
+/**
+ * Allows user to select the exported project's location with the file explorer 
+ */
+function exportProject() {
+  let projectsPath = project.dirname || path.join(basePath, 'projects');
+  
+  dialog.showOpenDialog(win, {
+    title:       'Export Project',
+    defaultPath: projectsPath,
+    buttonLabel: 'Export',
+    properties: ['openDirectory']
+  },
+  (projectPath) => {
+    if (typeof projectPath === 'undefined') return;
+    
+    // Take the first selected project from the array
+    projectPath = projectPath[0];
+    
+    // The new folder to be created should be named after the project's title
+    projectPath = path.join(projectPath, project.title || 'undefined');
+    
+    mkdirp(projectPath, function (err) {
+      if (err && err.code !== 'EEXIST') {
+        throw err;
+      }
+    
+      let assetsPath = path.join(projectPath, 'assets');
+      
+      mkdirp(assetsPath, function (err) {
+        if (err && err.code !== 'EEXIST') {
+          throw err;
+        }
+        mkdirp(path.join(projectPath, 'behaviors'), function (err) {
+          if (err && err.code !== 'EEXIST') {
+            throw err;
+          }
+          
+          let fileList = [];
+          fileList.push({
+            srcPath:  path.join(basePath, 'src', 'lib', 'wfl.js'),
+            destPath: path.join(projectPath, 'wfl.js')
+          });
+          fileList.push({
+            srcPath:  path.join(basePath, 'src', 'export', 'styles.css'),
+            destPath: path.join(projectPath, 'styles.css')
+          });
+          fileList.push({
+            srcPath:  path.join(basePath, 'src', 'export', 'game.js'),
+            destPath: path.join(projectPath, 'game.js')
+          });
+          
+          let copiedEntities = [];
+          for (let entity of project.level.entities) {
+            copiedEntities.push({
+              imageSource: path.win32.basename(entity.imageSource),
+              name: entity.name
+            });
+            
+            fileList.push({
+              srcPath:  entity.imageSource,
+              destPath: path.join(
+                assetsPath,
+                path.win32.basename(entity.imageSource)
+              )
+            });
+          }
+          
+          for (let fileData of fileList) {
+            fs.writeFileSync(
+              fileData.destPath,
+              fs.readFileSync(fileData.srcPath)
+            );
+          }
+          
+          // Create level data for the exported game
+          let levelData = {
+            dynamicZOrder: project.level.dynamicZOrder,
+            entities:      copiedEntities,
+            gameObjects:   project.level.gameObjects
+          };
+          let gameData = {
+            title: project.title,
+            level: levelData
+          };
+          
+          // Add the game data file
+          fs.writeFileSync(
+            path.join(projectPath, 'data.json'),
+            JSON.stringify(gameData)
+          );
+          
+          // Add the HTML file
+          fs.writeFileSync(
+            path.join(projectPath, 'index.html'),
+`<!DOCTYPE html>
+<html>
+    <head>
+        <title>${project.title}</title>
+        
+        <link rel="stylesheet" href="./styles.css">
+    </head>
+    <body>
+        <canvas width="768" height="576" id="game-canvas"></canvas>
+        <script src="./wfl.js"></script>
+        <script src="./bundle.js"></script>
+    </body>
+</html>`
+          );
+          
+          // Copy over all behaviors
+          fs.readdir(path.join(project.dirname, 'behaviors'), (err, items) => {
+            if (err) {
+              throw err;
+            }
+
+            let behaviors = [];
+
+            for (let item of items) {
+              if (path.extname(item) === '.js') {
+                behaviors.push(item);
+              }
+            }
+            
+            // Add the behaviors index
+            let moduleString = 
+`'use strict';
+module.exports = {`;
+            
+            for (let behavior of behaviors) {
+              let basename = path.win32.basename(behavior, '.js');
+              moduleString += `${basename}: require('./${basename}.js'),`;
+            }
+            moduleString += '};';
+            
+            fs.writeFileSync(
+              path.join(projectPath, 'behaviors', 'index.js'),
+              moduleString
+            );
+
+            // Begin bundling game and behaviors
+            let b = browserify();
+            let writeStream = fs.createWriteStream(
+              path.join(projectPath, 'bundle.js')
+            );
+            
+            // Compile all behaviors into one bundle
+            if (behaviors.length > 0) {
+              for (let behavior of behaviors) {
+                fs.writeFileSync(
+                  path.join(projectPath, 'behaviors', behavior),
+                  fs.readFileSync(
+                    path.join(project.dirname, 'behaviors', behavior)
+                  )
+                );
+              }
+
+              for (let behavior of behaviors) {
+                b.add(path.join(projectPath, 'behaviors', behavior));
+              }
+            }
+            
+            // Bundle the game and behaviors
+            b.add(path.join(projectPath, 'game.js'));
+            b.bundle().pipe(writeStream);
+            
+            // Remove temp files when the bundle is finished
+            writeStream.on('finish', function () {
+              fs.remove(path.join(projectPath, 'behaviors'));
+              fs.remove(path.join(projectPath, 'game.js'));
+            });
+          });
+        });
+      });
+    });
+  });
+}
+
 
 /**
- * Allows user to select the project's directory with the file explore to save a new project
+ * Allows user to select the project's directory with the file explorer to save a new project
  */
 function saveAsProject(next) {
-  let projectJson  = JSON.stringify(project, null, '  ');
   let projectsPath = path.join(basePath, 'projects');
   
   dialog.showSaveDialog(win, {
@@ -93,13 +270,13 @@ function saveAsProject(next) {
   (projectPath) => {
     if (typeof projectPath === 'undefined') return;
     
-    // If likely overwriting another project, handle the paths accordintly
+    // If likely overwriting another project, handle the paths accordingly
     if (path.extname(projectPath) === '.wfl') {
       project.dirname = path.dirname(projectPath);
-      project.title   = path.basename(project.dirname);
+      project.title   = path.win32.basename(project.dirname);
     } else {
       project.dirname = projectPath;
-      project.title   = path.basename(projectPath);
+      project.title   = path.win32.basename(projectPath);
     }
     
     saveProject(next);
@@ -191,6 +368,7 @@ module.exports = {
   reset:               newProject,
   save:                saveProject,
   saveAs:              saveAsProject,
+  export:              exportProject,
   load:                loadProject,
   hasChanges:          hasChanges,
   updateHistory:       updateHistory,

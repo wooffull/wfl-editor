@@ -42,7 +42,7 @@ class FileMenu extends Menu {
   
   update() {
     if (typeof this.rootPath !== 'undefined') {
-      this.rootFileItem.setTitle(path.basename(this.rootPath));
+      this.rootFileItem.setTitle(path.win32.basename(this.rootPath));
       return this.rootFileItem.setFilepath(this.rootPath);
     }
     

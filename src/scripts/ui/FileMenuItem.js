@@ -55,7 +55,7 @@ class FileMenuItem extends HtmlElement {
     if (typeof filepath === 'undefined') {
       this.setTitle('untitled');  
     } else {
-      this.setTitle(path.basename(filepath));
+      this.setTitle(path.win32.basename(filepath));
     }
     
     this.setDepth(this.depth);

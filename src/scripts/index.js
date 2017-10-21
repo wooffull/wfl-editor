@@ -111,16 +111,19 @@ $(Keyboard).on('keypressed', (e) => {
         } else {
           ipcRenderer.send('project-save'); 
         }
+        Keyboard.clear();
         break;
 
       // CTRL+N: New project
       case Keyboard.N:
         ipcRenderer.send('project-new');
+        Keyboard.clear();
         break;
 
       // CTRL+O: Open project
       case Keyboard.O:
         ipcRenderer.send('project-load');
+        Keyboard.clear();
         break;
 
       // CTRL+Z: Undo last action
@@ -136,6 +139,12 @@ $(Keyboard).on('keypressed', (e) => {
       // CTRL+Q: Quit program
       case Keyboard.Q:
         ipcRenderer.send('window-close');
+        break;
+      
+      // CTRL+E: Export game
+      case Keyboard.E:
+        ipcRenderer.send('game-export');
+        Keyboard.clear();
         break;
     }
   } else {
@@ -158,6 +167,7 @@ const fileMenuTemplate = [
   },
   {
     label: 'Open...',
+    accelerator: 'Ctrl+O',
     role: 'open',
     click: () => ipcRenderer.send('project-load')
   },
@@ -178,6 +188,7 @@ const fileMenuTemplate = [
   },
   {
     label: 'Export Game',
+    accelerator: 'Ctrl+E',
     role: 'export',
     click: () => ipcRenderer.send('game-export')
   },

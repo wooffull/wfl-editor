@@ -2,7 +2,6 @@
 
 const {GameObject,
        PhysicsObject}   = wfl.core.entities;
-const geom              = wfl.geom;
 const EditorScene       = require('./EditorScene');
 
 class PlayGameScene extends EditorScene {
