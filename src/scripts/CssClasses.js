@@ -9,7 +9,7 @@ module.exports = {
   SUBWINDOW_VIEW: 'flex-column-box subwindow-view',
   SUBWINDOW_FLEX_COLUMN: 'flex-column-box',
   
-  WORLD_CANVAS: 'world-canvas',
+  WORLD_CANVAS: 'game-canvas',
   TOOL_BAR_TOOL_ICON: 'tool-bar-tool-icon',
   
   BUTTON: 'button',
