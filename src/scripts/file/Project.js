@@ -132,13 +132,18 @@ function exportProject() {
           
           let copiedEntities = [];
           for (let entity of project.level.entities) {
+            let absolutePath = path.join(
+              project.dirname,
+              'assets',
+              entity.imageSource
+            );
             copiedEntities.push({
               imageSource: path.win32.basename(entity.imageSource),
               name: entity.name
             });
             
             fileList.push({
-              srcPath:  entity.imageSource,
+              srcPath:  absolutePath,
               destPath: path.join(
                 assetsPath,
                 path.win32.basename(entity.imageSource)
@@ -189,67 +194,32 @@ function exportProject() {
           );
           
           // Copy over all behaviors
-          fs.readdir(path.join(project.dirname, 'behaviors'), (err, items) => {
-            if (err) {
-              throw err;
-            }
-
-            let behaviors = [];
-
-            for (let item of items) {
-              if (path.extname(item) === '.js') {
-                behaviors.push(item);
+          fs.copy(
+            path.join(project.dirname, 'behaviors'),
+            path.join(projectPath, 'behaviors'),
+            err => {
+              if (err) {
+                throw err;
               }
-            }
-            
-            // Add the behaviors index
-            let moduleString = 
-`'use strict';
-module.exports = {`;
-            
-            for (let behavior of behaviors) {
-              let basename = path.win32.basename(behavior, '.js');
-              moduleString += `${basename}: require('./${basename}.js'),`;
-            }
-            moduleString += '};';
-            
-            fs.writeFileSync(
-              path.join(projectPath, 'behaviors', 'index.js'),
-              moduleString
-            );
+              
+              // Begin bundling game and behaviors
+              let b = browserify();
+              let writeStream = fs.createWriteStream(
+                path.join(projectPath, 'bundle.js')
+              );
 
-            // Begin bundling game and behaviors
-            let b = browserify();
-            let writeStream = fs.createWriteStream(
-              path.join(projectPath, 'bundle.js')
-            );
-            
-            // Compile all behaviors into one bundle
-            if (behaviors.length > 0) {
-              for (let behavior of behaviors) {
-                fs.writeFileSync(
-                  path.join(projectPath, 'behaviors', behavior),
-                  fs.readFileSync(
-                    path.join(project.dirname, 'behaviors', behavior)
-                  )
-                );
-              }
+              // Bundle the game and behaviors
+              b.add(path.join(projectPath, 'behaviors', 'index.js'));
+              b.add(path.join(projectPath, 'game.js'));
+              b.bundle().pipe(writeStream);
 
-              for (let behavior of behaviors) {
-                b.add(path.join(projectPath, 'behaviors', behavior));
-              }
+              // Remove temp files when the bundle is finished
+              writeStream.on('finish', function () {
+                fs.remove(path.join(projectPath, 'behaviors'));
+                fs.remove(path.join(projectPath, 'game.js'));
+              });
             }
-            
-            // Bundle the game and behaviors
-            b.add(path.join(projectPath, 'game.js'));
-            b.bundle().pipe(writeStream);
-            
-            // Remove temp files when the bundle is finished
-            writeStream.on('finish', function () {
-              fs.remove(path.join(projectPath, 'behaviors'));
-              fs.remove(path.join(projectPath, 'game.js'));
-            });
-          });
+          )
         });
       });
     });
@@ -273,12 +243,11 @@ function saveAsProject(next) {
     // If likely overwriting another project, handle the paths accordingly
     if (path.extname(projectPath) === '.wfl') {
       project.dirname = path.dirname(projectPath);
-      project.title   = path.win32.basename(project.dirname);
     } else {
       project.dirname = projectPath;
-      project.title   = path.win32.basename(projectPath);
     }
     
+    project.title = path.win32.basename(project.dirname);
     saveProject(next);
   });
 }
@@ -299,7 +268,15 @@ function saveProject(next) {
   // Update the time reference for when the project was last changed
   project.lastChanged = lastChanged;
   
+  // Don't include dirname in the saved .wfl file. It'll be generated
+  // when necessary
+  let dirname = project.dirname;
+  delete project.dirname;
   let projectJson  = JSON.stringify(project, null, '  ');
+  
+  // Reload dirname after the JSON is created
+  project.dirname = dirname;
+  
   let projectsPath = path.join(basePath, 'projects');
   
   mkdirp(project.dirname, function (err) {
@@ -353,6 +330,8 @@ function loadProject(projectTitle = 'test', _preventConfirmation = false) {
       }
 
       project = JSON.parse(data);
+      project.dirname = path.dirname(projectPath);
+      
       win.webContents.send('project-load-finalize', project);
       
       lastChanged = project.lastChanged;

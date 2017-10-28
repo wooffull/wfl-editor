@@ -64,6 +64,8 @@ class FileExplorerView extends SubwindowView {
     if (typeof this.fileMenu.rootPath !== "undefined") {
       return this._confirmBehaviorsDirectoryExists()
         .catch((err) => console.log(err))
+        .then(this._confirmAssetsDirectoryExists())
+        .catch((err) => console.log(err))
         .then(this.fileMenu.update())
         .then(this._updateBehaviors());
     } else {
@@ -100,6 +102,44 @@ class FileExplorerView extends SubwindowView {
       let behaviorsPath = path.join(project.dirname, 'behaviors');
       
       mkdirp(behaviorsPath, function (err) {
+        if (err && err.code !== 'EEXIST') {
+          reject(err);
+        }
+        
+        resolve();
+      });
+    });
+  }
+  
+  _confirmAssetsDirectoryExists() {
+    return new Promise((resolve, reject) => {
+      let project = Project.getProject();
+      
+      if (project && project.title) {
+        let assetsPath = path.join(project.dirname, 'assets');
+      
+        fs.lstat(assetsPath, (err, stats) => {
+          if (err || !stats.isDirectory()) {
+            this._createAssetsDirectory()
+              .catch((err) => reject(err))
+              .then(() => resolve());
+          } else {
+            resolve();
+          }
+        });
+      } else {
+        reject("Assets directory could not be created. " +
+               "Try saving the current project.");
+      }
+    });
+  }
+  
+  _createAssetsDirectory() {
+    return new Promise((resolve, reject) => {
+      let project = Project.getProject();
+      let assetsPath = path.join(project.dirname, 'assets');
+      
+      mkdirp(assetsPath, function (err) {
         if (err && err.code !== 'EEXIST') {
           reject(err);
         }

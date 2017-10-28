@@ -5,6 +5,9 @@ const {Action,
        ActionPerformer} = require('../action');
 const {Entity}          = require('../world');
 const subwindowViews    = require('../subwindowViews');
+const {remote}          = require('electron');
+const path              = remote.require('path');
+const {Project}         = remote.require('./scripts/file');
 
 class EntityTool extends Tool {
   constructor() {
@@ -60,9 +63,18 @@ class EntityTool extends Tool {
     let data     = {
       entities: []
     };
+    let project = Project.getProject();
     
     for (const item of menuList) {
-      data.entities.push(item.data);
+      let entity = {
+        name: item.data.name,
+        imageSource: path.relative(
+          path.join(project.dirname, 'assets'),
+          item.data.imageSource
+        )
+      };
+      
+      data.entities.push(entity);
     }
     
     return data;

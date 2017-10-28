@@ -1,6 +1,7 @@
 const {remote}          = require('electron');
 const {Project}         = remote.require('./scripts/file');
 const path              = remote.require('path');
+const Behavior          = wfl.behavior.Behavior;
 
 const ArrowKeyMovement = require('./ArrowKeyMovement');
 
@@ -10,7 +11,9 @@ function updateBehaviors(behaviorData) {
   loadedBehaviors = {};
   
   for (let behavior of behaviorData) {
-    loadedBehaviors[behavior.name] = cloneBehavior(behavior);
+    if (typeof behavior.module === 'function') {
+      loadedBehaviors[behavior.name] = cloneBehavior(behavior);
+    }
   }
 }
 

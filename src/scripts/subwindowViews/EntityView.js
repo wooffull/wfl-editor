@@ -12,6 +12,8 @@ const {Action,
 const {remote}          = require('electron');
 const {dialog}          = remote;
 const path              = remote.require('path');
+const fs                = remote.require('fs-extra');
+const {Project}         = remote.require('./scripts/file');
 
 class EntityView extends SubwindowView {
   constructor() {
@@ -102,15 +104,43 @@ class EntityView extends SubwindowView {
         return;
       }
       
-      this.loadFromData(filePaths.map(x => ({imageSource: x})));
+      let entityObjs = [];
+      let fsPromises = [];
+      let project = Project.getProject();
+      
+      if (project && typeof project.dirname !== 'undefined') {
+        // Copy over assets into assets folder
+        for (let filePath of filePaths) {
+          // TODO: Allow for assets in subdirectories
+          let entityName = path.basename(filePath);
+          let newPath = path.join(project.dirname, 'assets', entityName);
+          
+          // If the asset is already contained in the assets folder, don't copy
+          // it again
+          if (newPath.indexOf(filePath) === -1) {
+            fsPromises.push(
+              fs.copy(filePath, newPath)
+            );
+          }
+          
+          entityObjs.push({
+            imageSource: entityName
+          });
+        }
+
+        Promise.all(fsPromises)
+        .then(() => this.loadFromData(entityObjs));
+      }
     });
   }
   
   loadFromData(data, reversable = true, callback = null) {
     let entities = [];
+    let project = Project.getProject();
 
     for (var i = 0; i < data.length; i++) {
-      let filePath   = data[i].imageSource;
+      let filePath = data[i].imageSource;
+      let absolutePath = path.join(project.dirname, 'assets', filePath);
       let entityName = data[i].name || path.parse(filePath).name;
 
       // Only proceed with loading an entity if it's not yet added
@@ -119,11 +149,14 @@ class EntityView extends SubwindowView {
         
         let entity = new Entity({
           name: entityName,
-          imageSource: filePath
+          imageSource: absolutePath
         });
-
+        
         // Queue the entities to load
-        this.loader.add(entityName, filePath);
+        this.loader.add(
+          entityName,
+          absolutePath
+        );
         entities.push(entity);
       }
     }
