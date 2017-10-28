@@ -1,0 +1,1282 @@
+{
+  "title": "HexTest",
+  "lastChanged": 1509148541005,
+  "level": {
+    "dynamicZOrder": true,
+    "entities": [
+      {
+        "imageSource": "door.png",
+        "name": "door"
+      },
+      {
+        "imageSource": "gate.png",
+        "name": "gate"
+      },
+      {
+        "imageSource": "redRoofPointy.png",
+        "name": "redRoofPointy"
+      },
+      {
+        "imageSource": "redRoofRounded.png",
+        "name": "redRoofRounded"
+      },
+      {
+        "imageSource": "redRoofShort.png",
+        "name": "redRoofShort"
+      },
+      {
+        "imageSource": "redRoofStraight.png",
+        "name": "redRoofStraight"
+      },
+      {
+        "imageSource": "redRoofTall.png",
+        "name": "redRoofTall"
+      },
+      {
+        "imageSource": "rockDoorLeft.png",
+        "name": "rockDoorLeft"
+      },
+      {
+        "imageSource": "rockDoorRight.png",
+        "name": "rockDoorRight"
+      },
+      {
+        "imageSource": "rockDoorWindow.png",
+        "name": "rockDoorWindow"
+      },
+      {
+        "imageSource": "rockDoorWindowBlinds.png",
+        "name": "rockDoorWindowBlinds"
+      },
+      {
+        "imageSource": "rockDoorWindowBlindsMirror.png",
+        "name": "rockDoorWindowBlindsMirror"
+      },
+      {
+        "imageSource": "rockDoorWindowMirror.png",
+        "name": "rockDoorWindowMirror"
+      },
+      {
+        "imageSource": "rockGateLeft.png",
+        "name": "rockGateLeft"
+      },
+      {
+        "imageSource": "rockGateRight.png",
+        "name": "rockGateRight"
+      },
+      {
+        "imageSource": "rockRing.png",
+        "name": "rockRing"
+      },
+      {
+        "imageSource": "rockWindowBlinds.png",
+        "name": "rockWindowBlinds"
+      },
+      {
+        "imageSource": "rockWindowBlindsLeft.png",
+        "name": "rockWindowBlindsLeft"
+      },
+      {
+        "imageSource": "rockWindowBlindsRight.png",
+        "name": "rockWindowBlindsRight"
+      },
+      {
+        "imageSource": "rockWindowLeft.png",
+        "name": "rockWindowLeft"
+      },
+      {
+        "imageSource": "rockWindowRight.png",
+        "name": "rockWindowRight"
+      },
+      {
+        "imageSource": "rockWindows.png",
+        "name": "rockWindows"
+      },
+      {
+        "imageSource": "sandDoorLeft.png",
+        "name": "sandDoorLeft"
+      },
+      {
+        "imageSource": "sandDoorRight.png",
+        "name": "sandDoorRight"
+      },
+      {
+        "imageSource": "sandDoorWindow.png",
+        "name": "sandDoorWindow"
+      },
+      {
+        "imageSource": "sandDoorWindowBlinds.png",
+        "name": "sandDoorWindowBlinds"
+      },
+      {
+        "imageSource": "sandDoorWindowBlindsMirror.png",
+        "name": "sandDoorWindowBlindsMirror"
+      },
+      {
+        "imageSource": "sandDoorWindowMirror.png",
+        "name": "sandDoorWindowMirror"
+      },
+      {
+        "imageSource": "sandGateLeft.png",
+        "name": "sandGateLeft"
+      },
+      {
+        "imageSource": "sandGateRight.png",
+        "name": "sandGateRight"
+      },
+      {
+        "imageSource": "sandRing.png",
+        "name": "sandRing"
+      },
+      {
+        "imageSource": "sandRoofPointy.png",
+        "name": "sandRoofPointy"
+      },
+      {
+        "imageSource": "sandRoofRounded.png",
+        "name": "sandRoofRounded"
+      },
+      {
+        "imageSource": "sandRoofShort.png",
+        "name": "sandRoofShort"
+      },
+      {
+        "imageSource": "sandRoofStraight.png",
+        "name": "sandRoofStraight"
+      },
+      {
+        "imageSource": "sandRoofTall.png",
+        "name": "sandRoofTall"
+      },
+      {
+        "imageSource": "sandWindowBlinds.png",
+        "name": "sandWindowBlinds"
+      },
+      {
+        "imageSource": "sandWindowBlindsLeft.png",
+        "name": "sandWindowBlindsLeft"
+      },
+      {
+        "imageSource": "sandWindowBlindsRight.png",
+        "name": "sandWindowBlindsRight"
+      },
+      {
+        "imageSource": "sandWindowLeft.png",
+        "name": "sandWindowLeft"
+      },
+      {
+        "imageSource": "sandWindowRight.png",
+        "name": "sandWindowRight"
+      },
+      {
+        "imageSource": "sandWindows.png",
+        "name": "sandWindows"
+      },
+      {
+        "imageSource": "stoneDoorLeft.png",
+        "name": "stoneDoorLeft"
+      },
+      {
+        "imageSource": "stoneDoorRight.png",
+        "name": "stoneDoorRight"
+      },
+      {
+        "imageSource": "stoneDoorWindow.png",
+        "name": "stoneDoorWindow"
+      },
+      {
+        "imageSource": "stoneDoorWindowBlinds.png",
+        "name": "stoneDoorWindowBlinds"
+      },
+      {
+        "imageSource": "stoneDoorWindowBlindsMirror.png",
+        "name": "stoneDoorWindowBlindsMirror"
+      },
+      {
+        "imageSource": "stoneDoorWindowMirror.png",
+        "name": "stoneDoorWindowMirror"
+      },
+      {
+        "imageSource": "stoneGateLeft.png",
+        "name": "stoneGateLeft"
+      },
+      {
+        "imageSource": "stoneGateRight.png",
+        "name": "stoneGateRight"
+      },
+      {
+        "imageSource": "stoneRing.png",
+        "name": "stoneRing"
+      },
+      {
+        "imageSource": "stoneRoofPointy.png",
+        "name": "stoneRoofPointy"
+      },
+      {
+        "imageSource": "stoneRoofRounded.png",
+        "name": "stoneRoofRounded"
+      },
+      {
+        "imageSource": "stoneRoofShort.png",
+        "name": "stoneRoofShort"
+      },
+      {
+        "imageSource": "stoneRoofStraight.png",
+        "name": "stoneRoofStraight"
+      },
+      {
+        "imageSource": "stoneRoofTall.png",
+        "name": "stoneRoofTall"
+      },
+      {
+        "imageSource": "stoneWindowBlinds.png",
+        "name": "stoneWindowBlinds"
+      },
+      {
+        "imageSource": "stoneWindowBlindsLeft.png",
+        "name": "stoneWindowBlindsLeft"
+      },
+      {
+        "imageSource": "stoneWindowBlindsRight.png",
+        "name": "stoneWindowBlindsRight"
+      },
+      {
+        "imageSource": "stoneWindowLeft.png",
+        "name": "stoneWindowLeft"
+      },
+      {
+        "imageSource": "stoneWindowRight.png",
+        "name": "stoneWindowRight"
+      },
+      {
+        "imageSource": "stoneWindows.png",
+        "name": "stoneWindows"
+      },
+      {
+        "imageSource": "window.png",
+        "name": "window"
+      },
+      {
+        "imageSource": "windowBlinds.png",
+        "name": "windowBlinds"
+      },
+      {
+        "imageSource": "woodDoorLeft.png",
+        "name": "woodDoorLeft"
+      },
+      {
+        "imageSource": "woodDoorRight.png",
+        "name": "woodDoorRight"
+      },
+      {
+        "imageSource": "woodDoorWindow.png",
+        "name": "woodDoorWindow"
+      },
+      {
+        "imageSource": "woodDoorWindowBlinds.png",
+        "name": "woodDoorWindowBlinds"
+      },
+      {
+        "imageSource": "woodDoorWindowBlindsMirror.png",
+        "name": "woodDoorWindowBlindsMirror"
+      },
+      {
+        "imageSource": "woodDoorWindowMirror.png",
+        "name": "woodDoorWindowMirror"
+      },
+      {
+        "imageSource": "woodGateLeft.png",
+        "name": "woodGateLeft"
+      },
+      {
+        "imageSource": "woodGateRight.png",
+        "name": "woodGateRight"
+      },
+      {
+        "imageSource": "woodRing.png",
+        "name": "woodRing"
+      },
+      {
+        "imageSource": "woodRoofPointy.png",
+        "name": "woodRoofPointy"
+      },
+      {
+        "imageSource": "woodRoofRounded.png",
+        "name": "woodRoofRounded"
+      },
+      {
+        "imageSource": "woodRoofShort.png",
+        "name": "woodRoofShort"
+      },
+      {
+        "imageSource": "woodRoofStraight.png",
+        "name": "woodRoofStraight"
+      },
+      {
+        "imageSource": "woodRoofTall.png",
+        "name": "woodRoofTall"
+      },
+      {
+        "imageSource": "woodWindowBlinds.png",
+        "name": "woodWindowBlinds"
+      },
+      {
+        "imageSource": "woodWindowBlindsLeft.png",
+        "name": "woodWindowBlindsLeft"
+      },
+      {
+        "imageSource": "woodWindowBlindsRight.png",
+        "name": "woodWindowBlindsRight"
+      },
+      {
+        "imageSource": "woodWindowLeft.png",
+        "name": "woodWindowLeft"
+      },
+      {
+        "imageSource": "woodWindowRight.png",
+        "name": "woodWindowRight"
+      },
+      {
+        "imageSource": "woodWindows.png",
+        "name": "woodWindows"
+      },
+      {
+        "imageSource": "alienBeige.png",
+        "name": "alienBeige"
+      },
+      {
+        "imageSource": "alienBlue.png",
+        "name": "alienBlue"
+      },
+      {
+        "imageSource": "alienGreen.png",
+        "name": "alienGreen"
+      },
+      {
+        "imageSource": "alienPink.png",
+        "name": "alienPink"
+      },
+      {
+        "imageSource": "alienYellow.png",
+        "name": "alienYellow"
+      },
+      {
+        "imageSource": "bushAutumn.png",
+        "name": "bushAutumn"
+      },
+      {
+        "imageSource": "bushDirt.png",
+        "name": "bushDirt"
+      },
+      {
+        "imageSource": "bushGrass.png",
+        "name": "bushGrass"
+      },
+      {
+        "imageSource": "bushMagic.png",
+        "name": "bushMagic"
+      },
+      {
+        "imageSource": "bushSand.png",
+        "name": "bushSand"
+      },
+      {
+        "imageSource": "bushSnow.png",
+        "name": "bushSnow"
+      },
+      {
+        "imageSource": "flowerBlue.png",
+        "name": "flowerBlue"
+      },
+      {
+        "imageSource": "flowerGreen.png",
+        "name": "flowerGreen"
+      },
+      {
+        "imageSource": "flowerRed.png",
+        "name": "flowerRed"
+      },
+      {
+        "imageSource": "flowerWhite.png",
+        "name": "flowerWhite"
+      },
+      {
+        "imageSource": "flowerYellow.png",
+        "name": "flowerYellow"
+      },
+      {
+        "imageSource": "hillAutumn.png",
+        "name": "hillAutumn"
+      },
+      {
+        "imageSource": "hillDirt.png",
+        "name": "hillDirt"
+      },
+      {
+        "imageSource": "hillGrass.png",
+        "name": "hillGrass"
+      },
+      {
+        "imageSource": "hillMagic.png",
+        "name": "hillMagic"
+      },
+      {
+        "imageSource": "hillSand.png",
+        "name": "hillSand"
+      },
+      {
+        "imageSource": "hillSnow.png",
+        "name": "hillSnow"
+      },
+      {
+        "imageSource": "pineAutumn_high.png",
+        "name": "pineAutumn_high"
+      },
+      {
+        "imageSource": "pineAutumn_low.png",
+        "name": "pineAutumn_low"
+      },
+      {
+        "imageSource": "pineAutumn_mid.png",
+        "name": "pineAutumn_mid"
+      },
+      {
+        "imageSource": "pineBlue_high.png",
+        "name": "pineBlue_high"
+      },
+      {
+        "imageSource": "pineBlue_low.png",
+        "name": "pineBlue_low"
+      },
+      {
+        "imageSource": "pineBlue_mid.png",
+        "name": "pineBlue_mid"
+      },
+      {
+        "imageSource": "pineGreen_high.png",
+        "name": "pineGreen_high"
+      },
+      {
+        "imageSource": "pineGreen_low.png",
+        "name": "pineGreen_low"
+      },
+      {
+        "imageSource": "pineGreen_mid.png",
+        "name": "pineGreen_mid"
+      },
+      {
+        "imageSource": "rockDirt.png",
+        "name": "rockDirt"
+      },
+      {
+        "imageSource": "rockDirt_moss1.png",
+        "name": "rockDirt_moss1"
+      },
+      {
+        "imageSource": "rockDirt_moss2.png",
+        "name": "rockDirt_moss2"
+      },
+      {
+        "imageSource": "rockDirt_moss3.png",
+        "name": "rockDirt_moss3"
+      },
+      {
+        "imageSource": "rockSnow_1.png",
+        "name": "rockSnow_1"
+      },
+      {
+        "imageSource": "rockSnow_2.png",
+        "name": "rockSnow_2"
+      },
+      {
+        "imageSource": "rockSnow_3.png",
+        "name": "rockSnow_3"
+      },
+      {
+        "imageSource": "rockStone.png",
+        "name": "rockStone"
+      },
+      {
+        "imageSource": "rockStone_moss1.png",
+        "name": "rockStone_moss1"
+      },
+      {
+        "imageSource": "rockStone_moss2.png",
+        "name": "rockStone_moss2"
+      },
+      {
+        "imageSource": "rockStone_moss3.png",
+        "name": "rockStone_moss3"
+      },
+      {
+        "imageSource": "smallRockDirt.png",
+        "name": "smallRockDirt"
+      },
+      {
+        "imageSource": "smallRockGrass.png",
+        "name": "smallRockGrass"
+      },
+      {
+        "imageSource": "smallRockSnow.png",
+        "name": "smallRockSnow"
+      },
+      {
+        "imageSource": "smallRockStone.png",
+        "name": "smallRockStone"
+      },
+      {
+        "imageSource": "tileAutumn.png",
+        "name": "tileAutumn"
+      },
+      {
+        "imageSource": "tileAutumn_full.png",
+        "name": "tileAutumn_full"
+      },
+      {
+        "imageSource": "tileAutumn_tile.png",
+        "name": "tileAutumn_tile"
+      },
+      {
+        "imageSource": "tileDirt.png",
+        "name": "tileDirt"
+      },
+      {
+        "imageSource": "tileDirt_full.png",
+        "name": "tileDirt_full"
+      },
+      {
+        "imageSource": "tileDirt_tile.png",
+        "name": "tileDirt_tile"
+      },
+      {
+        "imageSource": "tileGrass.png",
+        "name": "tileGrass"
+      },
+      {
+        "imageSource": "tileGrass_full.png",
+        "name": "tileGrass_full"
+      },
+      {
+        "imageSource": "tileGrass_tile.png",
+        "name": "tileGrass_tile"
+      },
+      {
+        "imageSource": "tileLava.png",
+        "name": "tileLava"
+      },
+      {
+        "imageSource": "tileLava_full.png",
+        "name": "tileLava_full"
+      },
+      {
+        "imageSource": "tileLava_tile.png",
+        "name": "tileLava_tile"
+      },
+      {
+        "imageSource": "tileMagic.png",
+        "name": "tileMagic"
+      },
+      {
+        "imageSource": "tileMagic_full.png",
+        "name": "tileMagic_full"
+      },
+      {
+        "imageSource": "tileMagic_tile.png",
+        "name": "tileMagic_tile"
+      },
+      {
+        "imageSource": "tileRock.png",
+        "name": "tileRock"
+      },
+      {
+        "imageSource": "tileRock_full.png",
+        "name": "tileRock_full"
+      },
+      {
+        "imageSource": "tileRock_tile.png",
+        "name": "tileRock_tile"
+      },
+      {
+        "imageSource": "tileSand.png",
+        "name": "tileSand"
+      },
+      {
+        "imageSource": "tileSand_full.png",
+        "name": "tileSand_full"
+      },
+      {
+        "imageSource": "tileSand_tile.png",
+        "name": "tileSand_tile"
+      },
+      {
+        "imageSource": "tileSnow.png",
+        "name": "tileSnow"
+      },
+      {
+        "imageSource": "tileSnow_full.png",
+        "name": "tileSnow_full"
+      },
+      {
+        "imageSource": "tileSnow_tile.png",
+        "name": "tileSnow_tile"
+      },
+      {
+        "imageSource": "tileStone.png",
+        "name": "tileStone"
+      },
+      {
+        "imageSource": "tileStone_bridge.png",
+        "name": "tileStone_bridge"
+      },
+      {
+        "imageSource": "tileStone_full.png",
+        "name": "tileStone_full"
+      },
+      {
+        "imageSource": "tileStone_tile.png",
+        "name": "tileStone_tile"
+      },
+      {
+        "imageSource": "tileWater.png",
+        "name": "tileWater"
+      },
+      {
+        "imageSource": "tileWater_full.png",
+        "name": "tileWater_full"
+      },
+      {
+        "imageSource": "tileWater_shadow.png",
+        "name": "tileWater_shadow"
+      },
+      {
+        "imageSource": "tileWater_tile.png",
+        "name": "tileWater_tile"
+      },
+      {
+        "imageSource": "tileWood_bridge.png",
+        "name": "tileWood_bridge"
+      },
+      {
+        "imageSource": "treeAutumn_high.png",
+        "name": "treeAutumn_high"
+      },
+      {
+        "imageSource": "treeAutumn_low.png",
+        "name": "treeAutumn_low"
+      },
+      {
+        "imageSource": "treeAutumn_mid.png",
+        "name": "treeAutumn_mid"
+      },
+      {
+        "imageSource": "treeBlue_high.png",
+        "name": "treeBlue_high"
+      },
+      {
+        "imageSource": "treeBlue_low.png",
+        "name": "treeBlue_low"
+      },
+      {
+        "imageSource": "treeBlue_mid.png",
+        "name": "treeBlue_mid"
+      },
+      {
+        "imageSource": "treeCactus_1.png",
+        "name": "treeCactus_1"
+      },
+      {
+        "imageSource": "treeCactus_2.png",
+        "name": "treeCactus_2"
+      },
+      {
+        "imageSource": "treeCactus_3.png",
+        "name": "treeCactus_3"
+      },
+      {
+        "imageSource": "treeGreen_high.png",
+        "name": "treeGreen_high"
+      },
+      {
+        "imageSource": "treeGreen_low.png",
+        "name": "treeGreen_low"
+      },
+      {
+        "imageSource": "treeGreen_mid.png",
+        "name": "treeGreen_mid"
+      },
+      {
+        "imageSource": "waveLava.png",
+        "name": "waveLava"
+      },
+      {
+        "imageSource": "waveWater.png",
+        "name": "waveWater"
+      }
+    ],
+    "gameObjects": [
+      {
+        "entity": {
+          "name": "tileDirt_full"
+        },
+        "layer": 0,
+        "x": -272,
+        "y": -171
+      },
+      {
+        "entity": {
+          "name": "tileDirt_full"
+        },
+        "layer": 0,
+        "x": -208,
+        "y": -171.5
+      },
+      {
+        "entity": {
+          "name": "tileDirt_full"
+        },
+        "layer": 0,
+        "x": -144,
+        "y": -171.5
+      },
+      {
+        "entity": {
+          "name": "tileDirt_full"
+        },
+        "layer": 0,
+        "x": -80,
+        "y": -171.5
+      },
+      {
+        "entity": {
+          "name": "tileDirt_full"
+        },
+        "layer": 0,
+        "x": -16,
+        "y": -171.5
+      },
+      {
+        "entity": {
+          "name": "tileDirt_full"
+        },
+        "layer": 0,
+        "x": 48,
+        "y": -171.5
+      },
+      {
+        "entity": {
+          "name": "tileDirt_full"
+        },
+        "layer": 0,
+        "x": -336,
+        "y": -171.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -368,
+        "y": -122.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -304,
+        "y": -122.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -240,
+        "y": -122.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -176,
+        "y": -122.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -112,
+        "y": -122.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -48,
+        "y": -122.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": 16,
+        "y": -122.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": 80,
+        "y": -122.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -336,
+        "y": -73.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -272,
+        "y": -73.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -208,
+        "y": -73.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -144,
+        "y": -73.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -80,
+        "y": -73.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -16,
+        "y": -73.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": 48,
+        "y": -73.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -240,
+        "y": -24.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -176,
+        "y": -24.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -112,
+        "y": -24.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": 80,
+        "y": -24.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass_full"
+        },
+        "layer": 0,
+        "x": -272,
+        "y": 24.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass_full"
+        },
+        "layer": 0,
+        "x": -208,
+        "y": 24.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass_full"
+        },
+        "layer": 0,
+        "x": -144,
+        "y": 24.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass_full"
+        },
+        "layer": 0,
+        "x": -304,
+        "y": 73.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass_full"
+        },
+        "layer": 0,
+        "x": -240,
+        "y": 73.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass_full"
+        },
+        "layer": 0,
+        "x": -176,
+        "y": 73.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass_full"
+        },
+        "layer": 0,
+        "x": -112,
+        "y": 73.5
+      },
+      {
+        "entity": {
+          "name": "tileSand"
+        },
+        "layer": 0,
+        "x": -336,
+        "y": 122.5
+      },
+      {
+        "entity": {
+          "name": "tileSand"
+        },
+        "layer": 0,
+        "x": -272,
+        "y": 122.5
+      },
+      {
+        "entity": {
+          "name": "tileSand"
+        },
+        "layer": 0,
+        "x": -208,
+        "y": 122.5
+      },
+      {
+        "entity": {
+          "name": "tileSand"
+        },
+        "layer": 0,
+        "x": -144,
+        "y": 122.5
+      },
+      {
+        "entity": {
+          "name": "tileSand"
+        },
+        "layer": 0,
+        "x": -80,
+        "y": 122.5
+      },
+      {
+        "entity": {
+          "name": "tileWater_full"
+        },
+        "layer": 0,
+        "x": -368,
+        "y": -24.5
+      },
+      {
+        "entity": {
+          "name": "tileWater_full"
+        },
+        "layer": 0,
+        "x": -304,
+        "y": -24.5
+      },
+      {
+        "entity": {
+          "name": "tileWater_full"
+        },
+        "layer": 0,
+        "x": -336,
+        "y": 24.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": 16,
+        "y": -24.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -48,
+        "y": -24.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass_full"
+        },
+        "layer": 0,
+        "x": -80,
+        "y": 24.5
+      },
+      {
+        "entity": {
+          "name": "tileSand"
+        },
+        "layer": 0,
+        "x": 48,
+        "y": 122.5
+      },
+      {
+        "entity": {
+          "name": "tileSand"
+        },
+        "layer": 0,
+        "x": -16,
+        "y": 122.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass_full"
+        },
+        "layer": 0,
+        "x": 48,
+        "y": 24.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass_full"
+        },
+        "layer": 0,
+        "x": -48,
+        "y": 73.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass_full"
+        },
+        "layer": 0,
+        "x": -16,
+        "y": 24.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass_full"
+        },
+        "layer": 0,
+        "x": 16,
+        "y": 73.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": 80,
+        "y": 73.5
+      },
+      {
+        "entity": {
+          "name": "tileGrass"
+        },
+        "layer": 0,
+        "x": -368,
+        "y": 73.5
+      },
+      {
+        "entity": {
+          "name": "rockStone"
+        },
+        "layer": 2,
+        "x": -368,
+        "y": 73.5
+      },
+      {
+        "entity": {
+          "name": "rockStone_moss1"
+        },
+        "layer": 2,
+        "x": -304,
+        "y": 73.5
+      },
+      {
+        "entity": {
+          "name": "rockDirt_moss3"
+        },
+        "layer": 2,
+        "x": 80,
+        "y": -122.5
+      },
+      {
+        "entity": {
+          "name": "pineBlue_mid"
+        },
+        "layer": 2,
+        "x": 80,
+        "y": 24.5
+      },
+      {
+        "entity": {
+          "name": "pineBlue_mid"
+        },
+        "layer": 2,
+        "x": -368,
+        "y": -171.5
+      },
+      {
+        "entity": {
+          "name": "pineGreen_low"
+        },
+        "layer": 2,
+        "x": -336,
+        "y": -122.5
+      },
+      {
+        "entity": {
+          "name": "pineGreen_mid"
+        },
+        "layer": 2,
+        "x": -304,
+        "y": -220.5
+      },
+      {
+        "entity": {
+          "name": "rockSnow_2"
+        },
+        "layer": 2,
+        "x": -336,
+        "y": 122.5
+      },
+      {
+        "entity": {
+          "name": "treeBlue_high"
+        },
+        "layer": 2,
+        "x": 16,
+        "y": -171.5
+      },
+      {
+        "entity": {
+          "name": "alienPink"
+        },
+        "layer": 2,
+        "x": -16,
+        "y": -122.5
+      },
+      {
+        "entity": {
+          "name": "alienGreen"
+        },
+        "layer": 2,
+        "name": "player",
+        "x": -16,
+        "y": -24
+      },
+      {
+        "entity": {
+          "name": "alienBlue"
+        },
+        "layer": 2,
+        "x": -205,
+        "y": 74
+      },
+      {
+        "entity": {
+          "name": "smallRockGrass"
+        },
+        "layer": 2,
+        "x": -112,
+        "y": -122.5
+      },
+      {
+        "entity": {
+          "name": "smallRockDirt"
+        },
+        "layer": 2,
+        "x": -80,
+        "y": -171.5
+      },
+      {
+        "entity": {
+          "name": "smallRockDirt"
+        },
+        "layer": 2,
+        "x": -16,
+        "y": -171.5
+      },
+      {
+        "entity": {
+          "name": "alienBeige"
+        },
+        "layer": 2,
+        "x": -272,
+        "y": -122
+      }
+    ],
+    "layers": [
+      {
+        "index": 0,
+        "label": "layer0"
+      },
+      {
+        "index": 1,
+        "label": "layer1"
+      },
+      {
+        "index": 2,
+        "label": "layer2"
+      }
+    ],
+    "tileSize": {
+      "x": "32",
+      "y": "49"
+    }
+  }
+}
